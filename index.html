@@ -2190,8 +2190,10 @@ let S={
   theme:'dark',projFilter:'all',teamFilter:'all'
 };
 
-// API_URL
-const API_URL='http://localhost:8000/api';
+// API_URL — usa localhost en desarrollo, ruta relativa en producción
+const API_URL = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+  ? 'http://localhost:8000/api'
+  : `${location.origin}/api`;
 
 // ═══════════════════════════════════
 // HELPERS
