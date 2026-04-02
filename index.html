@@ -5385,11 +5385,15 @@ function exportHistorialPDF(){
 }
 .sidebar-overlay.open{display:block;}
 
+/* ═══════════════════════════════════════════════════
+   MOBILE RESPONSIVE — completo y mejorado
+═══════════════════════════════════════════════════ */
+
 @media(max-width:768px){
   :root{--sb:280px;}
 
+  /* ── Sidebar slide-over ── */
   .mobile-menu-btn{display:flex;align-items:center;}
-
   .sidebar{
     position:fixed;left:0;top:0;bottom:0;
     width:var(--sb) !important;
@@ -5399,16 +5403,71 @@ function exportHistorialPDF(){
   }
   .sidebar.open{transform:translateX(0);}
 
-  .header-row1{padding:0 12px;gap:6px;}
-  .header-row2{padding:0 12px 8px;}
-  .search-wrap{flex:1;min-width:0;}
+  /* ── Header: reorganizar en 2 sub-filas ── */
+  /* Fila A: hamburger | prev | hoy | next | periodo | 📊 | 🌓  */
+  /* Fila B: vtabs a ancho completo */
+  .header-row1{
+    padding:6px 10px 0;
+    gap:4px;
+    height:auto;
+    min-height:48px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  /* Los vtabs bajan a la segunda línea */
+  .vtabs{
+    order:10;
+    flex-basis:100%;
+    gap:2px;
+    padding:0 0 8px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    justify-content:stretch;
+  }
+  .vtabs::-webkit-scrollbar{display:none;}
+  .vtab{
+    flex:1;
+    padding:7px 6px;
+    font-size:11px;
+    min-width:56px;
+    white-space:nowrap;
+    text-align:center;
+  }
+  /* Periodo más compacto */
+  .period{
+    font-size:13px !important;
+    min-width:0 !important;
+    flex:1;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    font-family:'DM Serif Display',serif;
+  }
+
+  /* ── Header row 2: filtros + búsqueda ── */
+  .header-row2{
+    padding:0 10px 8px;
+    gap:5px;
+    flex-wrap:nowrap;
+    overflow:hidden;
+  }
+  .filters{
+    display:flex;
+    gap:4px;
+    flex-shrink:0;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    max-width:55vw;
+    padding-bottom:2px;
+  }
+  .filters::-webkit-scrollbar{display:none;}
+  .fbadge{padding:3px 8px;font-size:9px;letter-spacing:0;}
+  .search-wrap{flex:1;min-width:0;margin-left:0 !important;}
   .sinp{width:100% !important;max-width:none;}
 
-  /* Stack vtabs on small screens */
-  .vtabs{gap:1px;}
-  .vtab{padding:5px 8px;font-size:11px;}
-
-  /* Modals full screen on mobile */
+  /* ── Modales: pantalla completa desde abajo ── */
   .overlay{align-items:flex-end;padding:0;}
   .modal{
     border-radius:20px 20px 0 0 !important;
@@ -5417,28 +5476,119 @@ function exportHistorialPDF(){
     max-width:100% !important;
     margin:0;
   }
+  /* Cabecera y cuerpo con menos padding */
+  .mh{padding:16px 18px 14px;}
+  .mb{padding:14px 18px;}
+  .mf{
+    padding:0 18px 20px;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .mf .btn{flex:1;min-width:0;text-align:center;}
 
-  /* Calendar views */
+  /* Formularios en columna única */
+  .frow{grid-template-columns:1fr !important;}
+
+  /* Botones con mayor área táctil */
+  .nbtn{min-height:38px;padding:7px 12px;}
+  .today-btn{min-height:38px;}
+  .btn{padding:11px 18px;font-size:13px;}
+
+  /* ── Vistas de calendario: día y semana ── */
   .evcol{min-width:0;}
-  .evb{font-size:10px;}
+  .evb{font-size:10px;padding:4px 6px;}
   .evb-title{font-size:10px;}
   .evb-time{font-size:9px;}
 
-  /* Week view — smaller */
-  .wk-dh{font-size:10px;padding:4px 2px;}
-  .wk-dnum{width:24px;height:24px;font-size:13px;}
+  /* Semana — labels de hora más angostos */
+  .tlabels{width:42px;}
+  .tlbl{font-size:9px;padding-right:5px;}
+  .wk-pad{width:42px;}
+  .wk-dh{font-size:9px;padding:6px 1px;}
+  .wk-dname{font-size:8px;letter-spacing:.3px;}
+  .wk-dnum{font-size:13px;margin-top:2px;}
+  .wk-dh.today .wk-dnum{width:26px;height:26px;font-size:12px;}
 
-  /* Hide mini calendar label on small */
-  .mini-label{font-size:11px;}
+  /* Mes — celdas más pequeñas pero usables */
+  .mgrid{grid-auto-rows:minmax(72px,1fr);}
+  .mcell{padding:4px;}
+  .mcday{font-size:11px;margin-bottom:2px;}
+  .mc-ev{font-size:9px;padding:1px 4px;border-radius:3px;}
+  .month-dlbl{padding:7px 2px;font-size:8px;letter-spacing:.3px;}
 
-  /* Agenda view full width */
+  /* Agenda */
   .agenda-wrap{padding:10px 12px;}
   .agenda-item{padding:8px 10px;}
+
+  /* Mini calendario */
+  .mini-label{font-size:11px;}
+
+  /* ── Chat panel: ancho completo ── */
+  .chat-panel{
+    width:100% !important;
+    left:0 !important;right:0 !important;
+    bottom:0 !important;
+    border-radius:20px 20px 0 0;
+    height:68vh;
+  }
+  .chat-fab{bottom:20px;right:16px;}
+
+  /* ── Notificaciones: ancho completo ── */
+  .nstack{right:8px;left:8px;align-items:stretch;}
+  .notif{
+    min-width:0;
+    width:100%;
+    max-width:none;
+    box-sizing:border-box;
+  }
+
+  /* Toast centrado */
+  .toast{max-width:90vw;white-space:normal;text-align:center;line-height:1.4;}
+
+  /* ── Onboarding ── */
+  .onboard-body{padding:24px 18px 20px;}
+  .onboard-footer{padding:16px 18px;}
+
+  /* ── Modal de búsqueda ── */
+  .search-modal-overlay{padding-top:0;align-items:flex-end;}
+  .search-modal{
+    width:100%;
+    border-radius:20px 20px 0 0;
+    max-height:85vh;
+  }
+
+  /* ── Modal de estadísticas ── */
+  .stats-modal .modal{max-width:100% !important;width:100% !important;}
+  .stats-kpi-row{grid-template-columns:repeat(3,1fr);}
+  .stats-two-col{grid-template-columns:1fr;}
+  .stats-kpi-num{font-size:22px;}
+
+  /* ── Status options en detalle de tarea ── */
+  .status-opt{padding:10px 10px;}
+  .so-label{font-size:11px;}
+
+  /* ── Historial modal stats ── */
+  #histModalStats{grid-template-columns:repeat(2,1fr) !important;}
 }
 
 @media(max-width:480px){
-  .vtab{padding:4px 6px;font-size:10px;}
-  .header .nbtn span{display:none;}
+  /* Tabs aún más compactos */
+  .vtab{padding:6px 5px;font-size:10px;min-width:50px;}
+  /* Periodo muy compacto */
+  .period{font-size:12px !important;}
+  /* Badges más pequeños */
+  .fbadge{padding:2px 6px;font-size:8px;}
+
+  /* Celdas de mes */
+  .mgrid{grid-auto-rows:minmax(55px,1fr);}
+  .month-dlbl{padding:5px 1px;font-size:7px;}
+  .mc-ev{font-size:8px;}
+
+  /* Onboarding muy pequeño */
+  .onboard-title{font-size:18px;}
+  .onboard-step-icon{font-size:36px;margin-bottom:12px;}
+  .onboard-body{padding:18px 14px 14px;}
+  .onboard-footer{padding:12px 14px;}
 }
 
 /* ══════════════════════════════════════════
