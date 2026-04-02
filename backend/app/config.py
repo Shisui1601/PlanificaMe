@@ -15,12 +15,13 @@ class Settings(BaseSettings):
     CELERY_BROKER_URL: str = "redis://localhost:6379/0"
     CELERY_RESULT_BACKEND: str = "redis://localhost:6379/0"
 
-    # Email SMTP (Gmail)
-    SMTP_SERVER: str = "smtp.gmail.com"
+    # Email — Brevo HTTP API
+    BREVO_API_KEY: str = ""
+    SMTP_SERVER: str = "smtp-relay.brevo.com"
     SMTP_PORT: int = 587
     SMTP_USER: str = ""
     SMTP_PASSWORD: str = ""
-    SENDER_EMAIL: str = ""  # si queda vacío, puedes setear settings.SENDER_EMAIL or settings.SMTP_USER en runtime
+    SENDER_EMAIL: str = ""
     SENDER_NAME: str = "PlanificaMe"
 
     # Frontend / CORS

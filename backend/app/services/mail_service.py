@@ -1,10 +1,9 @@
 """
 mail_service.py — Servicio de correos de PlanificaMe
 Maneja todos los tipos de notificaciones por email con plantillas HTML.
+Usa la API HTTP de Brevo (evita bloqueos de puerto SMTP en Render free tier).
 """
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import requests
 from ..config import settings
 import logging
 
@@ -93,27 +92,39 @@ class MailService:
 
     @staticmethod
     def send_email(to_email: str, subject: str, html_content: str, text_content: str = None) -> bool:
-        """Envía un correo. Devuelve True si fue exitoso."""
-        if not settings.SMTP_USER or not settings.SMTP_PASSWORD:
-            logger.warning("SMTP no configurado — correo no enviado")
+        """Envía un correo via Brevo HTTP API. Devuelve True si fue exitoso."""
+        api_key = getattr(settings, 'BREVO_API_KEY', None)
+        if not api_key:
+            logger.warning("BREVO_API_KEY no configurado — correo no enviado")
             return False
         try:
-            msg = MIMEMultipart("alternative")
-            msg["Subject"] = subject
-            msg["From"] = f"{settings.SENDER_NAME} <{settings.SENDER_EMAIL}>"
-            msg["To"] = to_email
-
+            payload = {
+                "sender": {
+                    "name": settings.SENDER_NAME,
+                    "email": settings.SENDER_EMAIL
+                },
+                "to": [{"email": to_email}],
+                "subject": subject,
+                "htmlContent": html_content,
+            }
             if text_content:
-                msg.attach(MIMEText(text_content, "plain", "utf-8"))
-            msg.attach(MIMEText(html_content, "html", "utf-8"))
+                payload["textContent"] = text_content
 
-            with smtplib.SMTP(settings.SMTP_SERVER, settings.SMTP_PORT) as server:
-                server.starttls()
-                server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
-                server.sendmail(settings.SENDER_EMAIL, to_email, msg.as_string())
-
-            logger.info(f"✉️  Correo enviado → {to_email} | {subject}")
-            return True
+            response = requests.post(
+                "https://api.brevo.com/v3/smtp/email",
+                headers={
+                    "api-key": api_key,
+                    "Content-Type": "application/json"
+                },
+                json=payload,
+                timeout=15
+            )
+            if response.status_code in (200, 201):
+                logger.info(f"✉️  Correo enviado → {to_email} | {subject}")
+                return True
+            else:
+                logger.error(f"❌ Brevo API error {response.status_code}: {response.text}")
+                return False
 
         except Exception as e:
             logger.error(f"❌ Error enviando correo a {to_email}: {str(e)}")

@@ -4742,8 +4742,9 @@ async function onAuthSuccess(userData, token){
   loadTags();
   loadTemplates();
   restoreSidebarState();
-  // Show onboarding for new users (no calendars and never onboarded)
-  const isNew = !localStorage.getItem('planificame_onboarded') && S.calendars.length === 0;
+  // Show onboarding para nuevos usuarios — clave por usuario, no por navegador
+  const onboardKey = `planificame_onboarded_${ME.id}`;
+  const isNew = !localStorage.getItem(onboardKey) && S.calendars.length === 0;
   if(isNew) setTimeout(showOnboarding, 800);
 }
 
@@ -6042,7 +6043,7 @@ function skipOnboarding(){ finishOnboarding(); }
 
 function finishOnboarding(){
   document.getElementById('onboardOverlay').style.display = 'none';
-  localStorage.setItem('planificame_onboarded', '1');
+  localStorage.setItem(`planificame_onboarded_${ME.id}`, '1');
 }
 
 
