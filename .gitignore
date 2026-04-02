@@ -3,6 +3,9 @@
 .env.local
 .env.*.local
 
+# Render deployment config (contains secrets)
+render.yaml
+
 # Virtual Environment
 venv/
 ENV/

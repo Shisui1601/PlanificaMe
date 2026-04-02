@@ -1,0 +1,17 @@
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/.env
+**/.env.*
+celerybeat-schedule.*
+*.bak
+*.dat
+*.dir
+uploads/
+migrations/
+.git
+.gitignore
+backend/Dockerfile
+backend/docker-compose.yml
+backend/*.md
+backend/*.txt.bak
