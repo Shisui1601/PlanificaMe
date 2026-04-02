@@ -4759,6 +4759,10 @@ async function performLogin(){
     return;
   }
 
+  const btn = document.querySelector('#loginModal .btn-p');
+  const btnOriginal = btn ? btn.innerHTML : '';
+  if(btn){ btn.disabled = true; btn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Iniciando sesión...</span>'; }
+
   try {
     const res = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
@@ -4768,15 +4772,18 @@ async function performLogin(){
 
     if(res.ok){
       const data = await res.json();
+      if(btn){ btn.innerHTML = '✓ Entrando...'; }
       await onAuthSuccess(data.user, data.token);
       notify('👋 Bienvenido', `¡Hola ${data.user.name}!`);
     } else {
       const err = await res.json().catch(()=>({detail:'Error al iniciar sesión'}));
       showAuthError('loginError', '❌ ' + (err.detail || 'Email o contraseña incorrectos'));
+      if(btn){ btn.disabled = false; btn.innerHTML = btnOriginal; }
     }
   } catch(err){
     console.error('Login error:', err);
     showAuthError('loginError', '❌ Error de conexión con el servidor');
+    if(btn){ btn.disabled = false; btn.innerHTML = btnOriginal; }
   }
 }
 
@@ -4801,6 +4808,10 @@ async function performRegister(){
     showAuthError('registerError', '⚠️ Las contraseñas no coinciden'); return;
   }
 
+  const btn = document.querySelector('#registerModal .btn-p');
+  const btnOriginal = btn ? btn.innerHTML : '';
+  if(btn){ btn.disabled = true; btn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Creando cuenta...</span>'; }
+
   try {
     const res = await fetch(`${API_URL}/auth/register`, {
       method: 'POST',
@@ -4810,15 +4821,18 @@ async function performRegister(){
 
     if(res.ok){
       const data = await res.json();
+      if(btn){ btn.innerHTML = '✓ ¡Cuenta creada! Entrando...'; }
       await onAuthSuccess(data.user, data.token);
       notify('✓ ¡Bienvenido!', `Cuenta creada para ${data.user.name}`);
     } else {
       const err = await res.json().catch(()=>({detail:'Error al registrarse'}));
       showAuthError('registerError', '❌ ' + (err.detail || 'No se pudo crear la cuenta'));
+      if(btn){ btn.disabled = false; btn.innerHTML = btnOriginal; }
     }
   } catch(err){
     console.error('Register error:', err);
     showAuthError('registerError', '❌ Error de conexión con el servidor');
+    if(btn){ btn.disabled = false; btn.innerHTML = btnOriginal; }
   }
 }
 
