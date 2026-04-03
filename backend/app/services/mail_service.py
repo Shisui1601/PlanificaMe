@@ -56,7 +56,7 @@ def _base_template(content: str, color: str = "#7c5aff") -> str:
                 PlanificaMe © 2026 · Este correo fue enviado automáticamente, no respondas a este mensaje.
               </p>
               <p style="margin:8px 0 0;">
-                <a href="{settings.FRONTEND_URL}" style="font-size:12px;color:{color};text-decoration:none;font-weight:600;">
+                <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:{color};text-decoration:none;font-weight:600;">
                   Ir a PlanificaMe →
                 </a>
               </p>
@@ -154,7 +154,7 @@ class MailService:
           </table>
         </div>
         <div style="text-align:center;">
-          <a href="{settings.FRONTEND_URL}" style="display:inline-block;background:linear-gradient(135deg,#7c5aff,#5b3acc);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
+          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,#7c5aff,#5b3acc);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
             Ver actividad →
           </a>
         </div>"""
@@ -203,7 +203,7 @@ class MailService:
         </div>
         <p style="font-size:14px;color:#44446a;margin-bottom:24px;">{message}</p>
         <div style="text-align:center;">
-          <a href="{settings.FRONTEND_URL}" style="display:inline-block;background:linear-gradient(135deg,{color},{color}cc);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
+          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,{color},{color}cc);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
             Actualizar estado →
           </a>
         </div>"""
@@ -243,7 +243,7 @@ class MailService:
           Inicia sesión en PlanificaMe para ver el calendario y las actividades compartidas.
         </p>
         <div style="text-align:center;">
-          <a href="{settings.FRONTEND_URL}" style="display:inline-block;background:linear-gradient(135deg,#7c5aff,#10b981);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
+          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,#7c5aff,#10b981);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
             Abrir PlanificaMe →
           </a>
         </div>"""
@@ -287,7 +287,7 @@ class MailService:
         </div>
         {note_block}
         <div style="text-align:center;margin-top:24px;">
-          <a href="{settings.FRONTEND_URL}" style="display:inline-block;background:linear-gradient(135deg,{color},{color}cc);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
+          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,{color},{color}cc);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
             Ver en PlanificaMe →
           </a>
         </div>"""
@@ -369,7 +369,7 @@ class MailService:
         {overdue_block}
 
         <div style="text-align:center;margin-top:28px;">
-          <a href="{settings.FRONTEND_URL}" style="display:inline-block;background:linear-gradient(135deg,#7c5aff,#10b981);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
+          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,#7c5aff,#10b981);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
             Ver mi calendario →
           </a>
         </div>"""
@@ -425,7 +425,7 @@ class MailService:
           {desc_block}
         </div>
         <div style="text-align:center;">
-          <a href="{settings.FRONTEND_URL}" style="display:inline-block;background:linear-gradient(135deg,{type_color},{type_color}cc);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">Ver en PlanificaMe &rarr;</a>
+          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,{type_color},{type_color}cc);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">Ver en PlanificaMe &rarr;</a>
         </div>'''
         return MailService.send_email(to_email, subject, _base_template(body, type_color),
             f"{creator_name} creó \'{event_title}\' en {calendar_name}")
@@ -464,7 +464,7 @@ class MailService:
           <table width="100%" cellpadding="0" cellspacing="0">{changes_rows}</table>
         </div>
         <div style="text-align:center;">
-          <a href="{settings.FRONTEND_URL}" style="display:inline-block;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">Ver actividad &rarr;</a>
+          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">Ver actividad &rarr;</a>
         </div>'''
         return MailService.send_email(to_email, subject, _base_template(body, "#3b82f6"),
             f"{editor_name} editó \'{event_title}\' en {calendar_name}")
@@ -503,7 +503,7 @@ class MailService:
         </div>
         {note_block}
         <div style="text-align:center;margin-top:24px;">
-          <a href="{settings.FRONTEND_URL}" style="display:inline-block;background:linear-gradient(135deg,{color},{color}cc);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">Ver en PlanificaMe &rarr;</a>
+          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,{color},{color}cc);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">Ver en PlanificaMe &rarr;</a>
         </div>'''
         return MailService.send_email(to_email, subject, _base_template(body, color),
             f"{changed_by} marcó \'{event_title}\' como {label} en {calendar_name}")
@@ -531,7 +531,7 @@ class MailService:
           </table>
         </div>
         <div style="text-align:center;">
-          <a href="{settings.FRONTEND_URL}" style="display:inline-block;background:linear-gradient(135deg,#7c5aff,#10b981);color:white;text-decoration:none;padding:14px 32px;border-radius:8px;font-weight:700;font-size:15px;">
+          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,#7c5aff,#10b981);color:white;text-decoration:none;padding:14px 32px;border-radius:8px;font-weight:700;font-size:15px;">
             Comenzar ahora →
           </a>
         </div>"""

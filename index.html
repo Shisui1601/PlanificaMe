@@ -4131,7 +4131,8 @@ let _drag = { ev:null, startY:0, startX:0, startMinute:0, startDate:null, ghost:
 
 function makeDraggable(block, ev, dateStr){
   // Solo si el usuario puede editar
-  const canEdit = ev.creatorId === ME.id || ev.type === 'team';
+  const isCalendarEditor = ['owner', 'editor'].includes(S.currentCalendarRole);
+  const canEdit = ev.creatorId === ME.id || ev.type === 'team' || (ev.type === 'project' && isCalendarEditor);
   if(!canEdit) return;
 
   block.style.cursor = 'grab';
@@ -4661,9 +4662,11 @@ function showEventDetail(ev){
 
   if(!isDeadlineEv)html+=`<div class="drow"><div class="dico">🔔</div><div><div class="dlbl">Recordatorio</div><div class="dval">${ev.remind===0?'Al momento':ev.remind<60?`${ev.remind} min antes`:ev.remind===60?'1 hora antes':'1 día antes'}</div></div></div>`;
   if(ev.email)html+=`<div class="drow"><div class="dico">✉️</div><div><div class="dlbl">Email</div><div class="dval">${ev.email}</div></div></div>`;
-  const canEdit=ev.creatorId===ME.id||ev.type==='team';
+  const isCalendarEditor=['owner','editor'].includes(S.currentCalendarRole);
+  const canEdit=ev.creatorId===ME.id||ev.type==='team'||(ev.type==='project'&&isCalendarEditor);
   if(ev.type==='personal'&&ev.creatorId!==ME.id)html+=`<div class="perm">🔒 Tarea personal de otro miembro. Solo visualización.</div>`;
   else if(ev.type==='team')html+=`<div class="perm" style="border-color:rgba(106,247,196,.3)">👥 Tarea de equipo — todos pueden colaborar.</div>`;
+  else if(ev.type==='project'&&ev.creatorId!==ME.id)html+=`<div class="perm" style="border-color:rgba(245,158,11,.3)">🎯 Meta compartida — ${isCalendarEditor?'puedes editarla como editor del calendario':'solo visualización'} .</div>`;
 
   // Sección de archivos adjuntos
   html+=`<div id="detFilesSection" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
