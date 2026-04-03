@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
+from contextlib import asynccontextmanager
 from .app.config import settings
 from .app.database import Base, engine
 from .app.routes import users, projects, events, holidays, calendars, files
@@ -22,8 +23,48 @@ logger = logging.getLogger(__name__)
 # Crear tablas
 Base.metadata.create_all(bind=engine)
 
+
+# ════════════════════════════════════════
+# SCHEDULER — APScheduler dentro del proceso uvicorn
+# No requiere Celery worker externo
+# ════════════════════════════════════════
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Inicia y detiene el scheduler de tareas programadas."""
+    try:
+        from apscheduler.schedulers.background import BackgroundScheduler
+        from apscheduler.events import EVENT_JOB_ERROR
+        import pytz
+        from .app.scheduler import run_reminders, run_deadline_check, run_cleanup
+
+        tz = pytz.timezone("America/Santo_Domingo")
+        scheduler = BackgroundScheduler(timezone=tz)
+
+        def on_error(event):
+            if event.exception:
+                logger.error(f"[Scheduler] Error en tarea '{event.job_id}': {event.exception}")
+
+        scheduler.add_listener(on_error, EVENT_JOB_ERROR)
+        scheduler.add_job(run_reminders,     'interval', seconds=60,   id='reminders',  max_instances=1)
+        scheduler.add_job(run_deadline_check,'interval', hours=1,      id='deadlines',  max_instances=1)
+        scheduler.add_job(run_cleanup,       'cron',     hour=2, minute=0, id='cleanup',max_instances=1)
+        scheduler.start()
+        logger.info("🚀 APScheduler iniciado — recordatorios activos cada 60s")
+    except Exception as e:
+        logger.error(f"Error iniciando scheduler: {e}")
+        scheduler = None
+
+    yield
+
+    if scheduler and scheduler.running:
+        scheduler.shutdown(wait=False)
+        logger.info("⏹  APScheduler detenido")
+
+
 # Crear aplicación FastAPI
 app = FastAPI(
+    lifespan=lifespan,
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
     description="Backend API para PlanificaMe - Sistema de Gestión de Tareas y Proyectos"
@@ -83,6 +124,26 @@ async def health_check():
         "service": "PlanificaMe API",
         "version": settings.APP_VERSION
     }
+
+
+@app.get("/api/debug/trigger-reminders", tags=["Debug"])
+async def trigger_reminders_now():
+    """Dispara el chequeo de recordatorios manualmente (para pruebas)."""
+    try:
+        from .app.scheduler import run_reminders
+        import pytz
+        from datetime import datetime
+        tz = pytz.timezone("America/Santo_Domingo")
+        now = datetime.now(tz)
+        run_reminders()
+        return {
+            "status": "executed",
+            "local_time": now.strftime("%Y-%m-%d %H:%M:%S"),
+            "timezone": "America/Santo_Domingo",
+            "message": "Chequeo de recordatorios ejecutado. Revisa los logs de Render para ver el resultado."
+        }
+    except Exception as e:
+        return {"status": "error", "detail": str(e)}
 
 
 @app.get("/api/status", tags=["Health"])

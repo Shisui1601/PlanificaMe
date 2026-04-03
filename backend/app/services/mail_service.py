@@ -72,6 +72,37 @@ def _base_template(content: str, color: str = "#7c5aff") -> str:
 """
 
 
+def _btn(text: str, color: str = "#7c5aff") -> str:
+    """
+    Genera un botón de acción compatible con todos los clientes de correo.
+    Usa tabla HTML (funciona en Outlook, Gmail, Apple Mail, móviles).
+    Incluye URL de respaldo en texto plano por si el botón no responde.
+    """
+    url = settings.FRONTEND_URL
+    return f"""
+        <div style="text-align:center;margin:24px 0 8px;">
+          <table cellspacing="0" cellpadding="0" border="0" style="margin:0 auto;border-collapse:separate;">
+            <tr>
+              <td align="center" bgcolor="{color}"
+                  style="background-color:{color};border-radius:9px;padding:0;mso-padding-alt:0;">
+                <a href="{url}" target="_blank" rel="noopener noreferrer"
+                   style="display:inline-block;padding:13px 32px;color:#ffffff !important;
+                          text-decoration:none !important;font-weight:700;font-size:14px;
+                          font-family:'Segoe UI',Helvetica,Arial,sans-serif;
+                          border-radius:9px;letter-spacing:0.2px;line-height:1.4;">
+                  {text}
+                </a>
+              </td>
+            </tr>
+          </table>
+          <p style="margin:10px 0 0;font-size:11px;color:#8888aa;font-family:Arial,sans-serif;">
+            ¿El botón no abre? &rarr;
+            <a href="{url}" target="_blank" rel="noopener noreferrer"
+               style="color:{color};text-decoration:underline;">{url}</a>
+          </p>
+        </div>"""
+
+
 def _info_row(icon: str, label: str, value: str) -> str:
     return f"""
     <tr>
@@ -153,11 +184,7 @@ class MailService:
             {_info_row("⏰", "Recordatorio", f"{time_label} antes")}
           </table>
         </div>
-        <div style="text-align:center;">
-          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,#7c5aff,#5b3acc);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
-            Ver actividad →
-          </a>
-        </div>"""
+        {_btn("Ver actividad →", "#7c5aff")}"""
 
         return MailService.send_email(
             to_email, subject,
@@ -202,11 +229,7 @@ class MailService:
           </table>
         </div>
         <p style="font-size:14px;color:#44446a;margin-bottom:24px;">{message}</p>
-        <div style="text-align:center;">
-          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,{color},{color}cc);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
-            Actualizar estado →
-          </a>
-        </div>"""
+        {_btn("Actualizar estado →", color)}"""
 
         return MailService.send_email(
             to_email, subject,
@@ -242,11 +265,7 @@ class MailService:
         <p style="font-size:13px;color:#8888aa;margin-bottom:24px;">
           Inicia sesión en PlanificaMe para ver el calendario y las actividades compartidas.
         </p>
-        <div style="text-align:center;">
-          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,#7c5aff,#10b981);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
-            Abrir PlanificaMe →
-          </a>
-        </div>"""
+        {_btn("Abrir PlanificaMe →", "#7c5aff")}"""
 
         return MailService.send_email(
             to_email, subject,
@@ -286,11 +305,7 @@ class MailService:
           <div style="font-size:14px;color:#44446a;margin-top:8px;font-weight:600;">{event_title}</div>
         </div>
         {note_block}
-        <div style="text-align:center;margin-top:24px;">
-          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,{color},{color}cc);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
-            Ver en PlanificaMe →
-          </a>
-        </div>"""
+        {_btn("Ver en PlanificaMe →", color)}"""
 
         return MailService.send_email(
             to_email, subject,
@@ -368,11 +383,7 @@ class MailService:
 
         {overdue_block}
 
-        <div style="text-align:center;margin-top:28px;">
-          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,#7c5aff,#10b981);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
-            Ver mi calendario →
-          </a>
-        </div>"""
+        {_btn("Ver mi calendario →", "#7c5aff")}"""
 
         return MailService.send_email(
             to_email, subject,
@@ -424,9 +435,7 @@ class MailService:
           </table>
           {desc_block}
         </div>
-        <div style="text-align:center;">
-          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,{type_color},{type_color}cc);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">Ver en PlanificaMe &rarr;</a>
-        </div>'''
+        {_btn("Ver en PlanificaMe →", type_color)}'''
         return MailService.send_email(to_email, subject, _base_template(body, type_color),
             f"{creator_name} creó \'{event_title}\' en {calendar_name}")
 
@@ -463,9 +472,7 @@ class MailService:
           <p style="margin:0 0 12px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#8888aa;">Cambios realizados</p>
           <table width="100%" cellpadding="0" cellspacing="0">{changes_rows}</table>
         </div>
-        <div style="text-align:center;">
-          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">Ver actividad &rarr;</a>
-        </div>'''
+        {_btn("Ver actividad →", "#3b82f6")}'''
         return MailService.send_email(to_email, subject, _base_template(body, "#3b82f6"),
             f"{editor_name} editó \'{event_title}\' en {calendar_name}")
 
@@ -502,9 +509,7 @@ class MailService:
           <div style="font-size:12px;color:#8888aa;margin-top:6px;">Actualizado por {changed_by}</div>
         </div>
         {note_block}
-        <div style="text-align:center;margin-top:24px;">
-          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,{color},{color}cc);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">Ver en PlanificaMe &rarr;</a>
-        </div>'''
+        {_btn("Ver en PlanificaMe →", color)}'''
         return MailService.send_email(to_email, subject, _base_template(body, color),
             f"{changed_by} marcó \'{event_title}\' como {label} en {calendar_name}")
 
@@ -530,11 +535,7 @@ class MailService:
             {_info_row("🔔", "Recordatorios", "Recibe avisos por correo antes de cada actividad")}
           </table>
         </div>
-        <div style="text-align:center;">
-          <a href="{settings.FRONTEND_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:linear-gradient(135deg,#7c5aff,#10b981);color:white;text-decoration:none;padding:14px 32px;border-radius:8px;font-weight:700;font-size:15px;">
-            Comenzar ahora →
-          </a>
-        </div>"""
+        {_btn("Comenzar ahora →", "#7c5aff")}"""
 
         return MailService.send_email(
             to_email, subject,
