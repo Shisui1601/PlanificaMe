@@ -297,14 +297,54 @@ body{
   position:sticky;top:0;z-index:30;
 }
 .header-row1{
-  display:flex;align-items:center;gap:10px;
+  display:flex;align-items:center;gap:8px;
   padding:0 20px;height:52px;flex-shrink:0;
-  flex-wrap:nowrap;min-width:0;
+  min-width:0;
 }
+.hdr-left{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.hdr-center{display:flex;align-items:center;gap:6px;flex:1;min-width:0;justify-content:center;}
+.hdr-right{display:flex;align-items:center;gap:4px;flex-shrink:0;}
 .header-row2{
   display:flex;align-items:center;gap:8px;
   padding:0 20px 10px;flex-wrap:wrap;min-width:0;
 }
+/* Hamburger button — hidden on desktop, shown on tablet/mobile */
+.hamburger-btn{
+  display:none;align-items:center;justify-content:center;
+  background:none;border:1px solid var(--border2);border-radius:var(--r-sm);
+  color:var(--text2);cursor:pointer;padding:6px;
+  width:36px;height:36px;flex-shrink:0;
+  transition:all .15s;
+}
+.hamburger-btn:hover{border-color:var(--accent);color:var(--accent-bright);background:var(--accent-soft);}
+.hamburger-icon{
+  display:block;width:18px;height:2px;background:currentColor;border-radius:1px;
+  position:relative;transition:all .25s ease;
+}
+.hamburger-icon::before,.hamburger-icon::after{
+  content:'';display:block;width:18px;height:2px;background:currentColor;
+  border-radius:1px;position:absolute;left:0;transition:all .25s ease;
+}
+.hamburger-icon::before{top:-6px;}
+.hamburger-icon::after{top:6px;}
+/* Animated X state */
+.hamburger-btn.active .hamburger-icon{background:transparent;}
+.hamburger-btn.active .hamburger-icon::before{top:0;transform:rotate(45deg);}
+.hamburger-btn.active .hamburger-icon::after{top:0;transform:rotate(-45deg);}
+/* Icon buttons */
+.icon-btn{padding:5px 10px !important;flex-shrink:0;}
+/* Right panel mobile toggle — hidden on desktop */
+.rp-toggle-mobile{display:none !important;}
+/* Nav buttons inside center */
+.nav-btn{font-size:16px;padding:4px 10px !important;}
+/* Period */
+.period{
+  font-family:'DM Serif Display',serif;font-size:17px;font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  min-width:0;flex-shrink:1;letter-spacing:-.2px;
+}
+/* Search */
+.search-wrap{position:relative;margin-left:auto;flex-shrink:0;}
 
 /* View tabs */
 .vtabs{
@@ -340,16 +380,8 @@ body{
   font-weight:600;transition:all .15s;flex-shrink:0;
 }
 .today-btn:hover{color:var(--accent-bright);border-color:rgba(124,90,255,.45);background:rgba(124,90,255,.07);}
-.period{
-  font-family:'DM Serif Display',serif;font-size:17px;
-  flex-shrink:0;min-width:140px;letter-spacing:-.2px;
-}
-
 /* Filters */
 .filters{display:flex;gap:5px;flex-shrink:0;}
-
-/* Search */
-.search-wrap{position:relative;margin-left:auto;flex-shrink:0;}
 .sinp{
   background:var(--surface2);border:1px solid var(--border2);
   color:var(--text);border-radius:22px;padding:7px 14px 7px 34px;
@@ -971,10 +1003,6 @@ html.light-mode .stats-range input{background:var(--surface);border-color:var(--
   text-transform:uppercase;color:var(--text3);
 }
 
-/* Hide right panel on small screens */
-@media(max-width:1100px){
-  .right-panel{display:none;}
-}
 
 
 /* ══ VIEW TRANSITIONS ══ */
@@ -1241,6 +1269,267 @@ html.light-mode .stats-range input{background:var(--surface);border-color:var(--
 .mention-option:hover,.mention-option.active{background:var(--surface2);}
 .mention-avatar{width:24px;height:24px;border-radius:50%;background:var(--accent);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .mention-tag{color:var(--accent-bright);font-weight:600;}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE SYSTEM — main app
+   (sidebar drawer, header 3-col, mobile optimizations)
+═══════════════════════════════════════════════════════ */
+
+/* ── Overlays (siempre en DOM, ocultos por defecto) ── */
+.sidebar-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.52);backdrop-filter:blur(3px);
+  z-index:89;transition:opacity .28s ease;
+}
+.sidebar-overlay.open{display:block;}
+.rp-mobile-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.52);backdrop-filter:blur(3px);
+  z-index:90;
+}
+.rp-mobile-overlay.open{display:block;}
+
+/* ═══════════════════════════════════════════════════════
+   BREAKPOINT TABLET — ≤ 1100px
+   Sidebar oculto como drawer, right-panel también,
+   hamburger visible en header
+═══════════════════════════════════════════════════════ */
+@media(max-width:1100px){
+
+  /* Mostrar hamburger y botón de historial */
+  .hamburger-btn{display:flex !important;}
+  .rp-toggle-mobile{display:flex !important;}
+
+  /* Ocultar compact button (no aplica en drawer) */
+  #sbCompactBtn{display:none !important;}
+  /* Ocultar toggle interno del right-panel */
+  #rpToggleBtn{display:none !important;}
+
+  /* ── SIDEBAR → drawer desde la izquierda ── */
+  .sidebar{
+    position:fixed !important;
+    left:0;top:0;bottom:0;
+    width:var(--sb) !important;
+    transform:translateX(-100%);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+    z-index:90;
+    box-shadow:6px 0 40px rgba(0,0,0,.45);
+  }
+  .sidebar.open{transform:translateX(0);}
+
+  /* ── RIGHT PANEL → drawer desde la derecha ── */
+  .right-panel{
+    display:flex !important;
+    position:fixed !important;
+    right:0;top:0;bottom:0;
+    width:320px !important;
+    max-width:86vw !important;
+    transform:translateX(102%);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+    z-index:91;
+    box-shadow:-6px 0 40px rgba(0,0,0,.5);
+    flex-direction:column;
+    overflow-y:auto;
+  }
+  .right-panel.mobile-open{transform:translateX(0);}
+
+  /* Header compacto */
+  .period{font-size:15px !important;}
+  .vtab{padding:5px 10px;font-size:11px;}
+  .sinp{width:150px;}
+}
+
+/* ═══════════════════════════════════════════════════════
+   BREAKPOINT MOBILE — ≤ 768px
+   Header reorganizado en 2 filas, táctil
+═══════════════════════════════════════════════════════ */
+@media(max-width:768px){
+  :root{--sb:280px;}
+
+  /* ── HEADER ROW 1 — se divide en 2 sub-filas ── */
+  .header-row1{
+    height:auto;
+    padding:6px 10px 2px;
+    flex-wrap:wrap;
+    gap:4px;
+    min-height:auto;
+  }
+
+  /* Sub-fila A: hamburger + tabs (ancho completo) */
+  .hdr-left{
+    flex-basis:100%;
+    gap:5px;
+    align-items:center;
+  }
+  .hamburger-btn{
+    width:34px;height:34px;padding:5px;flex-shrink:0;
+  }
+  .vtabs{
+    flex:1;
+    gap:1px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .vtabs::-webkit-scrollbar{display:none;}
+  .vtab{
+    flex:1;
+    padding:6px 4px;
+    font-size:11px;
+    min-width:0;
+    white-space:nowrap;
+    text-align:center;
+  }
+
+  /* Sub-fila B: nav + periodo + iconos */
+  .hdr-center{
+    flex:1;
+    min-width:0;
+    justify-content:flex-start;
+    gap:3px;
+  }
+  .nav-btn{
+    padding:4px 8px !important;
+    font-size:14px;
+    min-height:30px;
+  }
+  .today-btn{
+    padding:4px 9px;
+    font-size:11px;
+    min-height:30px;
+  }
+  .period{
+    font-size:12px !important;
+    flex:1;
+    min-width:0;
+  }
+  .hdr-right{gap:2px;}
+  .icon-btn{padding:4px 6px !important;font-size:13px;}
+
+  /* ── HEADER ROW 2 — filtros + búsqueda ── */
+  .header-row2{
+    padding:0 10px 7px;
+    gap:5px;
+    flex-wrap:wrap;
+  }
+  .filters{
+    flex:1;
+    gap:3px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    max-width:100%;
+    flex-wrap:nowrap;
+  }
+  .filters::-webkit-scrollbar{display:none;}
+  .fbadge{
+    padding:3px 8px;
+    font-size:9px;
+    letter-spacing:0;
+    white-space:nowrap;
+  }
+  .search-wrap{
+    flex-basis:100%;
+    min-width:0;
+    margin-left:0 !important;
+  }
+  .sinp{width:100% !important;max-width:none;}
+
+  /* ── RIGHT PANEL más ancho en mobile ── */
+  .right-panel{width:90vw !important;}
+
+  /* ── MODALES → bottom sheet ── */
+  .overlay{align-items:flex-end;padding:0;}
+  .modal{
+    border-radius:20px 20px 0 0 !important;
+    max-height:92vh !important;
+    width:100% !important;
+    max-width:100% !important;
+    margin:0;
+  }
+  .mh{padding:16px 18px 14px;}
+  .mb{padding:14px 18px;}
+  .mf{padding:0 18px 20px;flex-wrap:wrap;gap:8px;}
+  .mf .btn{flex:1;min-width:0;text-align:center;}
+  .frow{grid-template-columns:1fr !important;}
+  .btn{padding:11px 18px;font-size:13px;}
+
+  /* ── Vistas de calendario ── */
+  .evcol{min-width:0;}
+  .evb{font-size:10px;padding:4px 6px;}
+  .evb-title{font-size:10px;}
+  .evb-time{font-size:9px;}
+
+  /* Vista Semana */
+  .tlabels{width:42px;}
+  .tlbl{font-size:9px;padding-right:5px;}
+  .wk-pad{width:42px;}
+  .wk-dh{font-size:9px;padding:6px 1px;}
+  .wk-dname{font-size:8px;letter-spacing:.3px;}
+  .wk-dnum{font-size:13px;margin-top:2px;}
+  .wk-dh.today .wk-dnum{width:26px;height:26px;font-size:12px;}
+
+  /* Vista Mes */
+  .mgrid{grid-auto-rows:minmax(72px,1fr);}
+  .mcell{padding:4px;}
+  .mcday{font-size:11px;margin-bottom:2px;}
+  .mc-ev{font-size:9px;padding:1px 4px;border-radius:3px;}
+  .month-dlbl{padding:7px 2px;font-size:8px;letter-spacing:.3px;}
+
+  /* Vista Agenda */
+  .agenda-wrap{padding:10px 12px;}
+  .agenda-item{padding:8px 10px;}
+  .mini-label{font-size:11px;}
+
+  /* Chat */
+  .chat-panel{
+    width:100% !important;
+    left:0 !important;right:0 !important;
+    bottom:0 !important;
+    border-radius:20px 20px 0 0;
+    height:68vh;
+  }
+  .chat-fab{bottom:20px;right:16px;}
+
+  /* Notificaciones */
+  .nstack{right:8px;left:8px;align-items:stretch;}
+  .notif{min-width:0;width:100%;max-width:none;box-sizing:border-box;}
+  .toast{max-width:90vw;white-space:normal;text-align:center;line-height:1.4;}
+
+  /* Onboarding */
+  .onboard-body{padding:24px 18px 20px;}
+  .onboard-footer{padding:16px 18px;}
+
+  /* Modal búsqueda */
+  .search-modal-overlay{padding-top:0;align-items:flex-end;}
+  .search-modal{width:100%;border-radius:20px 20px 0 0;max-height:85vh;}
+
+  /* Dashboard estadísticas */
+  .stats-modal .modal{max-width:100% !important;width:100% !important;}
+  .stats-kpi-row{grid-template-columns:repeat(3,1fr);}
+  .stats-two-col{grid-template-columns:1fr;}
+  .stats-kpi-num{font-size:22px;}
+  .status-opt{padding:10px 10px;}
+  .so-label{font-size:11px;}
+  #histModalStats{grid-template-columns:repeat(2,1fr) !important;}
+}
+
+/* ═══════════════════════════════════════════════════════
+   BREAKPOINT SMALL MOBILE — ≤ 480px
+═══════════════════════════════════════════════════════ */
+@media(max-width:480px){
+  .vtab{padding:5px 3px;font-size:10px;}
+  .period{font-size:10px !important;}
+  .fbadge{padding:2px 6px;font-size:8px;}
+  .icon-btn{padding:3px 5px !important;font-size:13px;}
+  .mgrid{grid-auto-rows:minmax(55px,1fr);}
+  .month-dlbl{padding:5px 1px;font-size:7px;}
+  .mc-ev{font-size:8px;}
+  .onboard-title{font-size:18px;}
+  .onboard-step-icon{font-size:36px;margin-bottom:12px;}
+  .onboard-body{padding:18px 14px 14px;}
+  .onboard-footer{padding:12px 14px;}
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -1248,11 +1537,8 @@ html.light-mode .stats-range input{background:var(--surface);border-color:var(--
 <body>
 <div class="app">
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-<!-- Tab izquierdo para abrir sidebar en móvil (reemplaza el ☰) -->
-<button class="sb-mobile-tab" id="sbMobileTab" onclick="toggleSidebar()" title="Abrir menú">›</button>
-<!-- Overlay y FAB para el panel derecho (historial) en móvil -->
+<!-- Overlays para paneles móvil -->
 <div class="rp-mobile-overlay" id="rpMobileOverlay" onclick="closeRightPanelMobile()"></div>
-<button class="rp-mobile-tab" id="rpMobileTab" onclick="toggleRightPanelMobile()" title="Historial y estadísticas">‹</button>
 <aside class="sidebar" id="sidebar">
   <div class="logo" style="display:flex;align-items:center;justify-content:space-between;padding-right:12px">
     <h1 class="logo-text">Planifica<span style="-webkit-text-fill-color:inherit">Me</span></h1>
@@ -1349,30 +1635,43 @@ html.light-mode .stats-range input{background:var(--surface);border-color:var(--
 
 <main class="main">
   <header class="header">
-    <!-- Fila 1: navegación + período + tema -->
+    <!-- Fila 1: topbar principal -->
     <div class="header-row1">
-      <div class="vtabs">
-        <button class="vtab active" id="tab-day" onclick="setView('day')">Día</button>
-        <button class="vtab" id="tab-week" onclick="setView('week')">Semana</button>
-        <button class="vtab" id="tab-month" onclick="setView('month')">Mes</button>
-        <button class="vtab" id="tab-agenda" onclick="setView('agenda')">Agenda</button>
+      <!-- IZQUIERDA: hamburger + view tabs -->
+      <div class="hdr-left">
+        <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()" title="Menú">
+          <span class="hamburger-icon"></span>
+        </button>
+        <div class="vtabs">
+          <button class="vtab active" id="tab-day" onclick="setView('day')">Día</button>
+          <button class="vtab" id="tab-week" onclick="setView('week')">Semana</button>
+          <button class="vtab" id="tab-month" onclick="setView('month')">Mes</button>
+          <button class="vtab" id="tab-agenda" onclick="setView('agenda')">Agenda</button>
+        </div>
       </div>
-      <button class="nbtn" onclick="navigate(-1)">‹</button>
-      <button class="today-btn" onclick="goToday()">Hoy</button>
-      <button class="nbtn" onclick="navigate(1)">›</button>
-      <span class="period" id="period" style="font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1"></span>
-      <button class="nbtn" onclick="openStatsModal()" title="Estadísticas" style="padding:5px 10px;flex-shrink:0">📊</button>
-      <button class="nbtn" id="themeToggleBtn" onclick="toggleTheme()" title="Cambiar tema" style="padding:5px 10px;flex-shrink:0">🌓</button>
+      <!-- CENTRO: navegación + periodo -->
+      <div class="hdr-center">
+        <button class="nbtn nav-btn" onclick="navigate(-1)">‹</button>
+        <button class="today-btn" onclick="goToday()">Hoy</button>
+        <button class="nbtn nav-btn" onclick="navigate(1)">›</button>
+        <span class="period" id="period"></span>
+      </div>
+      <!-- DERECHA: acciones -->
+      <div class="hdr-right">
+        <button class="nbtn icon-btn" onclick="openStatsModal()" title="Estadísticas">📊</button>
+        <button class="nbtn icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Cambiar tema">🌓</button>
+        <button class="nbtn icon-btn rp-toggle-mobile" id="rpMobileBtn" onclick="toggleRightPanelMobile()" title="Historial">📋</button>
+      </div>
     </div>
     <!-- Fila 2: filtros + buscador -->
     <div class="header-row2">
-      <div class="filters" style="flex-shrink:0">
+      <div class="filters">
         <div class="fbadge personal on" id="f-personal" onclick="toggleFilter('personal')">● Personal</div>
         <div class="fbadge team on" id="f-team" onclick="toggleFilter('team')">● Equipo</div>
         <div class="fbadge project-f on" id="f-project" onclick="toggleFilter('project')">● Meta</div>
         <div class="fbadge holiday-f on" id="f-holiday" onclick="toggleFilter('holiday')">🇩🇴 Festivos</div>
       </div>
-      <div class="search-wrap" style="margin-left:auto">
+      <div class="search-wrap">
         <span class="sico">🔍</span>
         <input class="sinp" id="sinp" type="text" placeholder="Buscar... (Ctrl+K)" onclick="openSearchModal()" readonly autocomplete="off" style="cursor:pointer">
         <div class="sresults" id="sresults"></div>
@@ -4941,39 +5240,37 @@ function switchSession(){
 function toggleSidebar(){
   const sb  = document.getElementById('sidebar');
   const ov  = document.getElementById('sidebarOverlay');
-  const tab = document.getElementById('sbMobileTab');
+  const btn = document.getElementById('hamburgerBtn');
   const isOpen = sb.classList.contains('open');
   sb.classList.toggle('open', !isOpen);
   ov.classList.toggle('open', !isOpen);
-  // Ocultar el tab lateral cuando el sidebar está abierto
-  if(tab) tab.classList.toggle('hide', !isOpen);
+  if(btn) btn.classList.toggle('active', !isOpen);
 }
 function closeSidebar(){
-  const tab = document.getElementById('sbMobileTab');
+  const btn = document.getElementById('hamburgerBtn');
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sidebarOverlay').classList.remove('open');
-  // Mostrar el tab lateral de nuevo cuando el sidebar se cierra
-  if(tab) tab.classList.remove('hide');
+  if(btn) btn.classList.remove('active');
 }
 
 // ── Panel derecho en móvil ──
 function toggleRightPanelMobile(){
   const rp  = document.getElementById('rightPanel');
   const ov  = document.getElementById('rpMobileOverlay');
-  const tab = document.getElementById('rpMobileTab');
+  const btn = document.getElementById('rpMobileBtn');
   if(!rp) return;
   const isOpen = rp.classList.contains('mobile-open');
   rp.classList.toggle('mobile-open', !isOpen);
   ov.classList.toggle('open', !isOpen);
-  if(tab) tab.classList.toggle('hide', !isOpen);
+  if(btn) btn.textContent = isOpen ? '📋' : '✕';
 }
 function closeRightPanelMobile(){
   const rp  = document.getElementById('rightPanel');
   const ov  = document.getElementById('rpMobileOverlay');
-  const tab = document.getElementById('rpMobileTab');
+  const btn = document.getElementById('rpMobileBtn');
   if(rp) rp.classList.remove('mobile-open');
   if(ov) ov.classList.remove('open');
-  if(tab) tab.classList.remove('hide');
+  if(btn) btn.textContent = '📋';
 }
 // Close sidebar when navigating on mobile
 function setView(v){
@@ -5449,178 +5746,155 @@ function exportHistorialPDF(){
     .footer{text-align:center;margin-top:24px;font-size:11px;color:#aaa;padding:16px;}
   
 /* ══════════════════════════════════════════
-   MOBILE RESPONSIVE
+   RESPONSIVE SYSTEM
 ══════════════════════════════════════════ */
+/* Overlays — siempre disponibles pero ocultos */
 .sidebar-overlay{
-  display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);
-  z-index:89;backdrop-filter:blur(2px);
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);
+  z-index:89;backdrop-filter:blur(3px);
+  transition:opacity .28s ease;
 }
 .sidebar-overlay.open{display:block;}
-
-/* ── Elementos de navegación móvil (base, ocultos en desktop) ── */
-.sb-mobile-tab{display:none;}
-.rp-mobile-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:90;backdrop-filter:blur(2px);}
+.rp-mobile-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);
+  z-index:90;backdrop-filter:blur(3px);
+}
 .rp-mobile-overlay.open{display:block;}
-.rp-mobile-tab{display:none;}
 
 /* ═══════════════════════════════════════════════════
-   MOBILE RESPONSIVE — completo y mejorado
+   BREAKPOINT: TABLET (768px – 1100px)
+   Sidebar oculto como drawer, right panel oculto,
+   header compacto pero en una sola línea
 ═══════════════════════════════════════════════════ */
-
-@media(max-width:768px){
-  :root{--sb:280px;}
-
-  /* ── Sidebar slide-over ── */
-  /* Ocultar botón compactar en móvil (no aplica cuando sidebar es slide-over) */
+@media(max-width:1100px){
+  /* Mostrar hamburger */
+  .hamburger-btn{display:flex;}
+  /* Mostrar botón historial en header */
+  .rp-toggle-mobile{display:flex !important;}
+  /* Ocultar compact button del sidebar */
   #sbCompactBtn{display:none !important;}
 
-  /* Tab lateral izquierdo que reemplaza el ☰ */
-  .sb-mobile-tab{
-    display:flex;align-items:center;justify-content:center;
-    position:fixed;left:0;top:50%;transform:translateY(-50%);
-    background:var(--surface);border:1px solid var(--border2);border-left:none;
-    border-radius:0 8px 8px 0;width:20px;height:54px;
-    z-index:88;cursor:pointer;color:var(--text3);font-size:14px;
-    box-shadow:3px 0 10px rgba(0,0,0,.25);transition:all .2s;padding:0;
-  }
-  .sb-mobile-tab.hide{display:none !important;}
-
-  /* Panel derecho — slide-in desde la derecha en móvil */
-  .right-panel{
-    display:flex !important;
-    position:fixed !important;
-    right:0;top:0;bottom:0;
-    width:88vw !important;
-    transform:translateX(102%);
-    transition:transform .28s cubic-bezier(.4,0,.2,1);
-    z-index:91;
-    box-shadow:-4px 0 32px rgba(0,0,0,.5);
-    flex-direction:column;overflow-y:auto;
-  }
-  .right-panel.mobile-open{transform:translateX(0);}
-
-  /* Tab lateral derecho para abrir historial (espejo del izquierdo) */
-  .rp-mobile-tab{
-    display:flex;align-items:center;justify-content:center;
-    position:fixed;right:0;top:50%;transform:translateY(-50%);
-    background:var(--surface);border:1px solid var(--border2);border-right:none;
-    border-radius:8px 0 0 8px;width:20px;height:54px;
-    z-index:88;cursor:pointer;color:var(--text3);font-size:14px;
-    box-shadow:-3px 0 10px rgba(0,0,0,.25);transition:all .2s;padding:0;
-  }
-  .rp-mobile-tab.hide{display:none !important;}
-
+  /* Sidebar → drawer fijo */
   .sidebar{
     position:fixed;left:0;top:0;bottom:0;
     width:var(--sb) !important;
     transform:translateX(-100%);
-    transition:transform .28s cubic-bezier(.4,0,.2,1);
-    z-index:90;box-shadow:4px 0 32px rgba(0,0,0,.4);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+    z-index:90;
+    box-shadow:4px 0 32px rgba(0,0,0,.4);
   }
   .sidebar.open{transform:translateX(0);}
 
-  /* ── Header: reorganizar en sub-filas ── */
-  /* Fila A: vtabs (Día, Semana, Mes, Agenda) a ancho completo */
-  /* Fila B: ‹ Hoy › | periodo | 📊 🌓 */
-  .header-row1{
-    padding:6px 8px 0;
-    gap:3px;
-    height:auto;
-    min-height:auto;
-    flex-wrap:wrap;
-    align-items:center;
+  /* Right panel → drawer desde la derecha */
+  .right-panel{
+    display:flex !important;
+    position:fixed !important;
+    right:0;top:0;bottom:0;
+    width:320px !important;max-width:85vw !important;
+    transform:translateX(102%);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+    z-index:91;
+    box-shadow:-4px 0 32px rgba(0,0,0,.5);
+    flex-direction:column;overflow-y:auto;
   }
-  /* Los vtabs van primero (arriba) y ocupan toda la fila */
-  .vtabs{
-    order:-1;
+  .right-panel.compact{width:320px !important;padding:16px 14px !important;border-left:1px solid var(--border);}
+  .right-panel.compact > *:not(#rpToggleBtn){display:flex;}
+  .right-panel.mobile-open{transform:translateX(0);}
+  /* Ocultar toggle interno del right panel (se usa el del header) */
+  #rpToggleBtn{display:none !important;}
+
+  /* Header: periodo más compacto */
+  .period{font-size:15px;}
+  .vtab{padding:5px 10px;font-size:11px;}
+  .sinp{width:150px;}
+}
+
+/* ═══════════════════════════════════════════════════
+   BREAKPOINT: MOBILE (< 768px)
+   Header reorganizado en 2 filas,
+   todo optimizado para táctil
+═══════════════════════════════════════════════════ */
+@media(max-width:768px){
+  :root{--sb:280px;}
+
+  /* ── Header row 1: se divide en sub-filas ── */
+  .header-row1{
+    height:auto;
+    padding:8px 10px 4px;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  /* Izquierda: hamburger + tabs en primera sub-fila */
+  .hdr-left{
     flex-basis:100%;
-    gap:2px;
-    padding:0 0 4px;
-    overflow-x:auto;
+    gap:6px;
+  }
+  .hamburger-btn{width:34px;height:34px;padding:5px;}
+  .vtabs{
+    flex:1;gap:1px;overflow-x:auto;
     -webkit-overflow-scrolling:touch;
     scrollbar-width:none;
-    justify-content:stretch;
   }
   .vtabs::-webkit-scrollbar{display:none;}
   .vtab{
-    flex:1;
-    padding:7px 4px;
-    font-size:11px;
-    min-width:50px;
-    white-space:nowrap;
-    text-align:center;
+    flex:1;padding:6px 4px;font-size:11px;
+    min-width:0;white-space:nowrap;text-align:center;
   }
-  /* Navegación: ‹ Hoy › ocupa menos */
-  .nbtn{min-height:34px;padding:5px 8px;font-size:14px;}
-  .today-btn{min-height:34px;padding:5px 10px;font-size:11px;}
-  /* Periodo más compacto */
-  .period{
-    font-size:13px !important;
-    min-width:0 !important;
-    flex:1;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    font-family:'DM Serif Display',serif;
+  /* Centro: nav + periodo en segunda sub-fila */
+  .hdr-center{
+    flex:1;min-width:0;justify-content:flex-start;gap:4px;
   }
+  .nav-btn{padding:4px 8px !important;font-size:14px;min-height:32px;}
+  .today-btn{padding:4px 10px;font-size:11px;min-height:32px;}
+  .period{font-size:13px !important;flex:1;min-width:0;}
+  /* Derecha: iconos */
+  .hdr-right{gap:3px;}
+  .icon-btn{padding:4px 7px !important;font-size:14px;}
 
   /* ── Header row 2: filtros + búsqueda ── */
   .header-row2{
-    padding:0 8px 6px;
-    gap:4px;
+    padding:0 10px 8px;
+    gap:6px;
     flex-wrap:wrap;
-    overflow:visible;
   }
   .filters{
-    display:flex;
-    gap:3px;
-    flex-shrink:1;
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-    max-width:100%;
-    padding-bottom:2px;
-    flex-wrap:nowrap;
+    gap:3px;flex-shrink:1;
+    overflow-x:auto;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;max-width:100%;flex-wrap:nowrap;
   }
   .filters::-webkit-scrollbar{display:none;}
-  .fbadge{padding:3px 7px;font-size:9px;letter-spacing:0;white-space:nowrap;}
+  .fbadge{padding:3px 8px;font-size:9px;letter-spacing:0;white-space:nowrap;}
   .search-wrap{flex-basis:100%;min-width:0;margin-left:0 !important;}
   .sinp{width:100% !important;max-width:none;}
 
-  /* ── Modales: pantalla completa desde abajo ── */
+  /* ── Right panel: más ancho en mobile ── */
+  .right-panel{width:88vw !important;}
+
+  /* ── Modales: bottom sheet ── */
   .overlay{align-items:flex-end;padding:0;}
   .modal{
     border-radius:20px 20px 0 0 !important;
     max-height:92vh !important;
-    width:100% !important;
-    max-width:100% !important;
-    margin:0;
+    width:100% !important;max-width:100% !important;margin:0;
   }
-  /* Cabecera y cuerpo con menos padding */
   .mh{padding:16px 18px 14px;}
   .mb{padding:14px 18px;}
-  .mf{
-    padding:0 18px 20px;
-    flex-wrap:wrap;
-    gap:8px;
-  }
+  .mf{padding:0 18px 20px;flex-wrap:wrap;gap:8px;}
   .mf .btn{flex:1;min-width:0;text-align:center;}
 
   /* Formularios en columna única */
   .frow{grid-template-columns:1fr !important;}
 
-  /* Botones con mayor área táctil */
-  .nbtn{min-height:38px;padding:7px 12px;}
-  .today-btn{min-height:38px;}
+  /* Botones táctiles */
   .btn{padding:11px 18px;font-size:13px;}
 
-  /* ── Vistas de calendario: día y semana ── */
+  /* ── Vistas de calendario ── */
   .evcol{min-width:0;}
   .evb{font-size:10px;padding:4px 6px;}
   .evb-title{font-size:10px;}
   .evb-time{font-size:9px;}
 
-  /* Semana — labels de hora más angostos */
+  /* Semana */
   .tlabels{width:42px;}
   .tlbl{font-size:9px;padding-right:5px;}
   .wk-pad{width:42px;}
@@ -5629,7 +5903,7 @@ function exportHistorialPDF(){
   .wk-dnum{font-size:13px;margin-top:2px;}
   .wk-dh.today .wk-dnum{width:26px;height:26px;font-size:12px;}
 
-  /* Mes — celdas más pequeñas pero usables */
+  /* Mes */
   .mgrid{grid-auto-rows:minmax(72px,1fr);}
   .mcell{padding:4px;}
   .mcday{font-size:11px;margin-bottom:2px;}
@@ -5639,72 +5913,51 @@ function exportHistorialPDF(){
   /* Agenda */
   .agenda-wrap{padding:10px 12px;}
   .agenda-item{padding:8px 10px;}
-
-  /* Mini calendario */
   .mini-label{font-size:11px;}
 
-  /* ── Chat panel: ancho completo ── */
+  /* Chat panel */
   .chat-panel{
-    width:100% !important;
-    left:0 !important;right:0 !important;
-    bottom:0 !important;
-    border-radius:20px 20px 0 0;
-    height:68vh;
+    width:100% !important;left:0 !important;right:0 !important;
+    bottom:0 !important;border-radius:20px 20px 0 0;height:68vh;
   }
   .chat-fab{bottom:20px;right:16px;}
 
-  /* ── Notificaciones: ancho completo ── */
+  /* Notificaciones */
   .nstack{right:8px;left:8px;align-items:stretch;}
-  .notif{
-    min-width:0;
-    width:100%;
-    max-width:none;
-    box-sizing:border-box;
-  }
+  .notif{min-width:0;width:100%;max-width:none;box-sizing:border-box;}
 
-  /* Toast centrado */
+  /* Toast */
   .toast{max-width:90vw;white-space:normal;text-align:center;line-height:1.4;}
 
-  /* ── Onboarding ── */
+  /* Onboarding */
   .onboard-body{padding:24px 18px 20px;}
   .onboard-footer{padding:16px 18px;}
 
-  /* ── Modal de búsqueda ── */
+  /* Búsqueda */
   .search-modal-overlay{padding-top:0;align-items:flex-end;}
-  .search-modal{
-    width:100%;
-    border-radius:20px 20px 0 0;
-    max-height:85vh;
-  }
+  .search-modal{width:100%;border-radius:20px 20px 0 0;max-height:85vh;}
 
-  /* ── Modal de estadísticas ── */
+  /* Estadísticas */
   .stats-modal .modal{max-width:100% !important;width:100% !important;}
   .stats-kpi-row{grid-template-columns:repeat(3,1fr);}
   .stats-two-col{grid-template-columns:1fr;}
   .stats-kpi-num{font-size:22px;}
-
-  /* ── Status options en detalle de tarea ── */
   .status-opt{padding:10px 10px;}
   .so-label{font-size:11px;}
-
-  /* ── Historial modal stats ── */
   #histModalStats{grid-template-columns:repeat(2,1fr) !important;}
 }
 
+/* ═══════════════════════════════════════════════════
+   BREAKPOINT: SMALL MOBILE (< 480px)
+═══════════════════════════════════════════════════ */
 @media(max-width:480px){
-  /* Tabs aún más compactos */
-  .vtab{padding:6px 5px;font-size:10px;min-width:50px;}
-  /* Periodo muy compacto */
-  .period{font-size:12px !important;}
-  /* Badges más pequeños */
+  .vtab{padding:5px 3px;font-size:10px;}
+  .period{font-size:11px !important;}
   .fbadge{padding:2px 6px;font-size:8px;}
-
-  /* Celdas de mes */
+  .icon-btn{padding:3px 5px !important;font-size:13px;}
   .mgrid{grid-auto-rows:minmax(55px,1fr);}
   .month-dlbl{padding:5px 1px;font-size:7px;}
   .mc-ev{font-size:8px;}
-
-  /* Onboarding muy pequeño */
   .onboard-title{font-size:18px;}
   .onboard-step-icon{font-size:36px;margin-bottom:12px;}
   .onboard-body{padding:18px 14px 14px;}
