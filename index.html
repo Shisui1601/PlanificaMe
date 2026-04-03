@@ -3488,20 +3488,21 @@ function renderDay(container){
     evCol.appendChild(hb);
   }
 
-  // Now line
+  // Now line — usa PX/60 para alinear con la grilla de 64px/hora
   if(isToday(S.cur)){
     const now=new Date();const mins=now.getHours()*60+now.getMinutes();
-    const line=document.createElement('div');line.className='now-line';line.style.top=`${mins}px`;
-    line.innerHTML=`<div style="position:relative"><div class="now-dot"></div><div class="now-bar"></div></div>`;
+    const line=document.createElement('div');line.className='now-line';
+    line.style.top=`${Math.round(mins*PX/60)}px`;
+    line.innerHTML=`<div style="position:relative"><div class="now-dot"></div><div class="now-bar"></div><span style="position:absolute;left:8px;top:-8px;font-size:9px;color:var(--accent);font-weight:700;font-family:'Space Mono',monospace">${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}</span></div>`;
     evCol.appendChild(line);
   }
 
-  // Events — absolute positioned by time
+  // Events — absolute positioned by time (PX/60 = pixels per minute)
   const evs=filtered().filter(e=>e.date===ds);
   const placed=layoutEvs(evs);
   placed.forEach(({ev,col,ncols})=>{
-    const topPx=t2m(ev.time);           // 1px = 1 minute (PX=60 means 60px/hour = 1px/min)
-    const heightPx=Math.max(ev.dur,18);
+    const topPx=Math.round(t2m(ev.time)*PX/60);
+    const heightPx=Math.max(Math.round(ev.dur*PX/60),18);
     const colW=100/ncols;
     const block=document.createElement('div');
     block.className=`evb ${ev.type}${ev.isDeadline?' deadline-ev':''}${ev.status?' status-'+ev.status:''}`;
@@ -3631,19 +3632,20 @@ function renderWeek(container){
       col.appendChild(hb);
     }
 
-    // Now line
+    // Now line — usa PX/60 para alinear con la grilla de 64px/hora
     if(isToday(dt)){
       const now=new Date();const mins=now.getHours()*60+now.getMinutes();
-      const line=document.createElement('div');line.className='now-line';line.style.top=`${mins}px`;
+      const line=document.createElement('div');line.className='now-line';
+      line.style.top=`${Math.round(mins*PX/60)}px`;
       line.innerHTML=`<div style="position:relative"><div class="now-dot"></div><div class="now-bar"></div></div>`;
       col.appendChild(line);
     }
 
-    // Events for this day — absolute positioned
+    // Events for this day — absolute positioned (PX/60 = pixels per minute)
     const evs=filtered().filter(e=>e.date===dk(dt));
     layoutEvs(evs).forEach(({ev,col:c,ncols})=>{
-      const top=t2m(ev.time);
-      const h=Math.max(ev.dur,15);
+      const top=Math.round(t2m(ev.time)*PX/60);
+      const h=Math.max(Math.round(ev.dur*PX/60),15);
       const cw=100/ncols;
       const blk=document.createElement('div');
       blk.className=`evb ${ev.type}${ev.isDeadline?' deadline-ev':''}${ev.status?' status-'+ev.status:''}`;
@@ -6394,6 +6396,8 @@ async function pollForChanges(){
     const data = await res.json();
     if(!data.changes || !data.changes.length) return;
 
+    let needReload = false;
+
     // Procesar cada cambio
     for(const change of data.changes){
       const cal = S.calendars.find(c=>c.id===change.calendar_id);
@@ -6407,13 +6411,14 @@ async function pollForChanges(){
         `"${change.title}" en ${calName}`
       );
 
-      // Actualizar S.events localmente si el evento ya existe
-      const existingIdx = S.events.findIndex(e=>e.id===change.id);
-      if(existingIdx === -1){
-        // Evento nuevo — recargar datos
-        await loadDataFromAPI();
-        render();
-      }
+      // Siempre recargar — tanto para eventos nuevos como para actualizaciones
+      needReload = true;
+    }
+
+    // Recargar datos y re-renderizar una sola vez (no en cada cambio del loop)
+    if(needReload){
+      await loadDataFromAPI();
+      render();
     }
 
   } catch(err){

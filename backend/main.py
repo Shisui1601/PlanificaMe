@@ -128,22 +128,61 @@ async def health_check():
 
 @app.get("/api/debug/trigger-reminders", tags=["Debug"])
 async def trigger_reminders_now():
-    """Dispara el chequeo de recordatorios manualmente (para pruebas)."""
+    """Dispara el chequeo de recordatorios manualmente y muestra diagnóstico."""
     try:
-        from .app.scheduler import run_reminders
         import pytz
         from datetime import datetime
+        from .app.database import SessionLocal, Event
+        from .app.utils.helpers import time_to_minutes
+
         tz = pytz.timezone("America/Santo_Domingo")
         now = datetime.now(tz)
+        today = now.strftime("%Y-%m-%d")
+        current_minutes = now.hour * 60 + now.minute
+
+        # Diagnosticar eventos candidatos ANTES de ejecutar
+        db = SessionLocal()
+        try:
+            candidates = db.query(Event).filter(
+                Event.date == today,
+                Event.email != None,
+                Event.email != "",
+                Event.reminder_sent == False,
+            ).all()
+            diag = []
+            for ev in candidates:
+                em = time_to_minutes(ev.time) if ev.time else None
+                rt = em - ev.reminder if em is not None and ev.reminder is not None else None
+                diff = abs(current_minutes - rt) if rt is not None else None
+                diag.append({
+                    "id": ev.id, "title": ev.title,
+                    "time": ev.time, "reminder_min": ev.reminder,
+                    "email": ev.email,
+                    "event_minutes": em, "reminder_fires_at": rt,
+                    "current_minutes": current_minutes,
+                    "diff_minutes": diff,
+                    "would_fire": diff is not None and diff <= 1
+                })
+        finally:
+            db.close()
+
+        # Ejecutar el recordatorio
+        from .app.scheduler import run_reminders
         run_reminders()
+
         return {
             "status": "executed",
             "local_time": now.strftime("%Y-%m-%d %H:%M:%S"),
+            "current_minutes": current_minutes,
             "timezone": "America/Santo_Domingo",
-            "message": "Chequeo de recordatorios ejecutado. Revisa los logs de Render para ver el resultado."
+            "today": today,
+            "candidates_today": len(diag),
+            "events": diag,
+            "message": "Revisa los logs de Render y los eventos listados arriba para diagnosticar."
         }
     except Exception as e:
-        return {"status": "error", "detail": str(e)}
+        import traceback
+        return {"status": "error", "detail": str(e), "trace": traceback.format_exc()}
 
 
 @app.get("/api/status", tags=["Health"])
