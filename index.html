@@ -1849,9 +1849,16 @@ html.light-mode .stats-range input{background:var(--surface);border-color:var(--
           </select>
         </div>
       </div><br>
-      <div class="fg">
-        <label class="flbl">Email para notificaciones</label>
-        <input class="finp" id="tEmail" type="email" placeholder="correo@ejemplo.com">
+      <div class="fg" id="tEmailsGroup">
+        <label class="flbl">📧 Correos para notificaciones</label>
+        <div id="tEmailsList"></div>
+        <button type="button" onclick="addEmailField()"
+          style="margin-top:6px;background:none;border:1px dashed var(--border2);color:var(--text3);border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;width:100%;transition:all .15s;font-family:var(--font)"
+          onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+          onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text3)'">
+          + Agregar otro correo
+        </button>
+        <div style="font-size:10px;color:var(--text3);margin-top:5px">💡 El primer correo se usa también para recordatorios automáticos.</div>
       </div>
       <div class="fg" id="tColorG" style="display:none">
         <label class="flbl">Color del proyecto</label>
@@ -3637,7 +3644,7 @@ function openTaskModal(date,time){
   S.editId=null;
   document.getElementById('taskModalTitle').textContent='Nueva Tarea';
   document.getElementById('btnDel').style.display='none';
-  document.getElementById('tTitle').value='';document.getElementById('tDesc').value='';document.getElementById('tEmail').value='';
+  document.getElementById('tTitle').value='';document.getElementById('tDesc').value='';renderEmailFields(['']);
   document.getElementById('tDur').value='60';document.getElementById('tRemind').value='15';
   document.getElementById('tDate').value=date||dk(S.cur);
   document.getElementById('tDeadlineDate').value='';
@@ -3677,7 +3684,7 @@ function openProjModal(){
   S.editId=null;
   document.getElementById('taskModalTitle').textContent='Nuevo Proyecto Meta';
   document.getElementById('btnDel').style.display='none';
-  document.getElementById('tTitle').value='';document.getElementById('tDesc').value='';document.getElementById('tEmail').value='';
+  document.getElementById('tTitle').value='';document.getElementById('tDesc').value='';renderEmailFields(['']);
   document.getElementById('tDate').value=dk(S.cur);
   document.getElementById('tDeadlineDate').value='';
   genTimeOpts();
@@ -3695,6 +3702,44 @@ function openProjModal(){
   }
   openModal('taskModal');
 }
+// ── Múltiples emails de notificación ──
+function renderEmailFields(emailsArray){
+  const list = document.getElementById('tEmailsList');
+  if(!list) return;
+  list.innerHTML = '';
+  const arr = (emailsArray && emailsArray.length) ? emailsArray : [''];
+  arr.forEach((em, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:6px;margin-bottom:6px;align-items:center';
+    row.innerHTML = `<input class="finp" type="email" placeholder="correo@ejemplo.com" value="${em||''}" style="flex:1">`
+      + (i > 0 ? `<button type="button" onclick="removeEmailRow(this)"
+          style="background:none;border:1px solid var(--border2);color:var(--danger);border-radius:6px;padding:5px 10px;cursor:pointer;flex-shrink:0;font-size:15px;line-height:1">✕</button>` : '');
+    list.appendChild(row);
+  });
+}
+function addEmailField(){
+  const list = document.getElementById('tEmailsList');
+  if(!list) return;
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;gap:6px;margin-bottom:6px;align-items:center';
+  row.innerHTML = `<input class="finp" type="email" placeholder="correo@ejemplo.com" style="flex:1">`
+    + `<button type="button" onclick="removeEmailRow(this)"
+        style="background:none;border:1px solid var(--border2);color:var(--danger);border-radius:6px;padding:5px 10px;cursor:pointer;flex-shrink:0;font-size:15px;line-height:1">✕</button>`;
+  list.appendChild(row);
+  row.querySelector('input').focus();
+}
+function removeEmailRow(btn){ btn.closest('div').remove(); }
+function getEmailsValue(){
+  const list = document.getElementById('tEmailsList');
+  if(!list) return '';
+  const emails = [];
+  list.querySelectorAll('input[type="email"]').forEach(inp => {
+    const v = inp.value.trim();
+    if(v) emails.push(v);
+  });
+  return emails.join(',');
+}
+
 function saveTask(){
   const title=document.getElementById('tTitle').value.trim();
   if(!title){toast('⚠️ El título es requerido');return;}
@@ -3724,7 +3769,7 @@ function saveTask(){
   const dur=parseInt(document.getElementById('tDur').value);
   const remind=parseInt(document.getElementById('tRemind').value);
   const desc=document.getElementById('tDesc').value;
-  const email=document.getElementById('tEmail').value;
+  const email=getEmailsValue();
   const projId=type==='project'?'':document.getElementById('tProj').value;
   const color=document.getElementById('tColor').value;
   const deadlineDate=document.getElementById('tDeadlineDate').value;
@@ -3871,7 +3916,7 @@ function editEvent(ev){
   document.getElementById('tTitle').value=ev.title.replace(/^🎯 /,'');
   document.getElementById('tDesc').value=ev.desc||'';
   document.getElementById('tDate').value=ev.date;
-  document.getElementById('tEmail').value=ev.email||'';
+  renderEmailFields(ev.email ? ev.email.split(',').map(e=>e.trim()) : ['']);
   document.getElementById('tDur').value=ev.dur;
   document.getElementById('tRemind').value=ev.remind;
   document.getElementById('tDeadlineDate').value=ev.deadlineDate||'';
@@ -4636,16 +4681,17 @@ async function loadDataFromAPI(){
 // ═══════════════════════════════════
 // SESIÓN CON JWT
 // ═══════════════════════════════════
+// NOTA: token y sesión se guardan en sessionStorage (aislado por pestaña),
+// así cada pestaña puede tener un usuario diferente sin interferir con las demás.
 function saveSession(){
-  localStorage.setItem('planificame_session', JSON.stringify({
+  sessionStorage.setItem('planificame_session', JSON.stringify({
     id: ME.id, name: ME.name, email: ME.email, role: ME.role
   }));
-  // El token ya está en localStorage por separado como 'planificame_token'
 }
 
 function restoreSession(){
-  const token = localStorage.getItem('planificame_token');
-  const session = localStorage.getItem('planificame_session');
+  const token = sessionStorage.getItem('planificame_token');
+  const session = sessionStorage.getItem('planificame_session');
   if(token && session){
     try {
       const user = JSON.parse(session);
@@ -4659,7 +4705,7 @@ function restoreSession(){
 
 // Token para incluir en cada petición
 function getAuthHeaders(){
-  const token = localStorage.getItem('planificame_token');
+  const token = sessionStorage.getItem('planificame_token');
   return token
     ? {'Content-Type':'application/json','Authorization':`Bearer ${token}`}
     : {'Content-Type':'application/json'};
@@ -4725,7 +4771,7 @@ function showAuthError(id, msg){
 
 // ─── Flujo después de login/registro exitoso ───────────────
 async function onAuthSuccess(userData, token){
-  localStorage.setItem('planificame_token', token);
+  sessionStorage.setItem('planificame_token', token);
   ME.id = userData.id; ME.name = userData.name;
   ME.email = userData.email; ME.role = userData.role;
   ME.color = ME.color || 'var(--accent)';
@@ -4865,8 +4911,8 @@ function openUserMenu(){
 function switchSession(){
   stopPolling();
   closeModal('userMenuModal');
-  localStorage.removeItem('planificame_session');
-  localStorage.removeItem('planificame_token');
+  sessionStorage.removeItem('planificame_session');
+  sessionStorage.removeItem('planificame_token');
   localStorage.removeItem('planificame_calendar');
   ME.id = null; ME.name = 'Usuario'; ME.email = ''; ME.role = 'user';
   S.events = []; S.projects = []; S.calendars = []; S.users = [];
@@ -4954,8 +5000,8 @@ function confirmLogout(){
 // Logout del usuario
 function logoutUser(){
   stopPolling();
-  localStorage.removeItem('planificame_session');
-  localStorage.removeItem('planificame_token');
+  sessionStorage.removeItem('planificame_session');
+  sessionStorage.removeItem('planificame_token');
   localStorage.removeItem('planificame_calendar');
   ME.id = null; ME.name = 'Usuario'; ME.email = ''; ME.role = 'user'; ME.color = '#7c5aff';
   S.events = []; S.projects = []; S.calendars = []; S.users = [];
@@ -6350,7 +6396,7 @@ function applyTemplate(id){
   setTimeout(()=>{
     document.getElementById('tTitle').value = t.title;
     document.getElementById('tDesc').value = t.description || '';
-    document.getElementById('tEmail').value = t.email || '';
+    renderEmailFields(t.email ? t.email.split(',').map(e=>e.trim()) : ['']);
     document.getElementById('tDur').value = t.dur || t.duration;
     document.getElementById('tRemind').value = t.remind || t.reminder;
     selType(t.type || 'personal');
@@ -6368,7 +6414,7 @@ async function saveCurrentAsTemplate(){
   const dur = parseInt(document.getElementById('tDur')?.value)||60;
   const remind = parseInt(document.getElementById('tRemind')?.value)||15;
   const desc = document.getElementById('tDesc')?.value||'';
-  const email = document.getElementById('tEmail')?.value||'';
+  const email = getEmailsValue();
   const color = document.getElementById('tColor')?.value||null;
   try {
     const r = await fetch(`${API_URL}/templates`, {method:'POST', headers:{'Content-Type':'application/json'},

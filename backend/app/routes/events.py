@@ -15,29 +15,48 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/events", tags=["events"])
 
 
-def _get_member_emails(db, calendar_id: str, exclude_id: str = None) -> list:
-    """Retorna lista de (email, name) de miembros del calendario."""
-    rows = db.query(CalendarMember).filter(CalendarMember.calendar_id == calendar_id).all()
-    result = []
-    for m in rows:
-        u = db.query(User).filter(User.id == m.user_id).first()
-        if u and u.email and u.id != exclude_id:
-            result.append((u.email, u.name or "Miembro"))
-    return result
+def _get_all_recipients(db, event, actor_id: str = None) -> list:
+    """
+    Retorna lista de (email, name) únicos para notificar sobre este evento.
+    Incluye: creador del evento + miembros del calendario (si aplica) + emails extra del evento.
+    No excluye a nadie — el creador/editor también recibe el correo.
+    """
+    recipients = {}
+
+    # 1. Siempre incluir al creador del evento
+    creator = db.query(User).filter(User.id == event.creator_id).first()
+    if creator and creator.email:
+        recipients[creator.email] = creator.name or "Usuario"
+
+    # 2. Para actividades de equipo/meta en un calendario: incluir TODOS los miembros
+    if event.calendar_id and event.type != "personal":
+        rows = db.query(CalendarMember).filter(
+            CalendarMember.calendar_id == event.calendar_id
+        ).all()
+        for m in rows:
+            u = db.query(User).filter(User.id == m.user_id).first()
+            if u and u.email:
+                recipients[u.email] = u.name or "Miembro"
+
+    # 3. Emails extra guardados en el evento (separados por coma)
+    if event.email:
+        for em in [e.strip() for e in event.email.split(',') if e.strip()]:
+            if em not in recipients:
+                recipients[em] = "Notificado"
+
+    return list(recipients.items())
 
 
-def _notify_members(db, calendar_id, exclude_id, fn):
-    """Llama fn(email, name) para cada miembro del calendario."""
-    if not calendar_id:
-        return
+def _notify_all(db, event, fn, actor_id=None):
+    """Llama fn(email, name) para todos los destinatarios del evento."""
     try:
-        for email, name in _get_member_emails(db, calendar_id, exclude_id):
+        for email, name in _get_all_recipients(db, event, actor_id):
             try:
                 fn(email, name)
             except Exception as ex:
                 logger.error(f"Notify error {email}: {ex}")
     except Exception as ex:
-        logger.error(f"Member lookup error {calendar_id}: {ex}")
+        logger.error(f"Recipient lookup error: {ex}")
 
 
 # POST - CREATE
@@ -55,26 +74,25 @@ def create_event(event: EventCreate, db: Session = Depends(get_db)):
         )
     created = EventService.create_event(db, event)
 
-    # Notificar a miembros (nunca para actividades personales)
-    if event.calendar_id and event.type != "personal":
-        try:
-            from ..services.mail_service import MailService
-            cal  = db.query(Calendar).filter(Calendar.id == event.calendar_id).first()
-            usr  = db.query(User).filter(User.id == event.creator_id).first()
-            c_name = usr.name  if usr  else "Alguien"
-            g_name = cal.name  if cal  else "Calendario"
-            g_col  = cal.color if cal  else "#7c5aff"
-            def _notify_create(email, _):
-                MailService.send_event_created_email(
-                    to_email=email, event_title=event.title, event_type=event.type,
-                    event_date=event.date, event_time=event.time, creator_name=c_name,
-                    calendar_name=g_name, calendar_color=g_col,
-                    description=event.description or None,
-                    deadline_date=event.deadline_date or None,
-                    duration_minutes=event.duration or None)
-            _notify_members(db, event.calendar_id, event.creator_id, _notify_create)
-        except Exception as ex:
-            logger.error(f"Create notify error: {ex}")
+    # Notificar a todos los destinatarios (creador + miembros + emails extra)
+    try:
+        from ..services.mail_service import MailService
+        usr    = db.query(User).filter(User.id == created.creator_id).first()
+        cal    = db.query(Calendar).filter(Calendar.id == created.calendar_id).first() if created.calendar_id else None
+        c_name = usr.name  if usr  else "Alguien"
+        g_name = cal.name  if cal  else "Personal"
+        g_col  = cal.color if cal  else "#7c5aff"
+        def _notify_create(email, _):
+            MailService.send_event_created_email(
+                to_email=email, event_title=created.title, event_type=created.type,
+                event_date=created.date, event_time=created.time, creator_name=c_name,
+                calendar_name=g_name, calendar_color=g_col,
+                description=created.description or None,
+                deadline_date=created.deadline_date or None,
+                duration_minutes=created.duration or None)
+        _notify_all(db, created, _notify_create, actor_id=created.creator_id)
+    except Exception as ex:
+        logger.error(f"Create notify error: {ex}")
     return created
 
 
@@ -180,31 +198,30 @@ def update_event(
     old_desc  = event.description or ""
     updated = EventService.update_event(db, event_id, event_update)
 
-    if event.calendar_id and event.type != "personal":
-        try:
-            from ..services.mail_service import MailService
-            cal = db.query(Calendar).filter(Calendar.id == event.calendar_id).first()
-            usr = db.query(User).filter(User.id == user_id).first() if user_id else None
-            ed_name = usr.name if usr else "Un miembro"
-            g_name  = cal.name  if cal else "Calendario"
-            g_col   = cal.color if cal else "#7c5aff"
-            changes = []
-            if event_update.title and event_update.title != old_title:
-                changes.append({"field": "Título", "old": old_title, "new": event_update.title})
-            if event_update.date and event_update.date != old_date:
-                changes.append({"field": "Fecha", "old": old_date, "new": event_update.date})
-            if event_update.time and event_update.time != old_time:
-                changes.append({"field": "Hora", "old": old_time, "new": event_update.time})
-            if event_update.description is not None and event_update.description != old_desc:
-                changes.append({"field": "Descripción", "old": (old_desc[:60] or "—"), "new": (event_update.description or "")[:60]})
-            def _notify_update(email, _):
-                MailService.send_event_updated_email(
-                    to_email=email, event_title=updated.title,
-                    editor_name=ed_name, calendar_name=g_name,
-                    calendar_color=g_col, changes=changes or None)
-            _notify_members(db, event.calendar_id, user_id, _notify_update)
-        except Exception as ex:
-            logger.error(f"Update notify error: {ex}")
+    try:
+        from ..services.mail_service import MailService
+        cal     = db.query(Calendar).filter(Calendar.id == updated.calendar_id).first() if updated.calendar_id else None
+        usr     = db.query(User).filter(User.id == user_id).first() if user_id else None
+        ed_name = usr.name  if usr  else "Un miembro"
+        g_name  = cal.name  if cal  else "Personal"
+        g_col   = cal.color if cal  else "#7c5aff"
+        changes = []
+        if event_update.title and event_update.title != old_title:
+            changes.append({"field": "Título", "old": old_title, "new": event_update.title})
+        if event_update.date and event_update.date != old_date:
+            changes.append({"field": "Fecha", "old": old_date, "new": event_update.date})
+        if event_update.time and event_update.time != old_time:
+            changes.append({"field": "Hora", "old": old_time, "new": event_update.time})
+        if event_update.description is not None and event_update.description != old_desc:
+            changes.append({"field": "Descripción", "old": (old_desc[:60] or "—"), "new": (event_update.description or "")[:60]})
+        def _notify_update(email, _):
+            MailService.send_event_updated_email(
+                to_email=email, event_title=updated.title,
+                editor_name=ed_name, calendar_name=g_name,
+                calendar_color=g_col, changes=changes or None)
+        _notify_all(db, updated, _notify_update, actor_id=user_id)
+    except Exception as ex:
+        logger.error(f"Update notify error: {ex}")
     return updated
 
 
@@ -220,24 +237,18 @@ def update_event_status(event_id: str, status_update: EventStatusUpdate, db: Ses
         try:
             from ..services.mail_service import MailService
             changer_id = getattr(status_update, "user_id", None)
-            usr = db.query(User).filter(User.id == changer_id).first() if changer_id else None
-            ch_name = usr.name if usr else "Un miembro"
-
-            if event.calendar_id and event.type != "personal":
-                cal = db.query(Calendar).filter(Calendar.id == event.calendar_id).first()
-                g_name = cal.name  if cal else "Calendario"
-                g_col  = cal.color if cal else "#7c5aff"
-                def _notify_status(email, _):
-                    MailService.send_status_team_email(
-                        to_email=email, event_title=event.title,
-                        new_status=status_update.status, changed_by=ch_name,
-                        calendar_name=g_name, calendar_color=g_col,
-                        status_note=status_update.status_note)
-                _notify_members(db, event.calendar_id, changer_id, _notify_status)
-            elif event.email:
-                MailService.send_status_update_email(
-                    event_title=event.title, to_email=event.email,
-                    status=status_update.status, status_note=status_update.status_note)
+            usr     = db.query(User).filter(User.id == changer_id).first() if changer_id else None
+            cal     = db.query(Calendar).filter(Calendar.id == event.calendar_id).first() if event.calendar_id else None
+            ch_name = usr.name  if usr  else "Un miembro"
+            g_name  = cal.name  if cal  else "Personal"
+            g_col   = cal.color if cal  else "#7c5aff"
+            def _notify_status(email, _):
+                MailService.send_status_team_email(
+                    to_email=email, event_title=event.title,
+                    new_status=status_update.status, changed_by=ch_name,
+                    calendar_name=g_name, calendar_color=g_col,
+                    status_note=status_update.status_note)
+            _notify_all(db, event, _notify_status, actor_id=changer_id)
         except Exception as ex:
             logger.error(f"Status notify error: {ex}")
     return event
