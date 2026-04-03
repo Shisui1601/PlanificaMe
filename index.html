@@ -1252,7 +1252,7 @@ html.light-mode .stats-range input{background:var(--surface);border-color:var(--
 <button class="sb-mobile-tab" id="sbMobileTab" onclick="toggleSidebar()" title="Abrir menú">›</button>
 <!-- Overlay y FAB para el panel derecho (historial) en móvil -->
 <div class="rp-mobile-overlay" id="rpMobileOverlay" onclick="closeRightPanelMobile()"></div>
-<button class="rp-mobile-fab" id="rpMobileFab" onclick="toggleRightPanelMobile()" title="Historial y estadísticas">📋</button>
+<button class="rp-mobile-tab" id="rpMobileTab" onclick="toggleRightPanelMobile()" title="Historial y estadísticas">‹</button>
 <aside class="sidebar" id="sidebar">
   <div class="logo" style="display:flex;align-items:center;justify-content:space-between;padding-right:12px">
     <h1 class="logo-text">Planifica<span style="-webkit-text-fill-color:inherit">Me</span></h1>
@@ -1351,7 +1351,6 @@ html.light-mode .stats-range input{background:var(--surface);border-color:var(--
   <header class="header">
     <!-- Fila 1: navegación + período + tema -->
     <div class="header-row1">
-      <button class="mobile-menu-btn" onclick="toggleSidebar()" title="Menú">☰</button>
       <div class="vtabs">
         <button class="vtab active" id="tab-day" onclick="setView('day')">Día</button>
         <button class="vtab" id="tab-week" onclick="setView('week')">Semana</button>
@@ -4961,20 +4960,20 @@ function closeSidebar(){
 function toggleRightPanelMobile(){
   const rp  = document.getElementById('rightPanel');
   const ov  = document.getElementById('rpMobileOverlay');
-  const fab = document.getElementById('rpMobileFab');
+  const tab = document.getElementById('rpMobileTab');
   if(!rp) return;
   const isOpen = rp.classList.contains('mobile-open');
   rp.classList.toggle('mobile-open', !isOpen);
   ov.classList.toggle('open', !isOpen);
-  if(fab) fab.textContent = isOpen ? '📋' : '✕';
+  if(tab) tab.classList.toggle('hide', !isOpen);
 }
 function closeRightPanelMobile(){
   const rp  = document.getElementById('rightPanel');
   const ov  = document.getElementById('rpMobileOverlay');
-  const fab = document.getElementById('rpMobileFab');
+  const tab = document.getElementById('rpMobileTab');
   if(rp) rp.classList.remove('mobile-open');
   if(ov) ov.classList.remove('open');
-  if(fab) fab.textContent = '📋';
+  if(tab) tab.classList.remove('hide');
 }
 // Close sidebar when navigating on mobile
 function setView(v){
@@ -5452,10 +5451,6 @@ function exportHistorialPDF(){
 /* ══════════════════════════════════════════
    MOBILE RESPONSIVE
 ══════════════════════════════════════════ */
-.mobile-menu-btn{
-  display:none;background:none;border:none;color:var(--text);
-  font-size:22px;cursor:pointer;padding:4px 8px;flex-shrink:0;
-}
 .sidebar-overlay{
   display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);
   z-index:89;backdrop-filter:blur(2px);
@@ -5466,7 +5461,7 @@ function exportHistorialPDF(){
 .sb-mobile-tab{display:none;}
 .rp-mobile-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:90;backdrop-filter:blur(2px);}
 .rp-mobile-overlay.open{display:block;}
-.rp-mobile-fab{display:none;}
+.rp-mobile-tab{display:none;}
 
 /* ═══════════════════════════════════════════════════
    MOBILE RESPONSIVE — completo y mejorado
@@ -5476,8 +5471,6 @@ function exportHistorialPDF(){
   :root{--sb:280px;}
 
   /* ── Sidebar slide-over ── */
-  /* Ocultar el ☰ del header — se reemplaza por el tab lateral */
-  .mobile-menu-btn{display:none !important;}
   /* Ocultar botón compactar en móvil (no aplica cuando sidebar es slide-over) */
   #sbCompactBtn{display:none !important;}
 
@@ -5506,17 +5499,16 @@ function exportHistorialPDF(){
   }
   .right-panel.mobile-open{transform:translateX(0);}
 
-  /* FAB para abrir el panel derecho */
-  .rp-mobile-fab{
+  /* Tab lateral derecho para abrir historial (espejo del izquierdo) */
+  .rp-mobile-tab{
     display:flex;align-items:center;justify-content:center;
-    position:fixed;right:16px;bottom:86px;
-    width:48px;height:48px;border-radius:50%;
-    background:var(--surface);border:1px solid var(--border2);
-    color:var(--text2);font-size:20px;cursor:pointer;
-    box-shadow:0 4px 16px rgba(0,0,0,.35);z-index:79;
-    transition:transform .15s;
+    position:fixed;right:0;top:50%;transform:translateY(-50%);
+    background:var(--surface);border:1px solid var(--border2);border-right:none;
+    border-radius:8px 0 0 8px;width:20px;height:54px;
+    z-index:88;cursor:pointer;color:var(--text3);font-size:14px;
+    box-shadow:-3px 0 10px rgba(0,0,0,.25);transition:all .2s;padding:0;
   }
-  .rp-mobile-fab:active{transform:scale(.9);}
+  .rp-mobile-tab.hide{display:none !important;}
 
   .sidebar{
     position:fixed;left:0;top:0;bottom:0;
@@ -5527,23 +5519,23 @@ function exportHistorialPDF(){
   }
   .sidebar.open{transform:translateX(0);}
 
-  /* ── Header: reorganizar en 2 sub-filas ── */
-  /* Fila A: hamburger | prev | hoy | next | periodo | 📊 | 🌓  */
-  /* Fila B: vtabs a ancho completo */
+  /* ── Header: reorganizar en sub-filas ── */
+  /* Fila A: vtabs (Día, Semana, Mes, Agenda) a ancho completo */
+  /* Fila B: ‹ Hoy › | periodo | 📊 🌓 */
   .header-row1{
-    padding:6px 10px 0;
-    gap:4px;
+    padding:6px 8px 0;
+    gap:3px;
     height:auto;
-    min-height:48px;
+    min-height:auto;
     flex-wrap:wrap;
     align-items:center;
   }
-  /* Los vtabs bajan a la segunda línea */
+  /* Los vtabs van primero (arriba) y ocupan toda la fila */
   .vtabs{
-    order:10;
+    order:-1;
     flex-basis:100%;
     gap:2px;
-    padding:0 0 8px;
+    padding:0 0 4px;
     overflow-x:auto;
     -webkit-overflow-scrolling:touch;
     scrollbar-width:none;
@@ -5552,12 +5544,15 @@ function exportHistorialPDF(){
   .vtabs::-webkit-scrollbar{display:none;}
   .vtab{
     flex:1;
-    padding:7px 6px;
+    padding:7px 4px;
     font-size:11px;
-    min-width:56px;
+    min-width:50px;
     white-space:nowrap;
     text-align:center;
   }
+  /* Navegación: ‹ Hoy › ocupa menos */
+  .nbtn{min-height:34px;padding:5px 8px;font-size:14px;}
+  .today-btn{min-height:34px;padding:5px 10px;font-size:11px;}
   /* Periodo más compacto */
   .period{
     font-size:13px !important;
@@ -5571,24 +5566,25 @@ function exportHistorialPDF(){
 
   /* ── Header row 2: filtros + búsqueda ── */
   .header-row2{
-    padding:0 10px 8px;
-    gap:5px;
-    flex-wrap:nowrap;
-    overflow:hidden;
+    padding:0 8px 6px;
+    gap:4px;
+    flex-wrap:wrap;
+    overflow:visible;
   }
   .filters{
     display:flex;
-    gap:4px;
-    flex-shrink:0;
+    gap:3px;
+    flex-shrink:1;
     overflow-x:auto;
     -webkit-overflow-scrolling:touch;
     scrollbar-width:none;
-    max-width:55vw;
+    max-width:100%;
     padding-bottom:2px;
+    flex-wrap:nowrap;
   }
   .filters::-webkit-scrollbar{display:none;}
-  .fbadge{padding:3px 8px;font-size:9px;letter-spacing:0;}
-  .search-wrap{flex:1;min-width:0;margin-left:0 !important;}
+  .fbadge{padding:3px 7px;font-size:9px;letter-spacing:0;white-space:nowrap;}
+  .search-wrap{flex-basis:100%;min-width:0;margin-left:0 !important;}
   .sinp{width:100% !important;max-width:none;}
 
   /* ── Modales: pantalla completa desde abajo ── */
