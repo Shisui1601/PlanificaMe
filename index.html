@@ -1248,6 +1248,11 @@ html.light-mode .stats-range input{background:var(--surface);border-color:var(--
 <body>
 <div class="app">
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+<!-- Tab izquierdo para abrir sidebar en móvil (reemplaza el ☰) -->
+<button class="sb-mobile-tab" id="sbMobileTab" onclick="toggleSidebar()" title="Abrir menú">›</button>
+<!-- Overlay y FAB para el panel derecho (historial) en móvil -->
+<div class="rp-mobile-overlay" id="rpMobileOverlay" onclick="closeRightPanelMobile()"></div>
+<button class="rp-mobile-fab" id="rpMobileFab" onclick="toggleRightPanelMobile()" title="Historial y estadísticas">📋</button>
 <aside class="sidebar" id="sidebar">
   <div class="logo" style="display:flex;align-items:center;justify-content:space-between;padding-right:12px">
     <h1 class="logo-text">Planifica<span style="-webkit-text-fill-color:inherit">Me</span></h1>
@@ -4935,15 +4940,41 @@ function switchSession(){
 // MOBILE SIDEBAR
 // ═══════════════════════════════════
 function toggleSidebar(){
-  const sb = document.getElementById('sidebar');
-  const ov = document.getElementById('sidebarOverlay');
+  const sb  = document.getElementById('sidebar');
+  const ov  = document.getElementById('sidebarOverlay');
+  const tab = document.getElementById('sbMobileTab');
   const isOpen = sb.classList.contains('open');
   sb.classList.toggle('open', !isOpen);
   ov.classList.toggle('open', !isOpen);
+  // Ocultar el tab lateral cuando el sidebar está abierto
+  if(tab) tab.classList.toggle('hide', !isOpen);
 }
 function closeSidebar(){
+  const tab = document.getElementById('sbMobileTab');
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sidebarOverlay').classList.remove('open');
+  // Mostrar el tab lateral de nuevo cuando el sidebar se cierra
+  if(tab) tab.classList.remove('hide');
+}
+
+// ── Panel derecho en móvil ──
+function toggleRightPanelMobile(){
+  const rp  = document.getElementById('rightPanel');
+  const ov  = document.getElementById('rpMobileOverlay');
+  const fab = document.getElementById('rpMobileFab');
+  if(!rp) return;
+  const isOpen = rp.classList.contains('mobile-open');
+  rp.classList.toggle('mobile-open', !isOpen);
+  ov.classList.toggle('open', !isOpen);
+  if(fab) fab.textContent = isOpen ? '📋' : '✕';
+}
+function closeRightPanelMobile(){
+  const rp  = document.getElementById('rightPanel');
+  const ov  = document.getElementById('rpMobileOverlay');
+  const fab = document.getElementById('rpMobileFab');
+  if(rp) rp.classList.remove('mobile-open');
+  if(ov) ov.classList.remove('open');
+  if(fab) fab.textContent = '📋';
 }
 // Close sidebar when navigating on mobile
 function setView(v){
@@ -5431,6 +5462,12 @@ function exportHistorialPDF(){
 }
 .sidebar-overlay.open{display:block;}
 
+/* ── Elementos de navegación móvil (base, ocultos en desktop) ── */
+.sb-mobile-tab{display:none;}
+.rp-mobile-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:90;backdrop-filter:blur(2px);}
+.rp-mobile-overlay.open{display:block;}
+.rp-mobile-fab{display:none;}
+
 /* ═══════════════════════════════════════════════════
    MOBILE RESPONSIVE — completo y mejorado
 ═══════════════════════════════════════════════════ */
@@ -5439,7 +5476,48 @@ function exportHistorialPDF(){
   :root{--sb:280px;}
 
   /* ── Sidebar slide-over ── */
-  .mobile-menu-btn{display:flex;align-items:center;}
+  /* Ocultar el ☰ del header — se reemplaza por el tab lateral */
+  .mobile-menu-btn{display:none !important;}
+  /* Ocultar botón compactar en móvil (no aplica cuando sidebar es slide-over) */
+  #sbCompactBtn{display:none !important;}
+
+  /* Tab lateral izquierdo que reemplaza el ☰ */
+  .sb-mobile-tab{
+    display:flex;align-items:center;justify-content:center;
+    position:fixed;left:0;top:50%;transform:translateY(-50%);
+    background:var(--surface);border:1px solid var(--border2);border-left:none;
+    border-radius:0 8px 8px 0;width:20px;height:54px;
+    z-index:88;cursor:pointer;color:var(--text3);font-size:14px;
+    box-shadow:3px 0 10px rgba(0,0,0,.25);transition:all .2s;padding:0;
+  }
+  .sb-mobile-tab.hide{display:none !important;}
+
+  /* Panel derecho — slide-in desde la derecha en móvil */
+  .right-panel{
+    display:flex !important;
+    position:fixed !important;
+    right:0;top:0;bottom:0;
+    width:88vw !important;
+    transform:translateX(102%);
+    transition:transform .28s cubic-bezier(.4,0,.2,1);
+    z-index:91;
+    box-shadow:-4px 0 32px rgba(0,0,0,.5);
+    flex-direction:column;overflow-y:auto;
+  }
+  .right-panel.mobile-open{transform:translateX(0);}
+
+  /* FAB para abrir el panel derecho */
+  .rp-mobile-fab{
+    display:flex;align-items:center;justify-content:center;
+    position:fixed;right:16px;bottom:86px;
+    width:48px;height:48px;border-radius:50%;
+    background:var(--surface);border:1px solid var(--border2);
+    color:var(--text2);font-size:20px;cursor:pointer;
+    box-shadow:0 4px 16px rgba(0,0,0,.35);z-index:79;
+    transition:transform .15s;
+  }
+  .rp-mobile-fab:active{transform:scale(.9);}
+
   .sidebar{
     position:fixed;left:0;top:0;bottom:0;
     width:var(--sb) !important;
