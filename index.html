@@ -308,6 +308,15 @@ body{
   display:flex;align-items:center;gap:8px;
   padding:0 20px 10px;flex-wrap:wrap;min-width:0;
 }
+/* Guest banner */
+.guest-banner{
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(90deg,rgba(124,90,255,.15),rgba(16,185,129,.12));
+  border-bottom:1px solid rgba(124,90,255,.25);
+  padding:8px 20px;font-size:13px;color:var(--text2);
+  flex-shrink:0;flex-wrap:wrap;gap:4px;
+}
+.guest-banner strong{color:var(--text1);}
 /* Hamburger button — hidden on desktop, shown on tablet/mobile */
 .hamburger-btn{
   display:none;align-items:center;justify-content:center;
@@ -1975,6 +1984,7 @@ html.light-mode .agenda-item:hover{
       </div>
       <!-- DERECHA: acciones -->
       <div class="hdr-right">
+        <button class="btn btn-p guest-login-btn" id="guestLoginBtn" onclick="openModal('authModal')" title="Iniciar sesión" style="display:none;padding:6px 14px;font-size:12px;height:32px">🔑 Iniciar sesión</button>
         <button class="nbtn icon-btn" onclick="openStatsModal()" title="Estadísticas">📊</button>
         <button class="nbtn icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Cambiar tema">🌓</button>
         <button class="nbtn icon-btn rp-toggle-mobile" id="rpMobileBtn" onclick="toggleRightPanelMobile()" title="Historial">📋</button>
@@ -1995,6 +2005,11 @@ html.light-mode .agenda-item:hover{
       </div>
     </div>
   </header>
+  <!-- GUEST BANNER -->
+  <div class="guest-banner" id="guestBanner" style="display:none">
+    <span>👁 Modo visitante — <strong>Inicia sesión</strong> para crear y gestionar actividades</span>
+    <button class="btn btn-p" onclick="openModal('authModal')" style="padding:5px 14px;font-size:12px;height:28px;margin-left:12px">Entrar</button>
+  </div>
   <div class="cal" id="cal"></div>
 </main>
 
@@ -2095,17 +2110,20 @@ html.light-mode .agenda-item:hover{
 </div>
 
 <!-- LOGIN MODAL -->
-<div class="overlay open" id="authModal">
+<div class="overlay" id="authModal">
   <div class="modal" style="max-width:400px">
     <div class="mh">
       <h2 class="mtitle">Bienvenido a PlanificaMe</h2>
     </div>
     <div class="mb" style="text-align:center">
-      <p style="color:var(--text2);font-size:13px;margin-bottom:20px">¿Qué deseas hacer?</p>
+      <p style="color:var(--text2);font-size:13px;margin-bottom:20px">Inicia sesión para crear y gestionar actividades, o explora como visitante.</p>
     </div>
-    <div class="mf" style="gap:8px">
-      <button class="btn btn-p" style="flex:1" onclick="showLoginForm()">🔑 Iniciar Sesión</button>
-      <button class="btn btn-s" style="flex:1" onclick="showRegisterForm()">📝 Registrarse</button>
+    <div class="mf" style="gap:8px;flex-direction:column">
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-p" style="flex:1" onclick="showLoginForm()">🔑 Iniciar Sesión</button>
+        <button class="btn btn-s" style="flex:1" onclick="showRegisterForm()">📝 Registrarse</button>
+      </div>
+      <button class="btn" style="width:100%;background:transparent;border:1px solid var(--border2);color:var(--text2);font-size:12px" onclick="enterGuestMode()">👁 Explorar como visitante</button>
     </div>
   </div>
 </div>
@@ -2803,6 +2821,36 @@ function getHoliday(ds){return HOLIDAYS[ds]||HOLIDAYS[ds.slice(5)]||null;}
 // STATE
 // ═══════════════════════════════════
 const ME={id:'u1',name:'Usuario',email:'',color:'#7c6af7',role:'admin'};
+let IS_GUEST = true; // true = visitante no autenticado
+
+// ─── Modo visitante ───────────────────────────────────────
+function enterGuestMode(){
+  IS_GUEST = true;
+  closeModal('authModal');
+  const banner = document.getElementById('guestBanner');
+  const loginBtn = document.getElementById('guestLoginBtn');
+  if(banner) banner.style.display = 'flex';
+  if(loginBtn) loginBtn.style.display = '';
+}
+
+function exitGuestMode(){
+  IS_GUEST = false;
+  const banner = document.getElementById('guestBanner');
+  const loginBtn = document.getElementById('guestLoginBtn');
+  if(banner) banner.style.display = 'none';
+  if(loginBtn) loginBtn.style.display = 'none';
+}
+
+function requireAuth(msg){
+  if(!IS_GUEST) return true; // ya autenticado
+  closeModal('authModal'); // reset first
+  // Update welcome message with context
+  const subtitle = document.querySelector('#authModal .mb p');
+  if(subtitle) subtitle.textContent = msg || 'Inicia sesión para realizar esta acción.';
+  openModal('authModal');
+  return false;
+}
+
 const TEAM=[];
 const MONTHS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const DAYS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
@@ -3052,6 +3100,7 @@ function switchCalendar(calendarId){
 }
 
 function openCreateCalendarModal(){
+  if(!requireAuth('Inicia sesión para crear calendarios.')) return;
   document.getElementById('calendarName').value = '';
   document.getElementById('calendarDesc').value = '';
   document.getElementById('calendarColor').value = '#7c6af7';
@@ -3150,6 +3199,7 @@ async function createCalendar(){
 }
 
 function openInviteMemberModal(){
+  if(!requireAuth('Inicia sesión para invitar miembros.')) return;
   if(!S.currentCalendarId){
     toast('⚠️ Selecciona un calendario primero');
     return;
@@ -4264,6 +4314,7 @@ function cleanDrag(){
 }
 
 function openTaskModal(date,time){
+  if(!requireAuth('Inicia sesión para crear actividades.')) return;
   S.editId=null;
   document.getElementById('taskModalTitle').textContent='Nueva Tarea';
   document.getElementById('btnDel').style.display='none';
@@ -4304,6 +4355,7 @@ function openTaskModal(date,time){
   openModal('taskModal');
 }
 function openProjModal(){
+  if(!requireAuth('Inicia sesión para crear metas.')) return;
   S.editId=null;
   document.getElementById('taskModalTitle').textContent='Nuevo Proyecto Meta';
   document.getElementById('btnDel').style.display='none';
@@ -4533,6 +4585,7 @@ function deleteTask(){
   );
 }
 function editEvent(ev){
+  if(!requireAuth('Inicia sesión para editar actividades.')) return;
   S.editId=ev.id;
   document.getElementById('taskModalTitle').textContent='Editar Evento';
   document.getElementById('btnDel').style.display='inline-flex';
@@ -4790,6 +4843,7 @@ async function deleteEventLink(eventId, linkId){
 // ═══════════════════════════════════
 let _statusEvId=null;
 function openStatusModal(ev){
+  if(!requireAuth('Inicia sesión para actualizar el estado.')) return;
   _statusEvId=ev.id;
   document.getElementById('statusEvTitle').textContent=ev.title;
   // Reset
@@ -5162,7 +5216,15 @@ function toast(msg){
 // ═══════════════════════════════════
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
-document.querySelectorAll('.overlay').forEach(o=>{o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');});});
+document.querySelectorAll('.overlay').forEach(o=>{
+  o.addEventListener('click',e=>{
+    if(e.target===o){
+      o.classList.remove('open');
+      // Si el visitante cierra el authModal, aseguramos el modo visitante activo
+      if(o.id === 'authModal' && IS_GUEST) enterGuestMode();
+    }
+  });
+});
 
 // ═══════════════════════════════════
 // API FUNCTIONS
@@ -5401,8 +5463,10 @@ async function onAuthSuccess(userData, token){
   ME.email = userData.email; ME.role = userData.role;
   ME.color = ME.color || 'var(--accent)';
   saveSession();
+  exitGuestMode();
   closeModal('loginModal');
   closeModal('registerModal');
+  closeModal('authModal');
   await loadUserCalendars();
   await loadDataFromAPI();
   const savedCal = localStorage.getItem('planificame_calendar');
@@ -7754,6 +7818,7 @@ async function init(){
   restoreSidebarState();
   if(restoreSession()){
     console.log('✓ Sesión restaurada:', ME.name);
+    exitGuestMode();
     closeModal('authModal');
     await loadUserCalendars();
     await loadDataFromAPI();
@@ -7764,7 +7829,11 @@ async function init(){
     startChatPoll();
     loadTags();
     loadTemplates();
-    console.log('✓ Aplicación lista. Esperando login del usuario...');
+    console.log('✓ Aplicación lista.');
+  } else {
+    // Sin sesión — modo visitante por defecto
+    enterGuestMode();
+    render(); // render calendario vacío para que el visitante pueda ver la UI
   }
 }
 init();
