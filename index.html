@@ -1856,6 +1856,163 @@ html.light-mode .agenda-item:hover{
   .onboard-body{padding:18px 14px 14px;}
   .onboard-footer{padding:12px 14px;}
 }
+
+/* ═══════════════════════════════════════
+   WORD SEARCH MINI GAME
+═══════════════════════════════════════ */
+#wordSearchModal .modal{
+  max-width:940px;width:96vw;max-height:94vh;
+  background:var(--surface);border-radius:20px;overflow:hidden;
+}
+.ws-layout{
+  display:grid;grid-template-columns:1fr 280px;
+  gap:0;height:calc(94vh - 72px);overflow:hidden;
+}
+.ws-left{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:20px;
+  background:var(--surface2);overflow:hidden;
+  border-right:1px solid var(--border);
+}
+.ws-right{
+  display:flex;flex-direction:column;padding:0;
+  overflow:hidden;background:var(--surface);
+}
+.ws-header-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.ws-title{font-size:13px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;}
+.ws-score-badge{
+  background:var(--accent-soft);color:var(--accent-bright);
+  padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;
+}
+.ws-stats{
+  display:flex;gap:8px;padding:10px 18px;border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.ws-stat{
+  flex:1;text-align:center;padding:8px 6px;
+  background:var(--surface2);border-radius:8px;border:1px solid var(--border);
+}
+.ws-stat-val{font-size:18px;font-weight:800;color:var(--text);}
+.ws-stat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-top:2px;}
+.ws-filters{
+  display:flex;gap:6px;padding:10px 18px;border-bottom:1px solid var(--border);
+  flex-shrink:0;flex-wrap:wrap;
+}
+.ws-filter-btn{
+  padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;
+  border:1px solid var(--border2);background:transparent;color:var(--text2);
+  transition:all .15s;
+}
+.ws-filter-btn.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-bright);}
+.ws-filter-btn.ws-f-personal.active{background:rgba(139,92,246,.15);border-color:#8b5cf6;color:#a78bfa;}
+.ws-filter-btn.ws-f-team.active{background:rgba(16,185,129,.15);border-color:#10b981;color:#34d399;}
+.ws-filter-btn.ws-f-project.active{background:rgba(245,158,11,.15);border-color:#f59e0b;color:#fbbf24;}
+.ws-word-list{flex:1;overflow-y:auto;padding:10px 18px;display:flex;flex-direction:column;gap:6px;}
+.ws-word-list::-webkit-scrollbar{width:3px;}
+.ws-word-list::-webkit-scrollbar-thumb{background:var(--border2);}
+.ws-word-item{
+  display:flex;align-items:flex-start;gap:8px;padding:8px 10px;
+  border-radius:10px;border:1px solid var(--border);
+  background:var(--surface2);transition:all .2s;cursor:default;
+  position:relative;overflow:hidden;
+}
+.ws-word-item.ws-found{
+  opacity:.7;
+  text-decoration:none;
+}
+.ws-word-item.ws-found .ws-word-name::after{
+  content:'';position:absolute;left:0;top:50%;
+  transform:translateY(-50%);height:1.5px;
+  background:currentColor;animation:ws-strikethrough .3s ease forwards;
+  width:0;
+}
+@keyframes ws-strikethrough{to{width:100%;}}
+.ws-word-item.ws-found .ws-word-name{position:relative;display:inline-block;}
+.ws-word-dot{
+  width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:3px;
+}
+.ws-word-info{min-width:0;}
+.ws-word-name{
+  font-size:12px;font-weight:700;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:160px;
+}
+.ws-word-meta{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px;}
+.ws-badge{
+  padding:1px 7px;border-radius:20px;font-size:10px;font-weight:600;
+  line-height:1.6;
+}
+.ws-badge-personal{background:rgba(139,92,246,.18);color:#a78bfa;}
+.ws-badge-team{background:rgba(16,185,129,.18);color:#34d399;}
+.ws-badge-project{background:rgba(245,158,11,.18);color:#fbbf24;}
+.ws-badge-pending{background:rgba(120,120,168,.12);color:var(--text2);}
+.ws-badge-completed{background:rgba(16,185,129,.14);color:#10b981;}
+.ws-badge-abandoned{background:rgba(248,113,113,.14);color:#f87171;}
+.ws-badge-atrasado,.ws-badge-overdue{background:rgba(245,158,11,.14);color:#f59e0b;}
+.ws-found-icon{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  font-size:14px;opacity:0;transition:opacity .3s;
+}
+.ws-word-item.ws-found .ws-found-icon{opacity:1;}
+/* GRID */
+.ws-grid-wrap{position:relative;user-select:none;touch-action:none;}
+.ws-grid{
+  display:grid;gap:1px;
+  background:var(--border);
+  border:1px solid var(--border2);border-radius:8px;overflow:hidden;
+  cursor:crosshair;
+}
+.ws-cell{
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;font-family:'Inter',monospace;
+  color:var(--text2);background:var(--surface3);
+  transition:background .1s,color .1s,transform .1s;
+  aspect-ratio:1/1;min-width:0;
+  border-radius:2px;
+}
+.ws-cell:hover{background:var(--surface4);color:var(--text);}
+.ws-cell.ws-selecting{
+  background:rgba(124,90,255,.25);color:var(--accent-bright);
+  transform:scale(1.05);
+}
+.ws-cell.ws-found-personal{background:rgba(139,92,246,.3) !important;color:#a78bfa !important;}
+.ws-cell.ws-found-team{background:rgba(16,185,129,.3) !important;color:#34d399 !important;}
+.ws-cell.ws-found-project{background:rgba(245,158,11,.3) !important;color:#fbbf24 !important;}
+@keyframes ws-flash{
+  0%{transform:scale(1.15);opacity:.5;}
+  50%{transform:scale(1.08);}
+  100%{transform:scale(1);opacity:1;}
+}
+.ws-cell.ws-flash{animation:ws-flash .5s ease forwards;}
+.ws-grid-timer{
+  font-size:12px;color:var(--text3);text-align:center;margin-top:8px;letter-spacing:.5px;
+}
+.ws-direction-hint{
+  display:flex;gap:6px;justify-content:center;margin-bottom:10px;flex-wrap:wrap;
+}
+.ws-dir-badge{
+  padding:2px 8px;border-radius:6px;font-size:10px;color:var(--text3);
+  background:var(--surface3);border:1px solid var(--border);
+}
+.ws-win-banner{
+  text-align:center;padding:20px;display:none;
+}
+.ws-win-banner.show{display:block;}
+@keyframes ws-bounce{0%,100%{transform:scale(1);}50%{transform:scale(1.1);}}
+.ws-win-emoji{font-size:48px;animation:ws-bounce .8s infinite;}
+.ws-empty-state{
+  text-align:center;padding:40px 20px;color:var(--text3);
+}
+.ws-empty-state-icon{font-size:40px;margin-bottom:10px;}
+@media(max-width:680px){
+  .ws-layout{grid-template-columns:1fr;grid-template-rows:auto 1fr;}
+  .ws-left{padding:12px;min-height:0;}
+  .ws-right{max-height:220px;}
+  .ws-cell{font-size:11px;}
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -1985,6 +2142,7 @@ html.light-mode .agenda-item:hover{
       <!-- DERECHA: acciones -->
       <div class="hdr-right">
         <button class="btn btn-p guest-login-btn" id="guestLoginBtn" onclick="openModal('authModal')" title="Iniciar sesión" style="display:none;padding:6px 14px;font-size:12px;height:32px">🔑 Iniciar sesión</button>
+        <button class="nbtn icon-btn" onclick="ws_openGame()" title="Sopa de Letras — Modo Juego">🎮</button>
         <button class="nbtn icon-btn" onclick="openStatsModal()" title="Estadísticas">📊</button>
         <button class="nbtn icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Cambiar tema">🌓</button>
         <button class="nbtn icon-btn rp-toggle-mobile" id="rpMobileBtn" onclick="toggleRightPanelMobile()" title="Historial">📋</button>
@@ -7813,6 +7971,440 @@ function exportStatsPDF(){
 }
 
 
+// ═══════════════════════════════════════════════════════════
+//  🎮  WORD SEARCH MINI GAME  — ws_* namespace
+// ═══════════════════════════════════════════════════════════
+const WS = {
+  grid: [],          // 2D array of letters
+  size: 12,          // grid size (NxN)
+  words: [],         // [{ word, title, type, status, calendarName, creatorName, placed, found, cells[], color }]
+  selecting: false,
+  startCell: null,   // {r, c}
+  currentCells: [],  // cells currently highlighted during drag
+  timerInterval: null,
+  startTime: null,
+  filter: 'all',
+};
+
+// ─── Utility ────────────────────────────────────────────────
+function ws_cleanWord(title){
+  // Remove emojis, trim, uppercase, strip spaces → use joined word
+  let w = title
+    .replace(/[\u{1F300}-\u{1FFFF}]/gu, '')
+    .replace(/[^\p{L}\p{N}]/gu, '')   // keep only letters & numbers
+    .toUpperCase()
+    .trim();
+  return w.slice(0, WS.size);  // cap at grid size
+}
+
+function ws_typeColor(type){
+  if(type === 'personal') return '#8b5cf6';
+  if(type === 'team')     return '#10b981';
+  if(type === 'project')  return '#f59e0b';
+  return 'var(--accent)';
+}
+function ws_typeClass(type){
+  if(type === 'personal') return 'ws-found-personal';
+  if(type === 'team')     return 'ws-found-team';
+  if(type === 'project')  return 'ws-found-project';
+  return 'ws-found-personal';
+}
+function ws_statusLabel(status){
+  const map = {
+    pending:'Pendiente', completed:'Completado', abandoned:'Abandonado',
+    atrasado:'Atrasado', overdue:'Atrasado', extended:'Extendido',
+    'early-voluntary':'Completado', 'early-forced':'Completado'
+  };
+  return map[status] || status || 'Pendiente';
+}
+
+// ─── Get visible activities (respecting privacy) ────────────
+function ws_getActivities(){
+  if(IS_GUEST || !ME || ME.id === 'u1'){
+    // Demo words for guest
+    return [
+      {word:'PLANIFICA',title:'Planifica',type:'personal',status:'pending',calendarName:'Mi calendario',creatorName:'Visitante'},
+      {word:'PROYECTO',title:'Proyecto',type:'project',status:'completed',calendarName:'Trabajo',creatorName:'Visitante'},
+      {word:'REUNION',title:'Reunión',type:'team',status:'pending',calendarName:'Equipo',creatorName:'Visitante'},
+      {word:'TAREA',title:'Tarea',type:'personal',status:'pending',calendarName:'Personal',creatorName:'Visitante'},
+      {word:'META',title:'Meta',type:'project',status:'pending',calendarName:'Metas',creatorName:'Visitante'},
+      {word:'AGENDA',title:'Agenda',type:'personal',status:'completed',calendarName:'Personal',creatorName:'Visitante'},
+      {word:'EQUIPO',title:'Equipo',type:'team',status:'pending',calendarName:'Trabajo',creatorName:'Visitante'},
+    ];
+  }
+  const sharedCalIds = new Set((S.calendars || []).map(c => c.id));
+  const seen = new Set();
+  const result = [];
+  const allItems = [...(S.events || []), ...(S.projects || [])];
+  for(const item of allItems){
+    // Privacy filter: own items OR items from accessible calendars
+    const isOwn = item.creatorId === ME.id;
+    const isShared = item.calendar_id && sharedCalIds.has(item.calendar_id);
+    if(!isOwn && !isShared) continue;
+    const raw = (item.title || '').replace(/^🎯\s*/,'').trim();
+    const word = ws_cleanWord(raw);
+    if(word.length < 3) continue;
+    if(seen.has(word)) continue;
+    seen.add(word);
+    result.push({
+      word,
+      title: raw,
+      type: item.type || 'personal',
+      status: item.status || 'pending',
+      calendarName: item.calendarName || 'Mi calendario',
+      creatorName: item.creatorName || ME.name,
+    });
+  }
+  return result;
+}
+
+// ─── Grid generation ────────────────────────────────────────
+const WS_DIRS = [
+  [0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]
+];
+const WS_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚÑ';
+
+function ws_generateGrid(wordObjs){
+  const N = WS.size;
+  // Init empty grid
+  const grid = Array.from({length:N}, () => Array(N).fill(null));
+  const placed = [];
+
+  // Sort words longest first
+  const sorted = [...wordObjs].sort((a,b) => b.word.length - a.word.length);
+
+  for(const wo of sorted){
+    const w = wo.word;
+    if(w.length > N) continue;
+    let success = false;
+    const attempts = 120;
+    for(let i = 0; i < attempts && !success; i++){
+      const [dr, dc] = WS_DIRS[Math.floor(Math.random() * WS_DIRS.length)];
+      // Random start that fits
+      const rRange = dr === 0 ? N : (dr > 0 ? N - w.length : w.length - 1);
+      const cRange = dc === 0 ? N : (dc > 0 ? N - w.length : w.length - 1);
+      const r0 = dr < 0 ? (N - 1) : 0;
+      const c0 = dc < 0 ? (N - 1) : 0;
+      const startR = r0 + Math.floor(Math.random() * (rRange || N));
+      const startC = c0 + Math.floor(Math.random() * (cRange || N));
+      // Check if fits
+      const cells = [];
+      let fits = true;
+      for(let j = 0; j < w.length; j++){
+        const r = startR + j * dr;
+        const c = startC + j * dc;
+        if(r < 0 || r >= N || c < 0 || c >= N){ fits = false; break; }
+        if(grid[r][c] !== null && grid[r][c] !== w[j]){ fits = false; break; }
+        cells.push({r, c});
+      }
+      if(fits){
+        cells.forEach(({r,c},j) => { grid[r][c] = w[j]; });
+        placed.push({...wo, cells, found: false});
+        success = true;
+      }
+    }
+  }
+
+  // Fill blanks with random letters (Spanish-friendly)
+  const FILL = 'ABEIOSRTNCMLDPUVHFGQJXYZ';
+  for(let r = 0; r < N; r++){
+    for(let c = 0; c < N; c++){
+      if(grid[r][c] === null){
+        grid[r][c] = FILL[Math.floor(Math.random() * FILL.length)];
+      }
+    }
+  }
+  return {grid, placed};
+}
+
+// ─── Render grid ────────────────────────────────────────────
+function ws_renderGrid(){
+  const N = WS.size;
+  const wrap = document.getElementById('ws-grid-wrap');
+  const gridEl = document.getElementById('ws-grid');
+  if(!gridEl) return;
+
+  // Calculate cell size based on available space
+  const leftPanel = document.getElementById('ws-left-panel');
+  const panelW = leftPanel ? leftPanel.clientWidth - 40 : 480;
+  const panelH = leftPanel ? leftPanel.clientHeight - 80 : 480;
+  const cellPx = Math.max(22, Math.min(Math.floor(Math.min(panelW, panelH) / N), 42));
+
+  gridEl.style.gridTemplateColumns = `repeat(${N}, ${cellPx}px)`;
+  gridEl.style.gridTemplateRows    = `repeat(${N}, ${cellPx}px)`;
+  gridEl.innerHTML = '';
+
+  for(let r = 0; r < N; r++){
+    for(let c = 0; c < N; c++){
+      const cell = document.createElement('div');
+      cell.className = 'ws-cell';
+      cell.textContent = WS.grid[r][c];
+      cell.dataset.r = r;
+      cell.dataset.c = c;
+      cell.style.width  = `${cellPx}px`;
+      cell.style.height = `${cellPx}px`;
+      cell.style.fontSize = `${Math.max(9, cellPx - 10)}px`;
+      gridEl.appendChild(cell);
+    }
+  }
+}
+
+// ─── Render word list panel ──────────────────────────────────
+function ws_renderWordList(){
+  const list = document.getElementById('ws-word-list');
+  if(!list) return;
+  const filter = WS.filter;
+  const items = WS.words.filter(w => filter === 'all' || w.type === filter);
+  if(items.length === 0){
+    list.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px">No hay actividades de este tipo</div>`;
+    return;
+  }
+  list.innerHTML = items.map(w => `
+    <div class="ws-word-item ${w.found ? 'ws-found':''}" id="ws-item-${w.word}" data-type="${w.type}">
+      <div class="ws-word-dot" style="background:${ws_typeColor(w.type)}"></div>
+      <div class="ws-word-info" style="flex:1;min-width:0">
+        <div class="ws-word-name" title="${w.title}">${w.title}</div>
+        <div class="ws-word-meta">
+          <span class="ws-badge ws-badge-${w.type}">${w.type==='personal'?'Personal':w.type==='team'?'Equipo':'Meta'}</span>
+          <span class="ws-badge ws-badge-${w.status}">${ws_statusLabel(w.status)}</span>
+          ${w.calendarName ? `<span class="ws-badge" style="background:rgba(120,120,168,.12);color:var(--text3)">📅 ${w.calendarName}</span>` : ''}
+        </div>
+        ${w.found && w.creatorName ? `<div style="font-size:10px;color:var(--text3);margin-top:3px">👤 ${w.creatorName}</div>` : ''}
+      </div>
+      <span class="ws-found-icon">${w.type==='project'?'🎯':w.type==='team'?'👥':'✅'}</span>
+    </div>
+  `).join('');
+}
+
+// ─── Update stats bar ────────────────────────────────────────
+function ws_updateStats(){
+  const total = WS.words.length;
+  const found = WS.words.filter(w => w.found).length;
+  const pct = total ? Math.round(found / total * 100) : 0;
+  document.getElementById('ws-score').textContent = `${found} / ${total}`;
+  document.getElementById('ws-stat-found').textContent = found;
+  document.getElementById('ws-stat-remain').textContent = total - found;
+  document.getElementById('ws-stat-pct').textContent = `${pct}%`;
+}
+
+// ─── Timer ───────────────────────────────────────────────────
+function ws_startTimer(){
+  if(WS.timerInterval) clearInterval(WS.timerInterval);
+  WS.startTime = Date.now();
+  const timerEl = document.getElementById('ws-timer');
+  const timerVal = document.getElementById('ws-timer-val');
+  if(timerEl) timerEl.style.display = '';
+  WS.timerInterval = setInterval(() => {
+    const s = Math.floor((Date.now() - WS.startTime) / 1000);
+    const mm = String(Math.floor(s/60)).padStart(2,'0');
+    const ss = String(s % 60).padStart(2,'0');
+    if(timerVal) timerVal.textContent = `${mm}:${ss}`;
+  }, 1000);
+}
+function ws_stopTimer(){
+  if(WS.timerInterval){ clearInterval(WS.timerInterval); WS.timerInterval = null; }
+}
+function ws_elapsedStr(){
+  if(!WS.startTime) return '';
+  const s = Math.floor((Date.now() - WS.startTime) / 1000);
+  const mm = Math.floor(s/60), ss = s % 60;
+  return mm > 0 ? `${mm}m ${ss}s` : `${ss} segundos`;
+}
+
+// ─── Selection logic ─────────────────────────────────────────
+function ws_cellAt(el){
+  if(!el || !el.classList.contains('ws-cell')) return null;
+  return {r: +el.dataset.r, c: +el.dataset.c};
+}
+
+function ws_getCellsInLine(start, end){
+  const dr = Math.sign(end.r - start.r);
+  const dc = Math.sign(end.c - start.c);
+  const lenR = Math.abs(end.r - start.r);
+  const lenC = Math.abs(end.c - start.c);
+  // Must be perfectly horizontal, vertical or diagonal
+  if(lenR !== lenC && lenR !== 0 && lenC !== 0) return [];
+  const len = Math.max(lenR, lenC);
+  const cells = [];
+  for(let i = 0; i <= len; i++){
+    cells.push({r: start.r + i*dr, c: start.c + i*dc});
+  }
+  return cells;
+}
+
+function ws_highlightSelecting(cells){
+  document.querySelectorAll('#ws-grid .ws-cell').forEach(el => {
+    el.classList.remove('ws-selecting');
+  });
+  if(!cells) return;
+  cells.forEach(({r, c}) => {
+    const el = document.querySelector(`#ws-grid [data-r="${r}"][data-c="${c}"]`);
+    if(el) el.classList.add('ws-selecting');
+  });
+}
+
+function ws_getCellFromPoint(x, y){
+  const els = document.elementsFromPoint(x, y);
+  for(const el of els){
+    if(el.classList && el.classList.contains('ws-cell')) return el;
+  }
+  return null;
+}
+
+function ws_checkWord(cells){
+  const letters = cells.map(({r,c}) => WS.grid[r][c]).join('');
+  const lettersRev = letters.split('').reverse().join('');
+  for(const wo of WS.words){
+    if(wo.found) continue;
+    if(wo.word === letters || wo.word === lettersRev){
+      return wo;
+    }
+  }
+  return null;
+}
+
+function ws_markFound(wo, cells){
+  wo.found = true;
+  const cls = ws_typeClass(wo.type);
+  cells.forEach(({r,c}) => {
+    const el = document.querySelector(`#ws-grid [data-r="${r}"][data-c="${c}"]`);
+    if(el){
+      el.classList.remove('ws-selecting');
+      el.classList.add(cls, 'ws-flash');
+      setTimeout(() => el.classList.remove('ws-flash'), 600);
+    }
+  });
+  // Update word list item
+  const item = document.getElementById(`ws-item-${wo.word}`);
+  if(item){
+    item.classList.add('ws-found');
+    item.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+  ws_updateStats();
+  toast(`✅ ¡Encontraste: ${wo.title}!`);
+  // Check win
+  if(WS.words.every(w => w.found)) ws_win();
+}
+
+function ws_win(){
+  ws_stopTimer();
+  const elapsed = ws_elapsedStr();
+  const banner = document.getElementById('ws-win-banner');
+  const winTime = document.getElementById('ws-win-time');
+  if(winTime) winTime.textContent = `Completado en ${elapsed} 🎊`;
+  if(banner) banner.classList.add('show');
+  document.getElementById('ws-grid-wrap').style.display = 'none';
+  document.getElementById('ws-dir-hint').style.display = 'none';
+}
+
+// ─── Event listeners for grid interaction ────────────────────
+function ws_bindGridEvents(){
+  const grid = document.getElementById('ws-grid');
+  if(!grid) return;
+
+  function onStart(e){
+    e.preventDefault();
+    const src = e.touches ? e.touches[0] : e;
+    const target = document.elementFromPoint(src.clientX, src.clientY);
+    const cell = ws_cellAt(target);
+    if(!cell) return;
+    WS.selecting = true;
+    WS.startCell = cell;
+    WS.currentCells = [cell];
+    ws_highlightSelecting(WS.currentCells);
+  }
+  function onMove(e){
+    if(!WS.selecting) return;
+    e.preventDefault();
+    const src = e.touches ? e.touches[0] : e;
+    const target = document.elementFromPoint(src.clientX, src.clientY);
+    const cell = ws_cellAt(target);
+    if(!cell) return;
+    const line = ws_getCellsInLine(WS.startCell, cell);
+    WS.currentCells = line.length > 0 ? line : [WS.startCell];
+    ws_highlightSelecting(WS.currentCells);
+  }
+  function onEnd(e){
+    if(!WS.selecting) return;
+    WS.selecting = false;
+    const matched = ws_checkWord(WS.currentCells);
+    if(matched){
+      ws_markFound(matched, WS.currentCells);
+    } else {
+      ws_highlightSelecting(null);
+    }
+    WS.currentCells = [];
+  }
+
+  grid.addEventListener('mousedown',  onStart, {passive:false});
+  grid.addEventListener('mousemove',  onMove,  {passive:false});
+  document.addEventListener('mouseup', onEnd);
+  grid.addEventListener('touchstart', onStart, {passive:false});
+  grid.addEventListener('touchmove',  onMove,  {passive:false});
+  grid.addEventListener('touchend',   onEnd,   {passive:false});
+}
+
+// ─── Filter ──────────────────────────────────────────────────
+function ws_setFilter(f){
+  WS.filter = f;
+  document.querySelectorAll('[data-filter]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.filter === f);
+  });
+  ws_renderWordList();
+}
+
+// ─── Open / New game ─────────────────────────────────────────
+function ws_newGame(){
+  ws_stopTimer();
+  WS.filter = 'all';
+  // Reset filter UI
+  document.querySelectorAll('[data-filter]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.filter === 'all');
+  });
+
+  // Get activities
+  const activities = ws_getActivities();
+  if(activities.length === 0){
+    document.getElementById('ws-empty-state').style.display = '';
+    document.getElementById('ws-grid-wrap').style.display = 'none';
+    document.getElementById('ws-dir-hint').style.display = 'none';
+    document.getElementById('ws-timer').style.display = 'none';
+    document.getElementById('ws-win-banner').classList.remove('show');
+    document.getElementById('ws-subtitle').textContent = 'Crea actividades para jugar';
+    return;
+  }
+
+  // Choose up to 14 activities randomly
+  const pool = [...activities].sort(() => Math.random() - .5).slice(0, 14);
+
+  // Choose grid size
+  WS.size = pool.length <= 6 ? 10 : pool.length <= 10 ? 12 : 14;
+
+  // Generate grid
+  const {grid, placed} = ws_generateGrid(pool);
+  WS.grid = grid;
+  WS.words = placed;
+
+  // Show/hide UI
+  document.getElementById('ws-empty-state').style.display = 'none';
+  document.getElementById('ws-win-banner').classList.remove('show');
+  document.getElementById('ws-dir-hint').style.display = '';
+  document.getElementById('ws-grid-wrap').style.display = '';
+  document.getElementById('ws-subtitle').textContent = `${placed.length} actividades ocultas — ¡encuéntralas!`;
+
+  ws_renderGrid();
+  ws_renderWordList();
+  ws_updateStats();
+  ws_bindGridEvents();
+  ws_startTimer();
+}
+
+function ws_openGame(){
+  openModal('wordSearchModal');
+  // slight delay so modal animation plays first
+  setTimeout(ws_newGame, 180);
+}
+
 async function init(){
   loadTheme();
   restoreSidebarState();
@@ -7966,5 +8558,85 @@ init();
     </div>
   </div>
 </div>
+
+<!-- ═══════════════════════════════════════
+     WORD SEARCH MINI GAME MODAL
+═══════════════════════════════════════ -->
+<div class="overlay" id="wordSearchModal">
+  <div class="modal" style="max-width:940px;width:96vw;max-height:94vh;overflow:hidden;padding:0">
+    <!-- Header -->
+    <div class="mh" style="padding:16px 22px 14px;background:linear-gradient(135deg,rgba(124,90,255,.18),rgba(52,211,153,.1));border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:22px">🎮</span>
+        <div>
+          <div class="mtitle" style="font-size:17px">Sopa de Letras</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:1px" id="ws-subtitle">Encuentra tus actividades</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button onclick="ws_newGame()" class="btn btn-s" style="padding:6px 14px;font-size:12px;height:32px" title="Nueva partida">🔄 Nueva</button>
+        <button class="mclose" onclick="closeModal('wordSearchModal')">×</button>
+      </div>
+    </div>
+    <!-- Body: two-column layout -->
+    <div class="ws-layout">
+      <!-- LEFT: Grid -->
+      <div class="ws-left" id="ws-left-panel">
+        <div id="ws-game-area" style="width:100%;display:flex;flex-direction:column;align-items:center">
+          <div class="ws-empty-state" id="ws-empty-state" style="display:none">
+            <div class="ws-empty-state-icon">🎯</div>
+            <div style="font-size:14px;font-weight:600;color:var(--text2);margin-bottom:6px">Sin actividades disponibles</div>
+            <div style="font-size:12px;color:var(--text3)">Inicia sesión y crea actividades para jugar</div>
+          </div>
+          <div class="ws-direction-hint" id="ws-dir-hint" style="display:none">
+            <span class="ws-dir-badge">→ Horizontal</span>
+            <span class="ws-dir-badge">↓ Vertical</span>
+            <span class="ws-dir-badge">↘ Diagonal</span>
+            <span class="ws-dir-badge">← Invertidas</span>
+          </div>
+          <div class="ws-grid-wrap" id="ws-grid-wrap" style="display:none">
+            <div class="ws-grid" id="ws-grid"></div>
+          </div>
+          <div class="ws-grid-timer" id="ws-timer" style="display:none">⏱ <span id="ws-timer-val">00:00</span></div>
+          <div class="ws-win-banner" id="ws-win-banner">
+            <div class="ws-win-emoji">🎉</div>
+            <div style="font-size:18px;font-weight:800;color:var(--text);margin:10px 0 4px">¡Lo lograste!</div>
+            <div style="font-size:13px;color:var(--text2)" id="ws-win-time"></div>
+            <button onclick="ws_newGame()" class="btn btn-p" style="margin-top:16px;padding:10px 24px">🔄 Jugar de nuevo</button>
+          </div>
+        </div>
+      </div>
+      <!-- RIGHT: Word list panel -->
+      <div class="ws-right">
+        <div class="ws-header-bar">
+          <span class="ws-title">Actividades</span>
+          <span class="ws-score-badge" id="ws-score">0 / 0</span>
+        </div>
+        <div class="ws-stats">
+          <div class="ws-stat">
+            <div class="ws-stat-val" id="ws-stat-found">0</div>
+            <div class="ws-stat-lbl">Encontradas</div>
+          </div>
+          <div class="ws-stat">
+            <div class="ws-stat-val" id="ws-stat-remain">0</div>
+            <div class="ws-stat-lbl">Restantes</div>
+          </div>
+          <div class="ws-stat">
+            <div class="ws-stat-val" id="ws-stat-pct">0%</div>
+            <div class="ws-stat-lbl">Progreso</div>
+          </div>
+        </div>
+        <div class="ws-filters">
+          <button class="ws-filter-btn active" onclick="ws_setFilter('all')" data-filter="all">Todas</button>
+          <button class="ws-filter-btn ws-f-personal" onclick="ws_setFilter('personal')" data-filter="personal">👤 Personal</button>
+          <button class="ws-filter-btn ws-f-team" onclick="ws_setFilter('team')" data-filter="team">👥 Equipo</button>
+          <button class="ws-filter-btn ws-f-project" onclick="ws_setFilter('project')" data-filter="project">🎯 Meta</button>
+        </div>
+        <div class="ws-word-list" id="ws-word-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
