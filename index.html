@@ -1022,22 +1022,272 @@ html.light-mode .stats-range input{background:var(--surface);border-color:var(--
 #cal{transition:opacity .18s ease,transform .18s ease;}
 #cal.view-fade{opacity:0;transform:translateY(6px);}
 
-/* ══ SIDEBAR COMPACT ══ */
-.sidebar{transition:width .25s cubic-bezier(.4,0,.2,1);}
-.sidebar.compact{width:52px !important;overflow:hidden;}
-.sidebar.compact .logo-text{display:none;}
-.sidebar.compact #sbCompactBtn{transform:rotate(180deg);margin:0 auto;}
-.sidebar.compact .logo{justify-content:center !important;padding-right:0 !important;}
-.sidebar.compact .logo h1{display:none;}
-.sidebar.compact .logo p{display:none;}
-.sidebar.compact .logo{padding:18px 0;display:flex;justify-content:center;}
-.sidebar.compact .sb-sec{display:none;}
-.sidebar.compact .logo-icon{display:flex !important;}
-.sidebar.compact .sb-toggle-btn{transform:rotate(180deg);}
-.logo-icon{display:none;font-size:22px;cursor:pointer;}
+/* ════════════════════════════════════════════════════════════
+   SIDEBAR COMPACT — Premium Notion-style rail
+   Design goals:
+   · 64px glassy rail, perfectly centered icons
+   · Gradient FAB, accent-ring avatar, status dot
+   · JS-powered body-level tooltips (avoids overflow clip)
+   · Smooth scale + fade transitions on every element
+   · Compact-nav shortcuts for hidden sections
+════════════════════════════════════════════════════════════ */
+
+/* ── Width + transition ── */
+.sidebar{transition:width .28s cubic-bezier(.4,0,.2,1);}
+.sidebar.compact{
+  width:64px !important;
+  min-width:64px !important;
+  overflow:visible !important;  /* lets portalled dropdown & tooltip escape */
+}
+
+/* ── Subtle accent border-right in compact ── */
+.sidebar.compact{
+  border-right:1px solid var(--border2) !important;
+  box-shadow:2px 0 20px rgba(124,90,255,.06) !important;
+}
+
+/* ════ LOGO / TOGGLE AREA ════ */
+.sidebar.compact .logo{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:14px 0 12px !important;
+  border-bottom:1px solid var(--border) !important;
+  flex-direction:row !important;
+}
+.sidebar.compact .logo-text,
+.sidebar.compact .logo h1,
+.sidebar.compact .logo p{ display:none !important; }
+.sidebar.compact .logo-icon{ display:flex !important; }
+
+/* Toggle button — pill, glows on hover */
+.sidebar.compact #sbCompactBtn{
+  transform:rotate(180deg);
+  margin:0 !important;
+  width:34px; height:34px;
+  padding:0 !important;
+  border-radius:10px !important;
+  display:flex !important;
+  align-items:center; justify-content:center;
+  font-size:16px !important;
+  flex-shrink:0;
+  transition:background .18s, box-shadow .18s, color .18s !important;
+}
+.sidebar.compact #sbCompactBtn:hover{
+  background:var(--accent-soft) !important;
+  color:var(--accent-bright) !important;
+  box-shadow:0 0 0 1px var(--accent),0 0 12px rgba(124,90,255,.25) !important;
+  border-color:var(--accent) !important;
+}
+
+/* ════ USER AVATAR ════ */
+.sidebar.compact .user-info{
+  padding:14px 0 10px !important;
+  gap:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  position:relative;
+  cursor:pointer;
+  border-bottom:1px solid var(--border) !important;
+}
+.sidebar.compact .user-info-text{ display:none !important; }
+
+.sidebar.compact .avatar{
+  width:38px !important;
+  height:38px !important;
+  font-size:15px !important;
+  font-weight:800 !important;
+  flex-shrink:0;
+  margin:0 !important;
+  align-self:center;
+  /* Double-ring: surface gap + accent color */
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 3.5px var(--accent),
+    0 4px 16px rgba(124,90,255,.35) !important;
+  transition:box-shadow .2s, transform .2s !important;
+}
+.sidebar.compact .user-info:hover .avatar{
+  transform:scale(1.07);
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 3.5px var(--accent-bright),
+    0 6px 20px rgba(124,90,255,.5) !important;
+}
+
+/* Status dot — green pulse ● */
+.sidebar.compact .user-info::before{
+  content:'';
+  position:absolute;
+  bottom:9px;
+  left:50%;
+  transform:translateX(9px);
+  width:9px; height:9px;
+  border-radius:50%;
+  background:#10b981;
+  border:2px solid var(--surface);
+  animation:sb-pulse 2.4s ease infinite;
+}
+@keyframes sb-pulse{
+  0%,100%{ box-shadow:0 0 0 0 rgba(16,185,129,.5); }
+  50%    { box-shadow:0 0 0 5px rgba(16,185,129,0); }
+}
+
+/* ════ CREATE FAB ════ */
+.sidebar.compact .crear-wrap{
+  margin:10px 0 6px !important;
+  padding:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:100%;
+  border-bottom:1px solid var(--border) !important;
+  padding-bottom:10px !important;
+}
+.sidebar.compact .crear-btn{
+  width:40px !important; height:40px !important;
+  border-radius:50% !important;
+  padding:0 !important;
+  display:flex !important;
+  align-items:center !important; justify-content:center !important;
+  /* Gradient — purple→green, brand colors */
+  background:linear-gradient(135deg,var(--accent) 0%,#10b981 100%) !important;
+  border:none !important;
+  box-shadow:0 4px 14px rgba(124,90,255,.45),0 2px 6px rgba(0,0,0,.3) !important;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s !important;
+  overflow:visible;
+}
+.sidebar.compact .crear-btn:hover{
+  transform:scale(1.1) translateY(-1px) !important;
+  box-shadow:0 6px 22px rgba(124,90,255,.6),0 2px 8px rgba(0,0,0,.35) !important;
+}
+.sidebar.compact .crear-btn:active{
+  transform:scale(.94) !important;
+  box-shadow:0 2px 8px rgba(124,90,255,.35) !important;
+}
+.sidebar.compact .crear-plus{
+  width:40px !important; height:40px !important;
+  font-size:22px !important; font-weight:300 !important;
+  color:#fff !important;
+  display:flex !important;
+  align-items:center !important; justify-content:center !important;
+  border-right:none !important;
+  flex-shrink:0;
+  line-height:1;
+}
+.sidebar.compact .crear-btn:hover .crear-plus{ transform:rotate(90deg); }
+.sidebar.compact .crear-label,
+.sidebar.compact .crear-arrow{
+  display:none !important; width:0 !important;
+  overflow:hidden !important; padding:0 !important; border:none !important;
+}
+
+/* ════ COMPACT NAV SHORTCUTS ════ */
+.compact-nav{
+  display:none;           /* hidden in normal mode */
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+  padding:8px 0 6px;
+  flex:1;
+}
+.sidebar.compact .compact-nav{ display:flex; }
+
+.cnav-item{
+  position:relative;
+  width:44px; height:44px;
+  border-radius:12px;
+  background:none;
+  border:none;
+  cursor:pointer;
+  display:flex;
+  align-items:center; justify-content:center;
+  font-size:19px;
+  transition:background .16s, transform .16s, box-shadow .16s;
+  outline:none;
+}
+.cnav-item:hover{
+  background:var(--surface3);
+  transform:scale(1.06);
+  box-shadow:0 2px 10px rgba(0,0,0,.2);
+}
+.cnav-item:active{ transform:scale(.92); }
+.cnav-item.active{
+  background:var(--accent-soft);
+  box-shadow:0 0 0 1px rgba(124,90,255,.3),0 2px 10px rgba(124,90,255,.2);
+}
+/* Animated indicator dot for active state */
+.cnav-item.active::after{
+  content:'';
+  position:absolute;
+  left:3px; top:50%;
+  transform:translateY(-50%);
+  width:3px; height:18px;
+  border-radius:2px;
+  background:var(--accent);
+}
+
+.cnav-divider{
+  width:28px; height:1px;
+  background:var(--border);
+  margin:4px 0;
+  flex-shrink:0;
+}
+
+/* ════ HIDE SECTIONS ════ */
+.sidebar.compact .sb-sec{ display:none !important; }
+.sidebar.compact .sb-toggle-btn{ transform:rotate(180deg); }
+.sidebar.compact::-webkit-scrollbar{ width:0 !important; }
+
+/* ════ GLOBAL TOOLTIP (JS-powered — see sbTooltip) ════ */
+#sbTooltip{
+  position:fixed;
+  pointer-events:none;
+  z-index:10002;
+  /* Styled via JS but base font here */
+  font-family:'Inter',sans-serif;
+}
+
+/* ════ LIGHT MODE OVERRIDES ════ */
+html.light-mode .sidebar.compact{
+  box-shadow:2px 0 16px rgba(0,0,0,.06) !important;
+}
+html.light-mode .sidebar.compact .crear-btn{
+  box-shadow:0 4px 14px rgba(124,90,255,.3),0 2px 6px rgba(0,0,0,.1) !important;
+}
+html.light-mode .sidebar.compact .avatar{
+  box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--accent),0 4px 12px rgba(124,90,255,.2) !important;
+}
+
+/* ════ EXPAND/COLLAPSE ANIMATION ════ */
+/* Fade in compact-nav items staggered */
+.sidebar.compact .cnav-item{
+  animation:cnav-in .22s cubic-bezier(.34,1.56,.64,1) both;
+}
+.sidebar.compact .cnav-item:nth-child(1){ animation-delay:.04s; }
+.sidebar.compact .cnav-item:nth-child(2){ animation-delay:.08s; }
+.sidebar.compact .cnav-item:nth-child(3){ animation-delay:.12s; }
+.sidebar.compact .cnav-item:nth-child(4){ animation-delay:.16s; }
+.sidebar.compact .cnav-item:nth-child(5){ animation-delay:.20s; }
+@keyframes cnav-in{
+  from{ opacity:0; transform:scale(.7) translateX(-6px); }
+  to  { opacity:1; transform:scale(1) translateX(0); }
+}
+/* Also animate the avatar and FAB on compact entry */
+.sidebar.compact .user-info .avatar{
+  animation:cnav-in .24s cubic-bezier(.34,1.56,.64,1) .02s both;
+}
+.sidebar.compact .crear-btn{
+  animation:cnav-in .24s cubic-bezier(.34,1.56,.64,1) .06s both;
+}
+
+/* ════ BASE HELPERS (unchanged) ════ */
+.logo-icon{ display:none; font-size:22px; cursor:pointer; }
 .sb-toggle-btn{
-  background:none;border:none;color:var(--text3);cursor:pointer;
-  font-size:14px;padding:2px 4px;transition:transform .25s;flex-shrink:0;
+  background:none; border:none; color:var(--text3); cursor:pointer;
+  font-size:14px; padding:2px 4px; transition:transform .25s; flex-shrink:0;
 }
 
 /* ══ WEEKEND BACKGROUNDS ══ */
@@ -2026,15 +2276,19 @@ html.light-mode .agenda-item:hover{
   <div class="logo" style="display:flex;align-items:center;justify-content:space-between;padding-right:12px">
     <h1 class="logo-text">Planifica<span style="-webkit-text-fill-color:inherit">Me</span></h1>
     <button onclick="toggleSidebarCompact()" title="Compactar sidebar"
+      data-tip="Expandir sidebar"
       style="background:none;border:1px solid var(--border2);border-radius:6px;color:var(--text3);cursor:pointer;padding:4px 7px;font-size:13px;line-height:1;transition:all .2s;flex-shrink:0"
       id="sbCompactBtn">‹</button>
   </div>
-  <div class="user-info" onclick="openUserMenu()" style="cursor:pointer;">
+  <div class="user-info" onclick="openUserMenu()" style="cursor:pointer;position:relative" title="Mi perfil" data-tip="Mi perfil">
     <div class="avatar" style="background:var(--accent);color:white" id="userAvatar">T</div>
-    <div><div class="user-name" id="userName">Tú (Admin)</div><div class="user-role" id="userRole">Administrador</div></div>
+    <div class="user-info-text">
+      <div class="user-name" id="userName">Tú (Admin)</div>
+      <div class="user-role" id="userRole">Administrador</div>
+    </div>
   </div>
-  <div class="crear-wrap">
-    <button class="crear-btn" id="crearBtn" onclick="toggleCrearMenu()">
+  <div class="crear-wrap" data-tip="Crear nuevo">
+    <button class="crear-btn" id="crearBtn" onclick="toggleCrearMenu()" title="Crear">
       <span class="crear-plus">+</span>
       <span class="crear-label">Crear</span>
       <span class="crear-arrow">▾</span>
@@ -2063,6 +2317,38 @@ html.light-mode .agenda-item:hover{
       </div>
     </div>
   </div>
+
+  <!-- ── COMPACT NAV — icon rail, only shown in compact mode ── -->
+  <div class="compact-nav" id="compactNav">
+    <button class="cnav-item" data-tip="Calendarios"
+      onclick="toggleSidebarCompact()" title="Calendarios">
+      <span>📅</span>
+    </button>
+    <button class="cnav-item" data-tip="Nueva tarea"
+      onclick="openTaskModal()" title="Nueva tarea">
+      <span>📋</span>
+    </button>
+    <button class="cnav-item" data-tip="Nueva meta"
+      onclick="openProjModal()" title="Nueva meta">
+      <span>🎯</span>
+    </button>
+    <div class="cnav-divider"></div>
+    <button class="cnav-item" data-tip="Estadísticas"
+      onclick="openStatsModal()" title="Estadísticas">
+      <span>📊</span>
+    </button>
+    <button class="cnav-item" data-tip="Modo Juego 🎮"
+      onclick="ws_openGame()" title="Modo Juego">
+      <span>🎮</span>
+    </button>
+    <div class="cnav-divider"></div>
+    <button class="cnav-item" data-tip="Expandir sidebar"
+      onclick="toggleSidebarCompact()" title="Expandir sidebar"
+      style="font-size:14px;opacity:.5;">
+      <span>›</span>
+    </button>
+  </div>
+
   <div class="sb-sec">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
       <div class="sb-title">Calendarios</div>
@@ -2945,18 +3231,57 @@ html.light-mode .agenda-item:hover{
 // CREAR DROPDOWN
 // ═══════════════════════════════════
 function toggleCrearMenu(){
-  const btn=document.getElementById('crearBtn');
-  const menu=document.getElementById('crearMenu');
-  const isOpen=menu.classList.contains('open');
-  if(isOpen){closeCrearMenu();}
-  else{menu.classList.add('open');btn.classList.add('open');}
+  const btn  = document.getElementById('crearBtn');
+  const menu = document.getElementById('crearMenu');
+  const sb   = document.getElementById('sidebar');
+  if(!btn || !menu) return;
+  const isOpen = menu.classList.contains('open');
+  if(isOpen){ closeCrearMenu(); return; }
+
+  if(sb && sb.classList.contains('compact')){
+    // ── Portal pattern: lift menu out of sidebar to escape overflow:hidden ──
+    // Position relative to the FAB button's screen coordinates
+    const wrap = document.querySelector('.crear-wrap');
+    const rect = wrap.getBoundingClientRect();
+    // Move to <body> so no parent's overflow clips it
+    document.body.appendChild(menu);
+    menu.style.cssText = `
+      position:fixed;
+      left:${Math.round(rect.right + 10)}px;
+      top:${Math.round(rect.top)}px;
+      right:auto;
+      width:220px;
+      z-index:10001;
+    `;
+    menu._sbPortal = true;
+  } else {
+    // Normal mode: return to its DOM parent if it was portalled
+    const wrap = document.querySelector('.crear-wrap');
+    if(menu._sbPortal && wrap){ wrap.appendChild(menu); menu._sbPortal = false; }
+    menu.style.cssText = '';
+  }
+  menu.classList.add('open');
+  btn.classList.add('open');
 }
+
 function closeCrearMenu(){
-  document.getElementById('crearMenu').classList.remove('open');
-  document.getElementById('crearBtn').classList.remove('open');
+  const menu = document.getElementById('crearMenu');
+  const btn  = document.getElementById('crearBtn');
+  if(menu){
+    menu.classList.remove('open');
+    // Move back to .crear-wrap if portalled
+    if(menu._sbPortal){
+      const wrap = document.querySelector('.crear-wrap');
+      if(wrap){ wrap.appendChild(menu); }
+      menu._sbPortal = false;
+      menu.style.cssText = '';
+    }
+  }
+  if(btn) btn.classList.remove('open');
 }
 document.addEventListener('click',e=>{
-  if(!e.target.closest('.crear-wrap'))closeCrearMenu();
+  // Close if click is outside both the crear-wrap AND the portalled menu
+  if(!e.target.closest('.crear-wrap') && !e.target.closest('#crearMenu')) closeCrearMenu();
 });
 
 // ═══════════════════════════════════
@@ -8404,6 +8729,117 @@ function ws_openGame(){
   // slight delay so modal animation plays first
   setTimeout(ws_newGame, 180);
 }
+
+// ═══════════════════════════════════════════════════════════
+//  COMPACT SIDEBAR — PREMIUM TOOLTIP ENGINE
+//  · Body-level fixed div avoids all overflow:hidden clipping
+//  · 300ms show delay (Notion-feel), 80ms hide
+//  · Arrow pointing left toward the icon
+//  · Respects light/dark mode via CSS variables
+// ═══════════════════════════════════════════════════════════
+(function sbTooltipEngine(){
+  // Create tooltip DOM element once
+  const tip = document.createElement('div');
+  tip.id = 'sbTooltip';
+  Object.assign(tip.style, {
+    position:       'fixed',
+    pointerEvents:  'none',
+    zIndex:         '10002',
+    display:        'flex',
+    alignItems:     'center',
+    gap:            '0',
+    opacity:        '0',
+    transition:     'opacity .14s ease, transform .14s ease',
+    transform:      'translateX(-6px)',
+    willChange:     'opacity, transform',
+  });
+  document.body.appendChild(tip);
+
+  // Inner parts: arrow + label bubble
+  tip.innerHTML = `
+    <div id="sbTipArrow" style="
+      width:0;height:0;
+      border-top:5px solid transparent;
+      border-bottom:5px solid transparent;
+      border-right:6px solid var(--surface3-solid);
+      flex-shrink:0;
+    "></div>
+    <div id="sbTipLabel" style="
+      padding:5px 11px;
+      border-radius:8px;
+      font-family:'Inter',sans-serif;
+      font-size:12px;
+      font-weight:600;
+      white-space:nowrap;
+      background:var(--surface3-solid);
+      color:var(--text);
+      border:1px solid var(--border2);
+      box-shadow:0 6px 20px rgba(0,0,0,.35);
+      letter-spacing:-.1px;
+    "></div>
+  `;
+  const tipLabel = tip.querySelector('#sbTipLabel');
+
+  let showTimer = null;
+  let hideTimer = null;
+  let currentTarget = null;
+
+  function showTip(el){
+    const label = el.dataset.tip;
+    if(!label) return;
+    clearTimeout(hideTimer);
+    currentTarget = el;
+    showTimer = setTimeout(() => {
+      const sb = document.getElementById('sidebar');
+      if(!sb || !sb.classList.contains('compact')) return; // only in compact mode
+      const rect = el.getBoundingClientRect();
+      tipLabel.textContent = label;
+      // Position: vertically centered on element, horizontally right of sidebar
+      const tipH = 30; // approximate
+      tip.style.left = (rect.right + 8) + 'px';
+      tip.style.top  = (rect.top + rect.height / 2 - tipH / 2) + 'px';
+      tip.style.opacity   = '1';
+      tip.style.transform = 'translateX(0)';
+    }, 280);
+  }
+
+  function hideTip(){
+    clearTimeout(showTimer);
+    hideTimer = setTimeout(() => {
+      tip.style.opacity   = '0';
+      tip.style.transform = 'translateX(-6px)';
+      currentTarget = null;
+    }, 80);
+  }
+
+  // Delegate on sidebar only (performance: avoids global mouseover cost)
+  document.addEventListener('mouseover', e => {
+    const el = e.target.closest('[data-tip]');
+    if(el && el.closest('#sidebar')) showTip(el);
+  });
+  document.addEventListener('mouseout', e => {
+    const el = e.target.closest('[data-tip]');
+    if(el && el.closest('#sidebar')) hideTip();
+  });
+
+  // Hide immediately when sidebar expands
+  const observer = new MutationObserver(() => {
+    const sb = document.getElementById('sidebar');
+    if(sb && !sb.classList.contains('compact')){
+      clearTimeout(showTimer);
+      tip.style.opacity = '0';
+      tip.style.transform = 'translateX(-6px)';
+    }
+  });
+  // Start observing once DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    const sb = document.getElementById('sidebar');
+    if(sb) observer.observe(sb, {attributes:true, attributeFilter:['class']});
+  });
+  // Also observe immediately in case DOMContentLoaded already fired
+  const sb = document.getElementById('sidebar');
+  if(sb) observer.observe(sb, {attributes:true, attributeFilter:['class']});
+})();
 
 async function init(){
   loadTheme();
