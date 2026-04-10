@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PlanificaMe</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
 
@@ -44,6 +45,36 @@
   --px:64px;
   --sb:272px;
   --shadow:0 24px 64px rgba(0,0,0,.7);
+
+  /* ── DESIGN SYSTEM: SPACING (8px grid) ── */
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+  --space-5:20px; --space-6:24px; --space-8:32px; --space-10:40px;
+
+  /* ── DESIGN SYSTEM: TRANSITIONS ── */
+  --t-fast:.12s ease; --t-base:.2s ease; --t-slow:.35s ease;
+  --t-spring:.25s cubic-bezier(.34,1.56,.64,1);
+
+  /* ── DESIGN SYSTEM: SHADOWS ── */
+  --shadow-xs:0 1px 3px rgba(0,0,0,.35);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.45), 0 1px 3px rgba(0,0,0,.3);
+  --shadow-md:0 4px 16px rgba(0,0,0,.5), 0 2px 6px rgba(0,0,0,.4);
+  --shadow-lg:0 12px 40px rgba(0,0,0,.6), 0 4px 12px rgba(0,0,0,.5);
+  --shadow-xl:0 24px 64px rgba(0,0,0,.7);
+  --shadow-accent:0 4px 20px rgba(124,90,255,.38);
+  --shadow-success:0 4px 16px rgba(16,185,129,.28);
+  --shadow-danger:0 4px 16px rgba(248,113,113,.25);
+
+  /* ── DESIGN SYSTEM: FOCUS ── */
+  --focus-ring:0 0 0 2px rgba(124,90,255,.45);
+
+  /* ── DESIGN SYSTEM: TYPOGRAPHY ── */
+  --text-xs:10px; --text-sm:11px; --text-base:13px;
+  --text-md:15px; --text-lg:17px; --text-xl:20px; --text-2xl:24px;
+
+  /* ── SEMANTIC COLORS ── */
+  --success:#10b981; --success-bg:rgba(16,185,129,.12);
+  --warning:#f59e0b; --warning-bg:rgba(245,158,11,.12);
+  --info:#3b82f6;    --info-bg:rgba(59,130,246,.12);
 }
 
 html.light-mode {
@@ -78,6 +109,211 @@ html.light-mode {
   --text:#111128;
   --text2:#44446a;
   --text3:#8888aa;
+  --success:#059669; --success-bg:rgba(5,150,105,.1);
+  --warning:#b45309; --warning-bg:rgba(180,83,9,.09);
+  --info:#2563eb;    --info-bg:rgba(37,99,235,.09);
+}
+
+/* ═══════════════════════════════════════════════════════
+   LUCIDE ICON SYSTEM
+═══════════════════════════════════════════════════════ */
+.icon{
+  width:18px;height:18px;
+  stroke-width:1.8;
+  color:inherit;
+  display:inline-flex;align-items:center;justify-content:center;
+  flex-shrink:0;vertical-align:middle;
+  transition:color var(--t-fast), opacity var(--t-fast);
+}
+.icon-sm{width:15px;height:15px;stroke-width:1.8;}
+.icon-md{width:20px;height:20px;}
+.icon-lg{width:22px;height:22px;}
+.icon-muted{color:var(--text3);}
+.icon-accent{color:var(--accent-bright);}
+.icon-success{color:var(--success);}
+.icon-danger{color:var(--danger);}
+/* Lucide SVG inside .icon */
+.icon svg{width:100%;height:100%;}
+
+/* Icon buttons — unified */
+.icon-btn-v2{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;
+  background:transparent;
+  border:1px solid transparent;
+  border-radius:9px;
+  cursor:pointer;
+  color:var(--text3);
+  transition:all var(--t-base);
+  flex-shrink:0;
+}
+.icon-btn-v2:hover{
+  background:var(--surface3);
+  border-color:var(--border2);
+  color:var(--text);
+}
+.icon-btn-v2:active{transform:scale(.93);}
+.icon-btn-v2.active{
+  background:var(--accent-soft);
+  border-color:rgba(124,90,255,.4);
+  color:var(--accent-bright);
+}
+
+/* ═══════════════════════════════════════════════════════
+   BUTTON SYSTEM — Enhanced
+═══════════════════════════════════════════════════════ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 20px;border-radius:10px;border:none;
+  font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
+  cursor:pointer;transition:all var(--t-base);letter-spacing:-.1px;
+  line-height:1;white-space:nowrap;flex-shrink:0;
+  position:relative;overflow:hidden;
+}
+.btn:disabled{opacity:.45;cursor:not-allowed;pointer-events:none;}
+.btn:active:not(:disabled){transform:translateY(1px);}
+.btn-p{
+  background:linear-gradient(135deg,#7c5aff,#5b3acc);
+  color:white;box-shadow:var(--shadow-accent);
+}
+.btn-p:hover:not(:disabled){
+  box-shadow:0 8px 30px rgba(124,90,255,.55);
+  transform:translateY(-1px);
+  filter:brightness(1.08);
+}
+.btn-s{
+  background:var(--surface2);border:1px solid var(--border2);
+  color:var(--text2);
+}
+.btn-s:hover:not(:disabled){
+  color:var(--text);border-color:rgba(124,90,255,.35);
+  background:var(--surface3);box-shadow:var(--shadow-xs);
+}
+.btn-ghost{
+  background:transparent;border:none;
+  color:var(--text3);padding:7px 14px;
+}
+.btn-ghost:hover:not(:disabled){
+  background:var(--surface3);color:var(--text2);
+}
+.btn-d{
+  background:var(--danger-glow,rgba(248,113,113,.1));
+  border:1px solid rgba(248,113,113,.4);color:var(--danger);
+}
+.btn-d:hover:not(:disabled){
+  background:rgba(248,113,113,.18);box-shadow:var(--shadow-danger);
+}
+/* Sizes */
+.btn-sm{padding:6px 14px;font-size:12px;border-radius:8px;}
+.btn-xs{padding:4px 10px;font-size:11px;border-radius:7px;}
+.btn-icon{padding:7px;border-radius:9px;gap:0;width:34px;height:34px;}
+
+/* ═══════════════════════════════════════════════════════
+   INPUT SYSTEM — Enhanced focus states
+═══════════════════════════════════════════════════════ */
+input[type="text"],input[type="email"],input[type="password"],
+input[type="number"],input[type="date"],input[type="time"],
+input[type="datetime-local"],select,textarea{
+  font-family:'Inter',sans-serif;
+  transition:border-color var(--t-base), box-shadow var(--t-base);
+}
+input:focus,select:focus,textarea:focus{
+  outline:none;
+}
+
+/* Shared input class */
+.finp,.sinp{transition:border-color var(--t-base), box-shadow var(--t-base), width var(--t-slow);}
+.finp:focus,.sinp:focus{
+  outline:none;
+  border-color:rgba(124,90,255,.55) !important;
+  box-shadow:var(--focus-ring);
+}
+
+/* ═══════════════════════════════════════════════════════
+   CARD SYSTEM
+═══════════════════════════════════════════════════════ */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:var(--space-4);
+  transition:border-color var(--t-base), box-shadow var(--t-base);
+}
+.card:hover{border-color:var(--border2);box-shadow:var(--shadow-sm);}
+.card-surface{background:var(--surface2);}
+
+/* ═══════════════════════════════════════════════════════
+   SIDEBAR ENHANCEMENTS
+═══════════════════════════════════════════════════════ */
+/* Compact nav icon hover */
+.cnav-item{
+  transition:background var(--t-base), color var(--t-base), transform var(--t-base) !important;
+}
+.cnav-item:hover{transform:scale(1.08) !important;}
+
+/* Crear btn icon area */
+.crear-icon-wrap{
+  width:32px;height:32px;border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   HEADER MICROINTERACTIONS
+═══════════════════════════════════════════════════════ */
+.nbtn{transition:all var(--t-base) !important;}
+.vtab{transition:all var(--t-base) !important;}
+
+/* ═══════════════════════════════════════════════════════
+   TYPOGRAPHY UTILITIES
+═══════════════════════════════════════════════════════ */
+.text-xs{font-size:var(--text-xs);}
+.text-sm{font-size:var(--text-sm);}
+.text-base{font-size:var(--text-base);}
+.text-muted{color:var(--text3);}
+.text-secondary{color:var(--text2);}
+.font-semibold{font-weight:600;}
+.font-bold{font-weight:700;}
+.tracking-wide{letter-spacing:.4px;}
+.tracking-wider{letter-spacing:.8px;}
+.uppercase{text-transform:uppercase;}
+
+/* ═══════════════════════════════════════════════════════
+   BADGE / TAG SYSTEM
+═══════════════════════════════════════════════════════ */
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:2px 8px;border-radius:20px;
+  font-size:var(--text-xs);font-weight:700;line-height:1.6;
+  letter-spacing:.2px;white-space:nowrap;
+}
+.badge-success{background:var(--success-bg);color:var(--success);}
+.badge-warning{background:var(--warning-bg);color:var(--warning);}
+.badge-danger{background:var(--danger-glow,rgba(248,113,113,.12));color:var(--danger);}
+.badge-info{background:var(--info-bg);color:var(--info);}
+.badge-neutral{background:var(--surface3);color:var(--text2);border:1px solid var(--border2);}
+
+/* ═══════════════════════════════════════════════════════
+   SCROLLBAR GLOBAL
+═══════════════════════════════════════════════════════ */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:var(--text3);}
+
+/* ═══════════════════════════════════════════════════════
+   MODAL ENHANCEMENTS
+═══════════════════════════════════════════════════════ */
+.modal{transition:box-shadow var(--t-base);}
+.mclose{
+  transition:all var(--t-base) !important;
+}
+.mclose:hover{
+  background:var(--danger-glow, rgba(248,113,113,.12)) !important;
+  color:var(--danger) !important;
+}
+/* Label system in forms */
+.flbl{
+  display:flex;align-items:center;gap:5px;
+  font-size:var(--text-sm);font-weight:600;color:var(--text2);
+  margin-bottom:5px;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -101,13 +337,17 @@ body{
 .sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 
 /* Logo */
-.logo{padding:22px 20px 16px;border-bottom:1px solid var(--border);}
+.logo{padding:20px 20px 15px;border-bottom:1px solid var(--border);}
 .logo h1{
-  font-family:'DM Serif Display',serif;font-size:21px;letter-spacing:-.4px;
-  background:linear-gradient(135deg,#7c5aff 0%,#10b981 100%);
+  font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-.5px;
+  background:linear-gradient(135deg,#7c5aff 0%,#34d399 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1.2;
 }
-.logo p{font-size:11px;color:var(--text3);margin-top:3px;letter-spacing:.3px;}
+.logo p{
+  font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.5px;
+  text-transform:uppercase;font-weight:600;
+}
 
 /* User */
 .user-info{
@@ -269,15 +509,26 @@ body{
 
 /* Filter buttons used in team/project */
 .fbadge{
-  display:flex;align-items:center;gap:5px;padding:4px 11px;
+  display:flex;align-items:center;gap:5px;padding:5px 12px;
   border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;
-  border:1px solid transparent;transition:all .18s;
+  border:1px solid transparent;
+  transition:all var(--t-base,0.2s);
   white-space:nowrap;flex-shrink:0;letter-spacing:.3px;text-transform:uppercase;
+  position:relative;
 }
+/* CSS color dot instead of ● emoji character */
+.fbadge::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  flex-shrink:0;background:currentColor;
+  transition:transform .2s;
+}
+.fbadge:hover::before{transform:scale(1.3);}
 .fbadge.personal{border-color:rgba(139,92,246,.4);color:var(--personal);}
 .fbadge.team{border-color:rgba(16,185,129,.35);color:var(--team);}
 .fbadge.project-f{border-color:rgba(245,158,11,.35);color:var(--project);}
 .fbadge.holiday-f{border-color:rgba(239,68,68,.35);color:var(--holiday);}
+/* Holiday badge no dot */
+.fbadge.holiday-f::before{display:none;}
 .fbadge.on.personal{background:rgba(139,92,246,.12);box-shadow:0 0 10px rgba(139,92,246,.12);}
 .fbadge.on.team{background:rgba(16,185,129,.09);}
 .fbadge.on.project-f{background:rgba(245,158,11,.09);}
@@ -399,7 +650,7 @@ body{
 }
 .sinp:focus{outline:none;border-color:rgba(124,90,255,.55);width:240px;box-shadow:0 0 22px rgba(124,90,255,.14);}
 .sinp::placeholder{color:var(--text3);}
-.sico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:12px;pointer-events:none;}
+.sico{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;display:flex;align-items:center;}
 .sresults{display:none;}
 .search-modal-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;
@@ -642,13 +893,7 @@ body{
 .tbtn.personal.on{border-color:rgba(109,40,217,.5);background:var(--personal-bg);color:var(--personal);box-shadow:0 0 14px rgba(109,40,217,.15);}
 .tbtn.team.on{border-color:rgba(4,120,87,.45);background:var(--team-bg);color:var(--team);}
 .tbtn.project.on{border-color:rgba(180,83,9,.45);background:var(--project-bg);color:var(--project);}
-.btn{padding:10px 22px;border-radius:10px;border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;letter-spacing:-.1px;}
-.btn-p{background:linear-gradient(135deg,#7c5aff,#5b3acc);color:white;box-shadow:0 4px 18px rgba(124,90,255,.32);}
-.btn-p:hover{box-shadow:0 8px 28px rgba(124,90,255,.52);transform:translateY(-2px);}
-.btn-s{background:var(--surface2);border:1px solid var(--border2);color:var(--text2);}
-.btn-s:hover{color:var(--text);border-color:rgba(124,90,255,.3);background:var(--surface3);}
-.btn-d{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.4);color:var(--danger);}
-.btn-d:hover{background:rgba(248,113,113,.18);box-shadow:0 4px 16px rgba(248,113,113,.2);}
+/* btn variants — core defined in design system above */
 
 /* Detail */
 .deth{padding:20px 26px 14px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(124,90,255,.05),transparent);}
@@ -1063,15 +1308,7 @@ html.light-mode .stats-range input{background:var(--surface);border-color:var(--
 /* Toggle button — pill, glows on hover */
 .sidebar.compact #sbCompactBtn{
   transform:rotate(180deg);
-  margin:0 !important;
-  width:34px; height:34px;
-  padding:0 !important;
-  border-radius:10px !important;
-  display:flex !important;
-  align-items:center; justify-content:center;
-  font-size:16px !important;
-  flex-shrink:0;
-  transition:background .18s, box-shadow .18s, color .18s !important;
+  transition:background .18s, box-shadow .18s, color .18s, transform .25s !important;
 }
 .sidebar.compact #sbCompactBtn:hover{
   background:var(--accent-soft) !important;
@@ -1205,15 +1442,18 @@ html.light-mode .stats-range input{background:var(--surface);border-color:var(--
   display:flex;
   align-items:center; justify-content:center;
   font-size:19px;
-  transition:background .16s, transform .16s, box-shadow .16s;
+  color:var(--text3);
+  transition:background .16s, transform .16s, box-shadow .16s, color .16s;
   outline:none;
 }
 .cnav-item:hover{
   background:var(--surface3);
   transform:scale(1.06);
   box-shadow:0 2px 10px rgba(0,0,0,.2);
+  color:var(--text);
 }
 .cnav-item:active{ transform:scale(.92); }
+.cnav-item .icon{ color:inherit; }
 .cnav-item.active{
   background:var(--accent-soft);
   box-shadow:0 0 0 1px rgba(124,90,255,.3),0 2px 10px rgba(124,90,255,.2);
@@ -2371,9 +2611,9 @@ html.light-mode .agenda-item:hover{
   <div class="logo" style="display:flex;align-items:center;justify-content:space-between;padding-right:12px">
     <h1 class="logo-text">Planifica<span style="-webkit-text-fill-color:inherit">Me</span></h1>
     <button onclick="toggleSidebarCompact()" title="Compactar sidebar"
-      data-tip="Expandir sidebar"
-      style="background:none;border:1px solid var(--border2);border-radius:6px;color:var(--text3);cursor:pointer;padding:4px 7px;font-size:13px;line-height:1;transition:all .2s;flex-shrink:0"
-      id="sbCompactBtn">‹</button>
+      data-tip="Compactar sidebar"
+      class="icon-btn-v2"
+      id="sbCompactBtn"><i data-lucide="panel-left-close" class="icon icon-sm"></i></button>
   </div>
   <div class="user-info" onclick="openUserMenu()" style="cursor:pointer;position:relative" title="Mi perfil" data-tip="Mi perfil">
     <div class="avatar" style="background:var(--accent);color:white" id="userAvatar">T</div>
@@ -2390,21 +2630,21 @@ html.light-mode .agenda-item:hover{
     </button>
     <div class="crear-menu" id="crearMenu">
       <div class="crear-item" onclick="closeCrearMenu();openTaskModal()">
-        <div class="crear-icon ci-task">📋</div>
+        <div class="crear-icon ci-task"><i data-lucide="clipboard-list" class="icon icon-md"></i></div>
         <div>
           <div class="crear-item-label">Nueva Tarea</div>
           <div class="crear-item-sub">Personal, equipo o recordatorio</div>
         </div>
       </div>
       <div class="crear-item" onclick="closeCrearMenu();openProjModal()">
-        <div class="crear-icon ci-proj">🎯</div>
+        <div class="crear-icon ci-proj"><i data-lucide="target" class="icon icon-md"></i></div>
         <div>
-          <div class="crear-item-label">Nuevo Proyecto Meta</div>
+          <div class="crear-item-label">Nueva Meta</div>
           <div class="crear-item-sub">Objetivo con fecha límite</div>
         </div>
       </div>
       <div class="crear-item" onclick="closeCrearMenu();openCreateCalendarModal()">
-        <div class="crear-icon ci-event">📅</div>
+        <div class="crear-icon ci-event"><i data-lucide="calendar-plus" class="icon icon-md"></i></div>
         <div>
           <div class="crear-item-label">Nuevo Calendario</div>
           <div class="crear-item-sub">Espacio compartido con el equipo</div>
@@ -2417,30 +2657,30 @@ html.light-mode .agenda-item:hover{
   <div class="compact-nav" id="compactNav">
     <button class="cnav-item" data-tip="Calendarios"
       onclick="toggleSidebarCompact()" title="Calendarios">
-      <span>📅</span>
+      <i data-lucide="calendar" class="icon"></i>
     </button>
     <button class="cnav-item" data-tip="Nueva tarea"
       onclick="openTaskModal()" title="Nueva tarea">
-      <span>📋</span>
+      <i data-lucide="clipboard-list" class="icon"></i>
     </button>
     <button class="cnav-item" data-tip="Nueva meta"
       onclick="openProjModal()" title="Nueva meta">
-      <span>🎯</span>
+      <i data-lucide="target" class="icon"></i>
     </button>
     <div class="cnav-divider"></div>
     <button class="cnav-item" data-tip="Estadísticas"
       onclick="openStatsModal()" title="Estadísticas">
-      <span>📊</span>
+      <i data-lucide="bar-chart-3" class="icon"></i>
     </button>
-    <button class="cnav-item" data-tip="Modo Juego 🎮"
+    <button class="cnav-item" data-tip="Modo Juego"
       onclick="ws_openGame()" title="Modo Juego">
-      <span>🎮</span>
+      <i data-lucide="gamepad-2" class="icon"></i>
     </button>
     <div class="cnav-divider"></div>
     <button class="cnav-item" data-tip="Expandir sidebar"
       onclick="toggleSidebarCompact()" title="Expandir sidebar"
-      style="font-size:14px;opacity:.5;">
-      <span>›</span>
+      style="opacity:.55;">
+      <i data-lucide="chevron-right" class="icon"></i>
     </button>
   </div>
 
@@ -2522,23 +2762,23 @@ html.light-mode .agenda-item:hover{
       </div>
       <!-- DERECHA: acciones -->
       <div class="hdr-right">
-        <button class="btn btn-p guest-login-btn" id="guestLoginBtn" onclick="openModal('authModal')" title="Iniciar sesión" style="display:none;padding:6px 14px;font-size:12px;height:32px">🔑 Iniciar sesión</button>
-        <button class="nbtn icon-btn" onclick="ws_openGame()" title="Sopa de Letras — Modo Juego">🎮</button>
-        <button class="nbtn icon-btn" onclick="openStatsModal()" title="Estadísticas">📊</button>
-        <button class="nbtn icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Cambiar tema">🌓</button>
-        <button class="nbtn icon-btn rp-toggle-mobile" id="rpMobileBtn" onclick="toggleRightPanelMobile()" title="Historial">📋</button>
+        <button class="btn btn-p guest-login-btn btn-sm" id="guestLoginBtn" onclick="openModal('authModal')" title="Iniciar sesión" style="display:none;gap:5px"><i data-lucide="log-in" class="icon icon-sm"></i> Iniciar sesión</button>
+        <button class="nbtn icon-btn icon-btn-v2" onclick="ws_openGame()" title="Modo Juego"><i data-lucide="gamepad-2" class="icon"></i></button>
+        <button class="nbtn icon-btn icon-btn-v2" onclick="openStatsModal()" title="Estadísticas"><i data-lucide="bar-chart-3" class="icon"></i></button>
+        <button class="nbtn icon-btn icon-btn-v2" id="themeToggleBtn" onclick="toggleTheme()" title="Cambiar tema"><i data-lucide="moon" class="icon" id="themeIcon"></i></button>
+        <button class="nbtn icon-btn icon-btn-v2 rp-toggle-mobile" id="rpMobileBtn" onclick="toggleRightPanelMobile()" title="Historial"><i data-lucide="layout-list" class="icon"></i></button>
       </div>
     </div>
     <!-- Fila 2: filtros + buscador -->
     <div class="header-row2">
       <div class="filters">
-        <div class="fbadge personal on" id="f-personal" onclick="toggleFilter('personal')">● Personal</div>
-        <div class="fbadge team on" id="f-team" onclick="toggleFilter('team')">● Equipo</div>
-        <div class="fbadge project-f on" id="f-project" onclick="toggleFilter('project')">● Meta</div>
-        <div class="fbadge holiday-f on" id="f-holiday" onclick="toggleFilter('holiday')">🇩🇴 Festivos</div>
+        <div class="fbadge personal on" id="f-personal" onclick="toggleFilter('personal')">Personal</div>
+        <div class="fbadge team on" id="f-team" onclick="toggleFilter('team')">Equipo</div>
+        <div class="fbadge project-f on" id="f-project" onclick="toggleFilter('project')">Meta</div>
+        <div class="fbadge holiday-f on" id="f-holiday" onclick="toggleFilter('holiday')">Festivos</div>
       </div>
       <div class="search-wrap">
-        <span class="sico">🔍</span>
+        <span class="sico"><i data-lucide="search" class="icon icon-sm icon-muted"></i></span>
         <input class="sinp" id="sinp" type="text" placeholder="Buscar... (Ctrl+K)" onclick="openSearchModal()" readonly autocomplete="off" style="cursor:pointer">
         <div class="sresults" id="sresults"></div>
       </div>
@@ -2546,8 +2786,9 @@ html.light-mode .agenda-item:hover{
   </header>
   <!-- GUEST BANNER -->
   <div class="guest-banner" id="guestBanner" style="display:none">
-    <span>👁 Modo visitante — <strong>Inicia sesión</strong> para crear y gestionar actividades</span>
-    <button class="btn btn-p" onclick="openModal('authModal')" style="padding:5px 14px;font-size:12px;height:28px;margin-left:12px">Entrar</button>
+    <i data-lucide="eye" class="icon icon-sm" style="color:var(--accent-bright)"></i>
+    <span>Modo visitante — <strong>Inicia sesión</strong> para crear y gestionar actividades</span>
+    <button class="btn btn-p btn-sm" onclick="openModal('authModal')" style="margin-left:8px">Entrar</button>
   </div>
   <div class="cal" id="cal"></div>
 </main>
@@ -2604,7 +2845,7 @@ html.light-mode .agenda-item:hover{
   <div class="search-modal" onclick="event.stopPropagation()">
     <div class="search-modal-head">
       <div class="search-modal-input-wrap">
-        <span style="font-size:18px;color:var(--text3)">🔍</span>
+        <i data-lucide="search" class="icon icon-md icon-muted"></i>
         <input class="search-modal-input" id="searchModalInput" type="text"
           placeholder="Buscar actividades, proyectos..."
           oninput="runAdvancedSearch()" autocomplete="off">
@@ -2636,7 +2877,7 @@ html.light-mode .agenda-item:hover{
     </div>
     <div class="search-results-body" id="searchResults">
       <div class="sempty">
-        <div style="font-size:32px;margin-bottom:8px">🔍</div>
+        <i data-lucide="search" class="icon icon-lg icon-muted" style="margin-bottom:8px;width:32px;height:32px"></i>
         <div>Escribe para buscar actividades</div>
         <div style="margin-top:8px;font-size:10px;opacity:.6">Filtra por tipo, estado, calendario, creador o rango de fechas</div>
       </div>
@@ -2708,7 +2949,7 @@ html.light-mode .agenda-item:hover{
       <div>
         <div class="umenu-name" id="umenuName">Usuario</div>
         <div class="umenu-email" id="umenuEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c8bdbbbda9baa1a788ada5a9a1a4e6aba7a5">[email&#160;protected]</a></div>
-        <div class="umenu-role" id="umenuRole">👤 Usuario</div>
+        <div class="umenu-role" id="umenuRole">Usuario</div>
       </div>
       <button class="mclose" style="margin-left:auto;align-self:flex-start" onclick="closeModal('userMenuModal')">×</button>
     </div>
@@ -2731,23 +2972,23 @@ html.light-mode .agenda-item:hover{
     <div style="padding:8px 0">
       <div class="umenu-section">Cuenta</div>
       <button class="umenu-item" onclick="closeModal('userMenuModal');openEditProfileModal()">
-        <div class="umenu-item-icon" style="background:rgba(124,90,255,.15);color:var(--accent-bright)">👤</div>
+        <div class="umenu-item-icon" style="background:rgba(124,90,255,.15);color:var(--accent-bright)"><i data-lucide="user" class="icon"></i></div>
         <div class="umenu-item-text">
           <div class="umenu-item-label">Editar Perfil</div>
           <div class="umenu-item-sub">Nombre y correo electrónico</div>
         </div>
-        <span style="color:var(--text3);font-size:11px">›</span>
+        <i data-lucide="chevron-right" class="icon icon-sm icon-muted"></i>
       </button>
       <button class="umenu-item" onclick="openHistorialModal()">
-        <div class="umenu-item-icon" style="background:rgba(245,158,11,.13);color:var(--accent2)">📊</div>
+        <div class="umenu-item-icon" style="background:rgba(245,158,11,.13);color:var(--accent2)"><i data-lucide="bar-chart-3" class="icon"></i></div>
         <div class="umenu-item-text">
           <div class="umenu-item-label">Mi Historial</div>
           <div class="umenu-item-sub">Ver todas mis actividades</div>
         </div>
-        <span style="color:var(--text3);font-size:11px">›</span>
+        <i data-lucide="chevron-right" class="icon icon-sm icon-muted"></i>
       </button>
       <button class="umenu-item" onclick="closeModal('userMenuModal');toggleTheme()">
-        <div class="umenu-item-icon" style="background:rgba(52,211,153,.12);color:var(--accent3)" id="umenuThemeIcon">🌓</div>
+        <div class="umenu-item-icon" style="background:rgba(52,211,153,.12);color:var(--accent3)" id="umenuThemeIcon"><i data-lucide="moon" class="icon" id="umenuThemeIconInner"></i></div>
         <div class="umenu-item-text">
           <div class="umenu-item-label" id="umenuThemeLabel">Cambiar Tema</div>
           <div class="umenu-item-sub" id="umenuThemeSub">Modo oscuro activo</div>
@@ -2756,14 +2997,14 @@ html.light-mode .agenda-item:hover{
       <div class="umenu-divider"></div>
       <div class="umenu-section">Sesión</div>
       <button class="umenu-item" onclick="switchSession()">
-        <div class="umenu-item-icon" style="background:rgba(96,165,250,.12);color:#60a5fa">🔄</div>
+        <div class="umenu-item-icon" style="background:rgba(96,165,250,.12);color:#60a5fa"><i data-lucide="refresh-cw" class="icon"></i></div>
         <div class="umenu-item-text">
           <div class="umenu-item-label">Cambiar de Cuenta</div>
           <div class="umenu-item-sub">Iniciar sesión con otro usuario</div>
         </div>
       </button>
       <button class="umenu-item danger" onclick="confirmLogout()">
-        <div class="umenu-item-icon" style="background:rgba(248,113,113,.1);color:var(--danger)">🚪</div>
+        <div class="umenu-item-icon" style="background:rgba(248,113,113,.1);color:var(--danger)"><i data-lucide="log-out" class="icon"></i></div>
         <div class="umenu-item-text">
           <div class="umenu-item-label">Cerrar Sesión</div>
           <div class="umenu-item-sub">Salir de tu cuenta actual</div>
@@ -2777,7 +3018,7 @@ html.light-mode .agenda-item:hover{
 <div class="overlay" id="historialModal">
   <div class="modal" style="width:600px;max-height:88vh">
     <div class="mh">
-      <h2 class="mtitle">📊 Mi Historial</h2>
+      <h2 class="mtitle" style="display:flex;align-items:center;gap:8px"><i data-lucide="bar-chart-3" class="icon icon-md icon-accent"></i> Mi Historial</h2>
       <button class="mclose" onclick="closeModal('historialModal')">×</button>
     </div>
     <div class="mb" style="padding-top:12px">
@@ -2815,8 +3056,8 @@ html.light-mode .agenda-item:hover{
       <!-- Exportar -->
       <div style="display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
         <span style="font-size:11px;color:var(--text3);align-self:center;flex:1">Exportar resultados:</span>
-        <button class="btn btn-s" onclick="exportHistorialExcel()" style="font-size:12px;gap:6px">
-          📊 Excel
+        <button class="btn btn-s btn-sm" onclick="exportHistorialExcel()" style="gap:6px">
+          <i data-lucide="table-2" class="icon icon-sm"></i> Excel
         </button>
         <button class="btn btn-s" onclick="exportHistorialPDF()" style="font-size:12px;gap:6px">
           📄 PDF
@@ -3890,6 +4131,15 @@ async function loadUserCalendars(){
 // ═══════════════════════════════════
 // THEME TOGGLE
 // ═══════════════════════════════════
+function _updateThemeIcons(){
+  const isDark = S.theme === 'dark';
+  // Header icon: show sun when dark (to switch to light), moon when light (to switch to dark)
+  const hdrIcon = document.getElementById('themeIcon');
+  if(hdrIcon){ hdrIcon.setAttribute('data-lucide', isDark ? 'sun' : 'moon'); lucide.createIcons({el:hdrIcon.parentElement}); }
+  // User menu icon
+  const umIcon = document.getElementById('umenuThemeIconInner');
+  if(umIcon){ umIcon.setAttribute('data-lucide', isDark ? 'sun' : 'moon'); lucide.createIcons({el:umIcon.parentElement}); }
+}
 function toggleTheme(){
   S.theme = S.theme === 'dark' ? 'light' : 'dark';
   if(S.theme === 'light'){
@@ -3898,11 +4148,7 @@ function toggleTheme(){
     document.documentElement.classList.remove('light-mode');
   }
   localStorage.setItem('theme', S.theme);
-  
-  // Cambiar emoji del botón
-  const btn = document.getElementById('themeToggleBtn');
-  if(btn) btn.textContent = S.theme === 'dark' ? '☀️' : '🌙';
-
+  _updateThemeIcons();
   // Re-render stats charts if dashboard is open (colors need to update)
   if(document.getElementById('statsModal')?.classList.contains('open')){
     renderStatsTab(_statsTab);
@@ -3915,9 +4161,8 @@ function loadTheme(){
   S.theme = saved;
   if(S.theme === 'light'){
     document.documentElement.classList.add('light-mode');
-    const btn = document.getElementById('themeToggleBtn');
-    if(btn) btn.textContent = '🌙';
   }
+  // icons will be updated after lucide.createIcons() runs in init
 }
 
 // ═══════════════════════════════════
@@ -5792,7 +6037,11 @@ function toast(msg){
 // ═══════════════════════════════════
 // MODAL UTILS
 // ═══════════════════════════════════
-function openModal(id){document.getElementById(id).classList.add('open');}
+function openModal(id){
+  document.getElementById(id).classList.add('open');
+  // Re-scan for any Lucide icons
+  if(typeof lucide !== 'undefined') lucide.createIcons();
+}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.overlay').forEach(o=>{
   o.addEventListener('click',e=>{
@@ -6158,7 +6407,7 @@ function openUserMenu(){
   document.getElementById('umenuAvatar').style.background = ME.color || 'var(--accent)';
   document.getElementById('umenuName').textContent = ME.name;
   document.getElementById('umenuEmail').textContent = ME.email || 'Sin email';
-  document.getElementById('umenuRole').textContent = '👤 ' + (ME.role || 'Usuario');
+  document.getElementById('umenuRole').textContent = ME.role || 'Usuario';
   // Stats
   const myEvents = S.events.filter(e => e.creatorId === ME.id);
   const myProjects = S.projects.filter(p => p.creatorId === ME.id);
@@ -6168,7 +6417,7 @@ function openUserMenu(){
   document.getElementById('umenuStatDone').textContent = myDone.length;
   // Tema
   const isDark = S.theme === 'dark';
-  document.getElementById('umenuThemeIcon').textContent = isDark ? '☀️' : '🌙';
+  _updateThemeIcons();
   document.getElementById('umenuThemeLabel').textContent = isDark ? 'Modo Claro' : 'Modo Oscuro';
   document.getElementById('umenuThemeSub').textContent = isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro';
   openModal('userMenuModal');
@@ -9132,6 +9381,8 @@ function ws_openGame(){
 async function init(){
   loadTheme();
   restoreSidebarState();
+  // Initialize Lucide icons on first paint
+  if(typeof lucide !== 'undefined') lucide.createIcons();
   if(restoreSession()){
     console.log('✓ Sesión restaurada:', ME.name);
     exitGuestMode();
@@ -9146,11 +9397,14 @@ async function init(){
     loadTags();
     loadTemplates();
     console.log('✓ Aplicación lista.');
+    _updateThemeIcons();
   } else {
     // Sin sesión — modo visitante por defecto
     enterGuestMode();
     render(); // render calendario vacío para que el visitante pueda ver la UI
   }
+  // Refresh icons after any dynamic content
+  if(typeof lucide !== 'undefined') lucide.createIcons();
 }
 init();
 </script>
