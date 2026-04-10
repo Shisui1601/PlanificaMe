@@ -2257,11 +2257,106 @@ html.light-mode .agenda-item:hover{
   text-align:center;padding:40px 20px;color:var(--text3);
 }
 .ws-empty-state-icon{font-size:40px;margin-bottom:10px;}
+/* Difficulty tabs */
+.ws-diff-tabs{display:flex;gap:3px;background:var(--surface3);border-radius:8px;padding:3px;}
+.ws-diff-tab{
+  padding:4px 11px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;
+  border:none;background:transparent;color:var(--text3);transition:all .15s;white-space:nowrap;
+}
+.ws-diff-tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.18);}
+.ws-diff-tab.easy.active{color:#10b981;}
+.ws-diff-tab.normal.active{color:#f59e0b;}
+.ws-diff-tab.hard.active{color:#ef4444;}
+/* Sound button */
+.ws-sound-btn{
+  background:none;border:1px solid var(--border2);border-radius:8px;
+  color:var(--text3);cursor:pointer;padding:4px 8px;font-size:14px;
+  transition:all .15s;line-height:1;
+}
+.ws-sound-btn:hover{border-color:var(--accent);color:var(--accent);}
+/* Score big area */
+.ws-score-area{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;background:var(--surface3);border-radius:12px;
+  margin:0 0 10px 0;width:100%;max-width:520px;box-sizing:border-box;
+}
+.ws-score-big{font-size:28px;font-weight:900;color:var(--accent-bright);line-height:1;}
+.ws-score-big-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-top:2px;}
+.ws-hi-score{text-align:right;}
+.ws-hi-val{font-size:14px;font-weight:800;color:var(--text2);}
+.ws-hi-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-top:2px;}
+/* Combo banner (body-level overlay) */
+.ws-combo-banner{
+  position:fixed;top:50%;left:50%;
+  background:linear-gradient(135deg,#7c5aff,#10b981);
+  color:white;font-size:20px;font-weight:900;padding:14px 32px;
+  border-radius:20px;z-index:20000;pointer-events:none;
+  box-shadow:0 8px 40px rgba(124,90,255,.6);
+  animation:ws-combo-pop .7s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes ws-combo-pop{
+  0%{transform:translate(-50%,-50%) scale(0);opacity:0;}
+  60%{transform:translate(-50%,-50%) scale(1.08);opacity:1;}
+  80%{transform:translate(-50%,-50%) scale(.98);}
+  100%{transform:translate(-50%,-50%) scale(1);opacity:1;}
+}
+/* Score popup */
+@keyframes ws-score-popup{
+  0%{opacity:1;transform:translateY(0) scale(1);}
+  60%{opacity:1;transform:translateY(-40px) scale(1.1);}
+  100%{opacity:0;transform:translateY(-70px) scale(.8);}
+}
+.ws-score-popup{
+  position:fixed;pointer-events:none;z-index:19999;
+  font-weight:900;font-size:20px;
+  text-shadow:0 2px 8px rgba(0,0,0,.4);
+  animation:ws-score-popup .9s ease forwards;
+  font-family:'Inter',sans-serif;
+}
+/* Wrong selection shake */
+@keyframes ws-shake{
+  0%,100%{transform:translateX(0);}
+  20%{transform:translateX(-6px);}40%{transform:translateX(6px);}
+  60%{transform:translateX(-4px);}80%{transform:translateX(4px);}
+}
+.ws-cell.ws-wrong{
+  background:rgba(239,68,68,.35) !important;
+  color:#f87171 !important;
+  animation:ws-shake .35s ease;
+}
+/* Timer urgent (countdown <30s) */
+.ws-timer-urgent{color:#ef4444 !important;animation:ws-timer-blink .5s ease infinite;}
+@keyframes ws-timer-blink{0%,100%{opacity:1;}50%{opacity:.45;}}
+/* Progress bar */
+.ws-progress-bar{
+  height:4px;background:var(--border);margin:0 18px 4px;flex-shrink:0;overflow:hidden;border-radius:2px;
+}
+.ws-progress-fill{
+  height:100%;background:linear-gradient(90deg,var(--accent),#10b981);
+  border-radius:2px;transition:width .45s cubic-bezier(.34,1.56,.64,1);width:0;
+}
+/* Records */
+.ws-records{
+  padding:8px 18px 12px;border-top:1px solid var(--border);flex-shrink:0;
+}
+.ws-records-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px;}
+.ws-record-row{display:flex;align-items:center;gap:6px;padding:4px 0;}
+.ws-record-icon{font-size:12px;width:18px;text-align:center;}
+.ws-record-lbl{font-size:11px;color:var(--text2);flex:1;}
+.ws-record-val{font-size:11px;font-weight:700;color:var(--text);}
+/* Badge unlock animation */
+@keyframes ws-badge-unlock{
+  0%{opacity:0;transform:translateY(10px) scale(.8);}
+  60%{opacity:1;transform:translateY(-4px) scale(1.05);}
+  100%{opacity:1;transform:translateY(0) scale(1);}
+}
 @media(max-width:680px){
   .ws-layout{grid-template-columns:1fr;grid-template-rows:auto 1fr;}
   .ws-left{padding:12px;min-height:0;}
-  .ws-right{max-height:220px;}
+  .ws-right{max-height:240px;}
   .ws-cell{font-size:11px;}
+  .ws-diff-tabs{display:none;}
+  .ws-score-area{max-width:100%;}
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -8297,56 +8392,255 @@ function exportStatsPDF(){
 
 
 // ═══════════════════════════════════════════════════════════
-//  🎮  WORD SEARCH MINI GAME  — ws_* namespace
+//  🎮  WORD SEARCH MINI GAME  — ws_* namespace  (v2)
 // ═══════════════════════════════════════════════════════════
-const WS = {
-  grid: [],          // 2D array of letters
-  size: 12,          // grid size (NxN)
-  words: [],         // [{ word, title, type, status, calendarName, creatorName, placed, found, cells[], color }]
-  selecting: false,
-  startCell: null,   // {r, c}
-  currentCells: [],  // cells currently highlighted during drag
-  timerInterval: null,
-  startTime: null,
-  filter: 'all',
+
+const WS_DIFFICULTY = {
+  easy:   {label:'Fácil',  emoji:'🟢',size:10,maxWords:6,  dirs:4,countdown:null,multiplier:1,  },
+  normal: {label:'Normal', emoji:'🟡',size:12,maxWords:10, dirs:8,countdown:null,multiplier:1.5,},
+  hard:   {label:'Difícil',emoji:'🔴',size:14,maxWords:14, dirs:8,countdown:180, multiplier:2.5,},
 };
+
+const WS = {
+  grid:[], size:12, words:[],
+  selecting:false, startCell:null, currentCells:[],
+  timerInterval:null, startTime:null,
+  filter:'all',
+  difficulty:'normal',
+  score:0, streak:0, combo:1,
+  soundEnabled:true,
+  timeLeft:0,
+  lastFoundTime:0,
+  _audioCtx:null,
+};
+
+// ─── Audio ───────────────────────────────────────────────────
+function ws_getAudio(){
+  if(!WS._audioCtx) WS._audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  return WS._audioCtx;
+}
+function ws_sfx_found(){
+  if(!WS.soundEnabled) return;
+  try{
+    const ac=ws_getAudio();
+    [523.25,659.25,783.99].forEach((freq,i)=>{
+      const o=ac.createOscillator(),g=ac.createGain();
+      o.connect(g);g.connect(ac.destination);
+      o.type='triangle';o.frequency.value=freq;
+      const t=ac.currentTime+i*.09;
+      g.gain.setValueAtTime(0,t);
+      g.gain.linearRampToValueAtTime(.18,t+.03);
+      g.gain.exponentialRampToValueAtTime(.001,t+.25);
+      o.start(t);o.stop(t+.26);
+    });
+  }catch(e){}
+}
+function ws_sfx_wrong(){
+  if(!WS.soundEnabled) return;
+  try{
+    const ac=ws_getAudio(),o=ac.createOscillator(),g=ac.createGain();
+    o.connect(g);g.connect(ac.destination);
+    o.type='sawtooth';o.frequency.value=180;
+    o.frequency.linearRampToValueAtTime(100,ac.currentTime+.25);
+    g.gain.setValueAtTime(.18,ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.28);
+    o.start();o.stop(ac.currentTime+.3);
+  }catch(e){}
+}
+function ws_sfx_combo(){
+  if(!WS.soundEnabled) return;
+  try{
+    const ac=ws_getAudio();
+    [659.25,783.99,1046.5,1318.5].forEach((freq,i)=>{
+      const o=ac.createOscillator(),g=ac.createGain();
+      o.connect(g);g.connect(ac.destination);
+      o.type='sine';o.frequency.value=freq;
+      const t=ac.currentTime+i*.07;
+      g.gain.setValueAtTime(0,t);
+      g.gain.linearRampToValueAtTime(.15,t+.03);
+      g.gain.exponentialRampToValueAtTime(.001,t+.2);
+      o.start(t);o.stop(t+.22);
+    });
+  }catch(e){}
+}
+function ws_sfx_win(){
+  if(!WS.soundEnabled) return;
+  try{
+    const ac=ws_getAudio();
+    [523.25,659.25,783.99,1046.5,1318.5,1567.98].forEach((freq,i)=>{
+      const o=ac.createOscillator(),g=ac.createGain();
+      o.connect(g);g.connect(ac.destination);
+      o.type=i%2===0?'triangle':'sine';o.frequency.value=freq;
+      const t=ac.currentTime+i*.11;
+      g.gain.setValueAtTime(0,t);
+      g.gain.linearRampToValueAtTime(.2,t+.04);
+      g.gain.exponentialRampToValueAtTime(.001,t+.35);
+      o.start(t);o.stop(t+.37);
+    });
+  }catch(e){}
+}
+function ws_sfx_tick(){
+  if(!WS.soundEnabled) return;
+  try{
+    const ac=ws_getAudio(),o=ac.createOscillator(),g=ac.createGain();
+    o.connect(g);g.connect(ac.destination);
+    o.type='square';o.frequency.value=880;
+    g.gain.setValueAtTime(.06,ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.04);
+    o.start();o.stop(ac.currentTime+.05);
+  }catch(e){}
+}
+function ws_toggleSound(){
+  WS.soundEnabled=!WS.soundEnabled;
+  const btn=document.getElementById('ws-sound-btn');
+  if(btn) btn.textContent=WS.soundEnabled?'🔊':'🔇';
+  if(WS.soundEnabled) ws_sfx_found();
+}
+
+// ─── Difficulty ───────────────────────────────────────────────
+function ws_setDifficulty(d){
+  WS.difficulty=d;
+  document.querySelectorAll('.ws-diff-tab').forEach(t=>{
+    t.classList.toggle('active',t.dataset.diff===d);
+  });
+}
+
+// ─── Progress persistence ─────────────────────────────────────
+function ws_getProgress(){
+  const key=`planificame_game_${ME&&ME.id?ME.id:'guest'}`;
+  try{return JSON.parse(localStorage.getItem(key))||{};}catch(e){return {};}
+}
+function ws_saveProgress(data){
+  const key=`planificame_game_${ME&&ME.id?ME.id:'guest'}`;
+  const prev=ws_getProgress();
+  try{localStorage.setItem(key,JSON.stringify({...prev,...data}));}catch(e){}
+}
+
+// ─── Score system ─────────────────────────────────────────────
+function ws_calcPoints(wo,timeSinceLastMs){
+  const diff=WS_DIFFICULTY[WS.difficulty];
+  const base=wo.word.length*10;
+  const speedBonus=timeSinceLastMs<3000?Math.round((1-timeSinceLastMs/3000)*50):0;
+  const comboMult=Math.min(WS.combo,3);
+  return {total:Math.round((base+speedBonus)*diff.multiplier*comboMult),base,speedBonus,comboMult};
+}
+function ws_showScorePopup(pts,el){
+  const popup=document.createElement('div');
+  popup.className='ws-score-popup';
+  popup.style.color=WS.combo>=3?'#fbbf24':WS.combo>=2?'#a78bfa':'#10b981';
+  popup.textContent=`+${pts}`;
+  const rect=el?el.getBoundingClientRect():{left:window.innerWidth/2,top:window.innerHeight/2,width:30};
+  popup.style.left=`${rect.left+rect.width/2-16}px`;
+  popup.style.top=`${rect.top-6}px`;
+  document.body.appendChild(popup);
+  setTimeout(()=>popup.remove(),950);
+}
+function ws_showComboBanner(combo){
+  document.getElementById('ws-combo-banner-el')?.remove();
+  const el=document.createElement('div');
+  el.id='ws-combo-banner-el';
+  el.className='ws-combo-banner';
+  el.textContent=`${combo}x COMBO! 🔥`;
+  document.body.appendChild(el);
+  setTimeout(()=>{
+    el.style.transition='opacity .4s';el.style.opacity='0';
+    setTimeout(()=>el.remove(),450);
+  },1100);
+  ws_sfx_combo();
+}
+
+// ─── Confetti ─────────────────────────────────────────────────
+function ws_confetti(){
+  document.getElementById('ws-confetti-canvas')?.remove();
+  const canvas=document.createElement('canvas');
+  canvas.id='ws-confetti-canvas';
+  Object.assign(canvas.style,{position:'fixed',inset:'0',pointerEvents:'none',zIndex:'19998'});
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  document.body.appendChild(canvas);
+  const ctx=canvas.getContext('2d');
+  const COLORS=['#7c5aff','#10b981','#f59e0b','#ef4444','#34d399','#fbbf24','#a78bfa'];
+  const pieces=Array.from({length:120},()=>({
+    x:Math.random()*canvas.width,y:-10-Math.random()*100,
+    vx:(Math.random()-.5)*4,vy:2+Math.random()*4,
+    size:5+Math.random()*8,color:COLORS[Math.floor(Math.random()*COLORS.length)],
+    rot:Math.random()*360,rotV:(Math.random()-.5)*8,
+  }));
+  let frame=0;
+  (function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color;ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*.6);
+      ctx.restore();
+      p.x+=p.vx;p.y+=p.vy;p.rot+=p.rotV;p.vy+=.08;
+    });
+    frame++;
+    if(frame<160) requestAnimationFrame(draw);
+    else{ctx.clearRect(0,0,canvas.width,canvas.height);setTimeout(()=>canvas.remove(),200);}
+  })();
+}
+
+// ─── Score display ────────────────────────────────────────────
+function ws_updateScoreDisplay(){
+  const prog=ws_getProgress();
+  const el=document.getElementById('ws-score-big-val');if(el)el.textContent=WS.score.toLocaleString();
+  const hi=document.getElementById('ws-hi-val');if(hi)hi.textContent=(prog.highScore||0).toLocaleString();
+  const total=WS.words.length,found=WS.words.filter(w=>w.found).length;
+  const fill=document.getElementById('ws-progress-fill');if(fill)fill.style.width=`${total?(found/total*100):0}%`;
+  const comboEl=document.getElementById('ws-combo-val');if(comboEl)comboEl.textContent=WS.combo>1?`🔥 ${WS.combo}x`:'';
+}
+
+// ─── Wrong selection ──────────────────────────────────────────
+function ws_wrongSelection(cells){
+  ws_sfx_wrong();
+  cells.forEach(({r,c})=>{
+    const el=document.querySelector(`#ws-grid [data-r="${r}"][data-c="${c}"]`);
+    if(el){el.classList.add('ws-wrong');setTimeout(()=>el.classList.remove('ws-wrong','ws-selecting'),400);}
+  });
+  WS.streak=0;WS.combo=1;ws_updateScoreDisplay();
+}
+
+// ─── Records ─────────────────────────────────────────────────
+function ws_renderRecords(){
+  const el=document.getElementById('ws-records-body');if(!el)return;
+  const p=ws_getProgress();
+  el.innerHTML=`
+    <div class="ws-record-row"><span class="ws-record-icon">🏆</span><span class="ws-record-lbl">Mejor puntuación</span><span class="ws-record-val">${(p.highScore||0).toLocaleString()}</span></div>
+    <div class="ws-record-row"><span class="ws-record-icon">🎮</span><span class="ws-record-lbl">Partidas jugadas</span><span class="ws-record-val">${p.gamesPlayed||0}</span></div>
+    <div class="ws-record-row"><span class="ws-record-icon">🔍</span><span class="ws-record-lbl">Palabras encontradas</span><span class="ws-record-val">${p.wordsFound||0}</span></div>
+    <div class="ws-record-row"><span class="ws-record-icon">⚡</span><span class="ws-record-lbl">Mejor racha</span><span class="ws-record-val">${p.bestStreak||0}x</span></div>
+  `;
+}
 
 // ─── Utility ────────────────────────────────────────────────
 function ws_cleanWord(title){
-  // Remove emojis, trim, uppercase, strip spaces → use joined word
-  let w = title
-    .replace(/[\u{1F300}-\u{1FFFF}]/gu, '')
-    .replace(/[^\p{L}\p{N}]/gu, '')   // keep only letters & numbers
-    .toUpperCase()
-    .trim();
-  return w.slice(0, WS.size);  // cap at grid size
+  return title
+    .replace(/[\u{1F300}-\u{1FFFF}]/gu,'')
+    .replace(/[^\p{L}\p{N}]/gu,'')
+    .toUpperCase().trim().slice(0,WS.size);
 }
-
 function ws_typeColor(type){
-  if(type === 'personal') return '#8b5cf6';
-  if(type === 'team')     return '#10b981';
-  if(type === 'project')  return '#f59e0b';
+  if(type==='personal') return '#8b5cf6';
+  if(type==='team')     return '#10b981';
+  if(type==='project')  return '#f59e0b';
   return 'var(--accent)';
 }
 function ws_typeClass(type){
-  if(type === 'personal') return 'ws-found-personal';
-  if(type === 'team')     return 'ws-found-team';
-  if(type === 'project')  return 'ws-found-project';
+  if(type==='personal') return 'ws-found-personal';
+  if(type==='team')     return 'ws-found-team';
+  if(type==='project')  return 'ws-found-project';
   return 'ws-found-personal';
 }
 function ws_statusLabel(status){
-  const map = {
-    pending:'Pendiente', completed:'Completado', abandoned:'Abandonado',
-    atrasado:'Atrasado', overdue:'Atrasado', extended:'Extendido',
-    'early-voluntary':'Completado', 'early-forced':'Completado'
-  };
-  return map[status] || status || 'Pendiente';
+  const map={pending:'Pendiente',completed:'Completado',abandoned:'Abandonado',
+    atrasado:'Atrasado',overdue:'Atrasado',extended:'Extendido',
+    'early-voluntary':'Completado','early-forced':'Completado'};
+  return map[status]||status||'Pendiente';
 }
 
 // ─── Get visible activities (respecting privacy) ────────────
 function ws_getActivities(){
-  if(IS_GUEST || !ME || ME.id === 'u1'){
-    // Demo words for guest
+  if(IS_GUEST||!ME||ME.id==='u1'){
     return [
       {word:'PLANIFICA',title:'Planifica',type:'personal',status:'pending',calendarName:'Mi calendario',creatorName:'Visitante'},
       {word:'PROYECTO',title:'Proyecto',type:'project',status:'completed',calendarName:'Trabajo',creatorName:'Visitante'},
@@ -8355,146 +8649,111 @@ function ws_getActivities(){
       {word:'META',title:'Meta',type:'project',status:'pending',calendarName:'Metas',creatorName:'Visitante'},
       {word:'AGENDA',title:'Agenda',type:'personal',status:'completed',calendarName:'Personal',creatorName:'Visitante'},
       {word:'EQUIPO',title:'Equipo',type:'team',status:'pending',calendarName:'Trabajo',creatorName:'Visitante'},
+      {word:'OBJETIVO',title:'Objetivo',type:'project',status:'pending',calendarName:'Metas',creatorName:'Visitante'},
+      {word:'LOGRO',title:'Logro',type:'personal',status:'completed',calendarName:'Personal',creatorName:'Visitante'},
+      {word:'TRABAJO',title:'Trabajo',type:'team',status:'pending',calendarName:'Equipo',creatorName:'Visitante'},
     ];
   }
-  const sharedCalIds = new Set((S.calendars || []).map(c => c.id));
-  const seen = new Set();
-  const result = [];
-  const allItems = [...(S.events || []), ...(S.projects || [])];
+  const sharedCalIds=new Set((S.calendars||[]).map(c=>c.id));
+  const seen=new Set(),result=[];
+  const allItems=[...(S.events||[]),...(S.projects||[])];
   for(const item of allItems){
-    // Privacy filter: own items OR items from accessible calendars
-    const isOwn = item.creatorId === ME.id;
-    const isShared = item.calendar_id && sharedCalIds.has(item.calendar_id);
-    if(!isOwn && !isShared) continue;
-    const raw = (item.title || '').replace(/^🎯\s*/,'').trim();
-    const word = ws_cleanWord(raw);
-    if(word.length < 3) continue;
-    if(seen.has(word)) continue;
+    const isOwn=item.creatorId===ME.id;
+    const isShared=item.calendar_id&&sharedCalIds.has(item.calendar_id);
+    if(!isOwn&&!isShared) continue;
+    const raw=(item.title||'').replace(/^🎯\s*/,'').trim();
+    const word=ws_cleanWord(raw);
+    if(word.length<3||seen.has(word)) continue;
     seen.add(word);
-    result.push({
-      word,
-      title: raw,
-      type: item.type || 'personal',
-      status: item.status || 'pending',
-      calendarName: item.calendarName || 'Mi calendario',
-      creatorName: item.creatorName || ME.name,
-    });
+    result.push({word,title:raw,type:item.type||'personal',status:item.status||'pending',
+      calendarName:item.calendarName||'Mi calendario',creatorName:item.creatorName||ME.name});
   }
   return result;
 }
 
 // ─── Grid generation ────────────────────────────────────────
-const WS_DIRS = [
-  [0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]
-];
-const WS_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚÑ';
+const WS_DIRS_ALL=[[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]];
+const WS_DIRS_4  =[[0,1],[1,0],[0,-1],[-1,0]]; // Fácil: H+V only
 
 function ws_generateGrid(wordObjs){
-  const N = WS.size;
-  // Init empty grid
-  const grid = Array.from({length:N}, () => Array(N).fill(null));
-  const placed = [];
-
-  // Sort words longest first
-  const sorted = [...wordObjs].sort((a,b) => b.word.length - a.word.length);
-
+  const N=WS.size;
+  const diff=WS_DIFFICULTY[WS.difficulty];
+  const dirs=diff.dirs===4?WS_DIRS_4:WS_DIRS_ALL;
+  const grid=Array.from({length:N},()=>Array(N).fill(null));
+  const placed=[];
+  const sorted=[...wordObjs].sort((a,b)=>b.word.length-a.word.length);
   for(const wo of sorted){
-    const w = wo.word;
-    if(w.length > N) continue;
-    let success = false;
-    const attempts = 120;
-    for(let i = 0; i < attempts && !success; i++){
-      const [dr, dc] = WS_DIRS[Math.floor(Math.random() * WS_DIRS.length)];
-      // Random start that fits
-      const rRange = dr === 0 ? N : (dr > 0 ? N - w.length : w.length - 1);
-      const cRange = dc === 0 ? N : (dc > 0 ? N - w.length : w.length - 1);
-      const r0 = dr < 0 ? (N - 1) : 0;
-      const c0 = dc < 0 ? (N - 1) : 0;
-      const startR = r0 + Math.floor(Math.random() * (rRange || N));
-      const startC = c0 + Math.floor(Math.random() * (cRange || N));
-      // Check if fits
-      const cells = [];
-      let fits = true;
-      for(let j = 0; j < w.length; j++){
-        const r = startR + j * dr;
-        const c = startC + j * dc;
-        if(r < 0 || r >= N || c < 0 || c >= N){ fits = false; break; }
-        if(grid[r][c] !== null && grid[r][c] !== w[j]){ fits = false; break; }
-        cells.push({r, c});
+    const w=wo.word;
+    if(w.length>N) continue;
+    let success=false;
+    for(let i=0;i<120&&!success;i++){
+      const [dr,dc]=dirs[Math.floor(Math.random()*dirs.length)];
+      const rRange=dr===0?N:(dr>0?N-w.length:w.length-1);
+      const cRange=dc===0?N:(dc>0?N-w.length:w.length-1);
+      const r0=dr<0?(N-1):0,c0=dc<0?(N-1):0;
+      const startR=r0+Math.floor(Math.random()*(rRange||N));
+      const startC=c0+Math.floor(Math.random()*(cRange||N));
+      const cells=[];let fits=true;
+      for(let j=0;j<w.length;j++){
+        const r=startR+j*dr,c=startC+j*dc;
+        if(r<0||r>=N||c<0||c>=N){fits=false;break;}
+        if(grid[r][c]!==null&&grid[r][c]!==w[j]){fits=false;break;}
+        cells.push({r,c});
       }
       if(fits){
-        cells.forEach(({r,c},j) => { grid[r][c] = w[j]; });
-        placed.push({...wo, cells, found: false});
-        success = true;
+        cells.forEach(({r,c},j)=>{grid[r][c]=w[j];});
+        placed.push({...wo,cells,found:false});
+        success=true;
       }
     }
   }
-
-  // Fill blanks with random letters (Spanish-friendly)
-  const FILL = 'ABEIOSRTNCMLDPUVHFGQJXYZ';
-  for(let r = 0; r < N; r++){
-    for(let c = 0; c < N; c++){
-      if(grid[r][c] === null){
-        grid[r][c] = FILL[Math.floor(Math.random() * FILL.length)];
-      }
-    }
-  }
-  return {grid, placed};
+  const FILL='ABEIOSRTNCMLDPUVHFGQJXYZ';
+  for(let r=0;r<N;r++) for(let c=0;c<N;c++) if(grid[r][c]===null) grid[r][c]=FILL[Math.floor(Math.random()*FILL.length)];
+  return {grid,placed};
 }
 
 // ─── Render grid ────────────────────────────────────────────
 function ws_renderGrid(){
-  const N = WS.size;
-  const wrap = document.getElementById('ws-grid-wrap');
-  const gridEl = document.getElementById('ws-grid');
+  const N=WS.size;
+  const gridEl=document.getElementById('ws-grid');
   if(!gridEl) return;
-
-  // Calculate cell size based on available space
-  const leftPanel = document.getElementById('ws-left-panel');
-  const panelW = leftPanel ? leftPanel.clientWidth - 40 : 480;
-  const panelH = leftPanel ? leftPanel.clientHeight - 80 : 480;
-  const cellPx = Math.max(22, Math.min(Math.floor(Math.min(panelW, panelH) / N), 42));
-
-  gridEl.style.gridTemplateColumns = `repeat(${N}, ${cellPx}px)`;
-  gridEl.style.gridTemplateRows    = `repeat(${N}, ${cellPx}px)`;
-  gridEl.innerHTML = '';
-
-  for(let r = 0; r < N; r++){
-    for(let c = 0; c < N; c++){
-      const cell = document.createElement('div');
-      cell.className = 'ws-cell';
-      cell.textContent = WS.grid[r][c];
-      cell.dataset.r = r;
-      cell.dataset.c = c;
-      cell.style.width  = `${cellPx}px`;
-      cell.style.height = `${cellPx}px`;
-      cell.style.fontSize = `${Math.max(9, cellPx - 10)}px`;
-      gridEl.appendChild(cell);
-    }
+  const leftPanel=document.getElementById('ws-left-panel');
+  const panelW=leftPanel?leftPanel.clientWidth-40:480;
+  const panelH=leftPanel?leftPanel.clientHeight-130:480;
+  const cellPx=Math.max(18,Math.min(Math.floor(Math.min(panelW,panelH)/N),40));
+  gridEl.style.gridTemplateColumns=`repeat(${N},${cellPx}px)`;
+  gridEl.style.gridTemplateRows=`repeat(${N},${cellPx}px)`;
+  gridEl.innerHTML='';
+  for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+    const cell=document.createElement('div');
+    cell.className='ws-cell';
+    cell.textContent=WS.grid[r][c];
+    cell.dataset.r=r;cell.dataset.c=c;
+    cell.style.width=`${cellPx}px`;cell.style.height=`${cellPx}px`;
+    cell.style.fontSize=`${Math.max(8,cellPx-10)}px`;
+    gridEl.appendChild(cell);
   }
 }
 
 // ─── Render word list panel ──────────────────────────────────
 function ws_renderWordList(){
-  const list = document.getElementById('ws-word-list');
-  if(!list) return;
-  const filter = WS.filter;
-  const items = WS.words.filter(w => filter === 'all' || w.type === filter);
-  if(items.length === 0){
-    list.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px">No hay actividades de este tipo</div>`;
+  const list=document.getElementById('ws-word-list');if(!list) return;
+  const items=WS.words.filter(w=>WS.filter==='all'||w.type===WS.filter);
+  if(items.length===0){
+    list.innerHTML=`<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px">No hay actividades de este tipo</div>`;
     return;
   }
-  list.innerHTML = items.map(w => `
-    <div class="ws-word-item ${w.found ? 'ws-found':''}" id="ws-item-${w.word}" data-type="${w.type}">
+  list.innerHTML=items.map(w=>`
+    <div class="ws-word-item ${w.found?'ws-found':''}" id="ws-item-${w.word}" data-type="${w.type}">
       <div class="ws-word-dot" style="background:${ws_typeColor(w.type)}"></div>
       <div class="ws-word-info" style="flex:1;min-width:0">
         <div class="ws-word-name" title="${w.title}">${w.title}</div>
         <div class="ws-word-meta">
           <span class="ws-badge ws-badge-${w.type}">${w.type==='personal'?'Personal':w.type==='team'?'Equipo':'Meta'}</span>
           <span class="ws-badge ws-badge-${w.status}">${ws_statusLabel(w.status)}</span>
-          ${w.calendarName ? `<span class="ws-badge" style="background:rgba(120,120,168,.12);color:var(--text3)">📅 ${w.calendarName}</span>` : ''}
+          ${w.calendarName?`<span class="ws-badge" style="background:rgba(120,120,168,.12);color:var(--text3)">📅 ${w.calendarName}</span>`:''}
         </div>
-        ${w.found && w.creatorName ? `<div style="font-size:10px;color:var(--text3);margin-top:3px">👤 ${w.creatorName}</div>` : ''}
+        ${w.found&&w.creatorName?`<div style="font-size:10px;color:var(--text3);margin-top:3px">👤 ${w.creatorName}</div>`:''}
       </div>
       <span class="ws-found-icon">${w.type==='project'?'🎯':w.type==='team'?'👥':'✅'}</span>
     </div>
@@ -8503,231 +8762,260 @@ function ws_renderWordList(){
 
 // ─── Update stats bar ────────────────────────────────────────
 function ws_updateStats(){
-  const total = WS.words.length;
-  const found = WS.words.filter(w => w.found).length;
-  const pct = total ? Math.round(found / total * 100) : 0;
-  document.getElementById('ws-score').textContent = `${found} / ${total}`;
-  document.getElementById('ws-stat-found').textContent = found;
-  document.getElementById('ws-stat-remain').textContent = total - found;
-  document.getElementById('ws-stat-pct').textContent = `${pct}%`;
+  const total=WS.words.length,found=WS.words.filter(w=>w.found).length;
+  const pct=total?Math.round(found/total*100):0;
+  const es=document.getElementById('ws-score');if(es)es.textContent=`${found} / ${total}`;
+  const ef=document.getElementById('ws-stat-found');if(ef)ef.textContent=found;
+  const er=document.getElementById('ws-stat-remain');if(er)er.textContent=total-found;
+  const ep=document.getElementById('ws-stat-pct');if(ep)ep.textContent=`${pct}%`;
+  ws_updateScoreDisplay();
 }
 
 // ─── Timer ───────────────────────────────────────────────────
 function ws_startTimer(){
   if(WS.timerInterval) clearInterval(WS.timerInterval);
-  WS.startTime = Date.now();
-  const timerEl = document.getElementById('ws-timer');
-  const timerVal = document.getElementById('ws-timer-val');
-  if(timerEl) timerEl.style.display = '';
-  WS.timerInterval = setInterval(() => {
-    const s = Math.floor((Date.now() - WS.startTime) / 1000);
-    const mm = String(Math.floor(s/60)).padStart(2,'0');
-    const ss = String(s % 60).padStart(2,'0');
-    if(timerVal) timerVal.textContent = `${mm}:${ss}`;
-  }, 1000);
+  WS.startTime=Date.now();
+  const diff=WS_DIFFICULTY[WS.difficulty];
+  WS.timeLeft=diff.countdown||0;
+  const timerEl=document.getElementById('ws-timer'),timerVal=document.getElementById('ws-timer-val');
+  if(timerEl){timerEl.style.display='';timerEl.classList.remove('ws-timer-urgent');}
+  const ico=document.getElementById('ws-timer-ico');if(ico)ico.textContent=diff.countdown?'⏳':'⏱';
+
+  WS.timerInterval=setInterval(()=>{
+    if(diff.countdown){
+      WS.timeLeft--;
+      const mm=String(Math.floor(Math.max(0,WS.timeLeft)/60)).padStart(2,'0');
+      const ss=String(Math.max(0,WS.timeLeft)%60).padStart(2,'0');
+      if(timerVal) timerVal.textContent=`${mm}:${ss}`;
+      if(timerEl) timerEl.classList.toggle('ws-timer-urgent',WS.timeLeft<=30);
+      if(WS.timeLeft<=10&&WS.timeLeft>0) ws_sfx_tick();
+      if(WS.timeLeft<=0){ws_stopTimer();ws_timeUp();}
+    } else {
+      const s=Math.floor((Date.now()-WS.startTime)/1000);
+      const mm=String(Math.floor(s/60)).padStart(2,'0'),ss=String(s%60).padStart(2,'0');
+      if(timerVal) timerVal.textContent=`${mm}:${ss}`;
+    }
+  },1000);
 }
 function ws_stopTimer(){
-  if(WS.timerInterval){ clearInterval(WS.timerInterval); WS.timerInterval = null; }
+  if(WS.timerInterval){clearInterval(WS.timerInterval);WS.timerInterval=null;}
 }
 function ws_elapsedStr(){
   if(!WS.startTime) return '';
-  const s = Math.floor((Date.now() - WS.startTime) / 1000);
-  const mm = Math.floor(s/60), ss = s % 60;
-  return mm > 0 ? `${mm}m ${ss}s` : `${ss} segundos`;
+  const s=Math.floor((Date.now()-WS.startTime)/1000);
+  const mm=Math.floor(s/60),ss=s%60;
+  return mm>0?`${mm}m ${ss}s`:`${ss} segundos`;
+}
+function ws_timeUp(){
+  const found=WS.words.filter(w=>w.found).length;
+  const banner=document.getElementById('ws-win-banner');
+  const winTime=document.getElementById('ws-win-time');
+  if(winTime) winTime.textContent=`⏰ ¡Tiempo! Encontraste ${found}/${WS.words.length} · ${WS.score.toLocaleString()} pts`;
+  if(banner){
+    banner.classList.add('show');
+    const emoji=banner.querySelector('.ws-win-emoji');if(emoji)emoji.textContent='⏰';
+    const title=banner.querySelector('[data-win-title]');if(title)title.textContent='¡Se acabó el tiempo!';
+  }
+  document.getElementById('ws-grid-wrap').style.display='none';
+  document.getElementById('ws-dir-hint').style.display='none';
+  const prog=ws_getProgress();
+  ws_saveProgress({
+    highScore:Math.max(WS.score,prog.highScore||0),
+    gamesPlayed:(prog.gamesPlayed||0)+1,
+    wordsFound:(prog.wordsFound||0)+found,
+    bestStreak:Math.max(WS.streak,prog.bestStreak||0),
+  });
+  ws_renderRecords();
 }
 
 // ─── Selection logic ─────────────────────────────────────────
 function ws_cellAt(el){
-  if(!el || !el.classList.contains('ws-cell')) return null;
-  return {r: +el.dataset.r, c: +el.dataset.c};
+  if(!el||!el.classList.contains('ws-cell')) return null;
+  return {r:+el.dataset.r,c:+el.dataset.c};
 }
-
-function ws_getCellsInLine(start, end){
-  const dr = Math.sign(end.r - start.r);
-  const dc = Math.sign(end.c - start.c);
-  const lenR = Math.abs(end.r - start.r);
-  const lenC = Math.abs(end.c - start.c);
-  // Must be perfectly horizontal, vertical or diagonal
-  if(lenR !== lenC && lenR !== 0 && lenC !== 0) return [];
-  const len = Math.max(lenR, lenC);
-  const cells = [];
-  for(let i = 0; i <= len; i++){
-    cells.push({r: start.r + i*dr, c: start.c + i*dc});
-  }
+function ws_getCellsInLine(start,end){
+  const dr=Math.sign(end.r-start.r),dc=Math.sign(end.c-start.c);
+  const lenR=Math.abs(end.r-start.r),lenC=Math.abs(end.c-start.c);
+  if(lenR!==lenC&&lenR!==0&&lenC!==0) return [];
+  const len=Math.max(lenR,lenC),cells=[];
+  for(let i=0;i<=len;i++) cells.push({r:start.r+i*dr,c:start.c+i*dc});
   return cells;
 }
-
 function ws_highlightSelecting(cells){
-  document.querySelectorAll('#ws-grid .ws-cell').forEach(el => {
-    el.classList.remove('ws-selecting');
-  });
+  document.querySelectorAll('#ws-grid .ws-cell').forEach(el=>el.classList.remove('ws-selecting'));
   if(!cells) return;
-  cells.forEach(({r, c}) => {
-    const el = document.querySelector(`#ws-grid [data-r="${r}"][data-c="${c}"]`);
+  cells.forEach(({r,c})=>{
+    const el=document.querySelector(`#ws-grid [data-r="${r}"][data-c="${c}"]`);
     if(el) el.classList.add('ws-selecting');
   });
 }
-
-function ws_getCellFromPoint(x, y){
-  const els = document.elementsFromPoint(x, y);
-  for(const el of els){
-    if(el.classList && el.classList.contains('ws-cell')) return el;
-  }
-  return null;
-}
-
 function ws_checkWord(cells){
-  const letters = cells.map(({r,c}) => WS.grid[r][c]).join('');
-  const lettersRev = letters.split('').reverse().join('');
+  const letters=cells.map(({r,c})=>WS.grid[r][c]).join('');
+  const rev=letters.split('').reverse().join('');
   for(const wo of WS.words){
-    if(wo.found) continue;
-    if(wo.word === letters || wo.word === lettersRev){
-      return wo;
-    }
+    if(!wo.found&&(wo.word===letters||wo.word===rev)) return wo;
   }
   return null;
 }
+function ws_markFound(wo,cells){
+  wo.found=true;
+  const now=Date.now();
+  const timeSinceLast=WS.lastFoundTime?(now-WS.lastFoundTime):9999;
+  WS.lastFoundTime=now;
+  WS.streak++;
+  WS.combo=timeSinceLast<5000?Math.min(WS.combo+1,5):1;
 
-function ws_markFound(wo, cells){
-  wo.found = true;
-  const cls = ws_typeClass(wo.type);
-  cells.forEach(({r,c}) => {
-    const el = document.querySelector(`#ws-grid [data-r="${r}"][data-c="${c}"]`);
+  const pts=ws_calcPoints(wo,timeSinceLast);
+  WS.score+=pts.total;
+
+  const cls=ws_typeClass(wo.type);
+  let lastEl=null;
+  cells.forEach(({r,c})=>{
+    const el=document.querySelector(`#ws-grid [data-r="${r}"][data-c="${c}"]`);
     if(el){
       el.classList.remove('ws-selecting');
-      el.classList.add(cls, 'ws-flash');
-      setTimeout(() => el.classList.remove('ws-flash'), 600);
+      el.classList.add(cls,'ws-flash');
+      setTimeout(()=>el.classList.remove('ws-flash'),600);
+      lastEl=el;
     }
   });
-  // Update word list item
-  const item = document.getElementById(`ws-item-${wo.word}`);
-  if(item){
-    item.classList.add('ws-found');
-    item.scrollIntoView({behavior:'smooth', block:'nearest'});
-  }
+
+  if(lastEl) ws_showScorePopup(pts.total,lastEl);
+  if(WS.combo>=2) ws_showComboBanner(WS.combo);
+  ws_sfx_found();
+
+  const item=document.getElementById(`ws-item-${wo.word}`);
+  if(item){item.classList.add('ws-found');item.scrollIntoView({behavior:'smooth',block:'nearest'});}
   ws_updateStats();
-  toast(`✅ ¡Encontraste: ${wo.title}!`);
-  // Check win
-  if(WS.words.every(w => w.found)) ws_win();
+  toast(`✅ ¡Encontraste: ${wo.title}! +${pts.total}`);
+  if(WS.words.every(w=>w.found)) ws_win();
 }
 
 function ws_win(){
   ws_stopTimer();
-  const elapsed = ws_elapsedStr();
-  const banner = document.getElementById('ws-win-banner');
-  const winTime = document.getElementById('ws-win-time');
-  if(winTime) winTime.textContent = `Completado en ${elapsed} 🎊`;
-  if(banner) banner.classList.add('show');
-  document.getElementById('ws-grid-wrap').style.display = 'none';
-  document.getElementById('ws-dir-hint').style.display = 'none';
+  ws_sfx_win();
+  ws_confetti();
+  const elapsed=ws_elapsedStr();
+  const found=WS.words.filter(w=>w.found).length;
+  const prog=ws_getProgress();
+  const newHigh=WS.score>(prog.highScore||0);
+  ws_saveProgress({
+    highScore:Math.max(WS.score,prog.highScore||0),
+    gamesPlayed:(prog.gamesPlayed||0)+1,
+    wordsFound:(prog.wordsFound||0)+found,
+    bestStreak:Math.max(WS.streak,prog.bestStreak||0),
+    lastDifficulty:WS.difficulty,
+  });
+  const winTime=document.getElementById('ws-win-time');
+  if(winTime) winTime.textContent=`Completado en ${elapsed} · ${WS.score.toLocaleString()} pts${newHigh?' 🏆 ¡Nuevo récord!':''}`;
+  const banner=document.getElementById('ws-win-banner');
+  if(banner){
+    banner.classList.add('show');
+    const emoji=banner.querySelector('.ws-win-emoji');if(emoji)emoji.textContent='🎉';
+    const title=banner.querySelector('[data-win-title]');if(title)title.textContent='¡Lo lograste!';
+  }
+  document.getElementById('ws-grid-wrap').style.display='none';
+  document.getElementById('ws-dir-hint').style.display='none';
+  ws_updateScoreDisplay();
+  ws_renderRecords();
 }
 
 // ─── Event listeners for grid interaction ────────────────────
 function ws_bindGridEvents(){
-  const grid = document.getElementById('ws-grid');
-  if(!grid) return;
-
+  const grid=document.getElementById('ws-grid');if(!grid) return;
   function onStart(e){
     e.preventDefault();
-    const src = e.touches ? e.touches[0] : e;
-    const target = document.elementFromPoint(src.clientX, src.clientY);
-    const cell = ws_cellAt(target);
+    const src=e.touches?e.touches[0]:e;
+    const cell=ws_cellAt(document.elementFromPoint(src.clientX,src.clientY));
     if(!cell) return;
-    WS.selecting = true;
-    WS.startCell = cell;
-    WS.currentCells = [cell];
+    WS.selecting=true;WS.startCell=cell;WS.currentCells=[cell];
     ws_highlightSelecting(WS.currentCells);
   }
   function onMove(e){
-    if(!WS.selecting) return;
-    e.preventDefault();
-    const src = e.touches ? e.touches[0] : e;
-    const target = document.elementFromPoint(src.clientX, src.clientY);
-    const cell = ws_cellAt(target);
+    if(!WS.selecting) return;e.preventDefault();
+    const src=e.touches?e.touches[0]:e;
+    const cell=ws_cellAt(document.elementFromPoint(src.clientX,src.clientY));
     if(!cell) return;
-    const line = ws_getCellsInLine(WS.startCell, cell);
-    WS.currentCells = line.length > 0 ? line : [WS.startCell];
+    const line=ws_getCellsInLine(WS.startCell,cell);
+    WS.currentCells=line.length>0?line:[WS.startCell];
     ws_highlightSelecting(WS.currentCells);
   }
   function onEnd(e){
-    if(!WS.selecting) return;
-    WS.selecting = false;
-    const matched = ws_checkWord(WS.currentCells);
-    if(matched){
-      ws_markFound(matched, WS.currentCells);
-    } else {
-      ws_highlightSelecting(null);
-    }
-    WS.currentCells = [];
+    if(!WS.selecting) return;WS.selecting=false;
+    const matched=ws_checkWord(WS.currentCells);
+    if(matched) ws_markFound(matched,WS.currentCells);
+    else if(WS.currentCells.length>1) ws_wrongSelection(WS.currentCells);
+    else ws_highlightSelecting(null);
+    WS.currentCells=[];
   }
-
-  grid.addEventListener('mousedown',  onStart, {passive:false});
-  grid.addEventListener('mousemove',  onMove,  {passive:false});
-  document.addEventListener('mouseup', onEnd);
-  grid.addEventListener('touchstart', onStart, {passive:false});
-  grid.addEventListener('touchmove',  onMove,  {passive:false});
-  grid.addEventListener('touchend',   onEnd,   {passive:false});
+  grid.addEventListener('mousedown',onStart,{passive:false});
+  grid.addEventListener('mousemove',onMove,{passive:false});
+  document.addEventListener('mouseup',onEnd);
+  grid.addEventListener('touchstart',onStart,{passive:false});
+  grid.addEventListener('touchmove',onMove,{passive:false});
+  grid.addEventListener('touchend',onEnd,{passive:false});
 }
 
 // ─── Filter ──────────────────────────────────────────────────
 function ws_setFilter(f){
-  WS.filter = f;
-  document.querySelectorAll('[data-filter]').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.filter === f);
-  });
+  WS.filter=f;
+  document.querySelectorAll('[data-filter]').forEach(btn=>btn.classList.toggle('active',btn.dataset.filter===f));
   ws_renderWordList();
 }
 
-// ─── Open / New game ─────────────────────────────────────────
+// ─── New game ────────────────────────────────────────────────
 function ws_newGame(){
   ws_stopTimer();
-  WS.filter = 'all';
-  // Reset filter UI
-  document.querySelectorAll('[data-filter]').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.filter === 'all');
-  });
+  document.getElementById('ws-confetti-canvas')?.remove();
+  document.getElementById('ws-combo-banner-el')?.remove();
 
-  // Get activities
-  const activities = ws_getActivities();
-  if(activities.length === 0){
-    document.getElementById('ws-empty-state').style.display = '';
-    document.getElementById('ws-grid-wrap').style.display = 'none';
-    document.getElementById('ws-dir-hint').style.display = 'none';
-    document.getElementById('ws-timer').style.display = 'none';
-    document.getElementById('ws-win-banner').classList.remove('show');
-    document.getElementById('ws-subtitle').textContent = 'Crea actividades para jugar';
-    return;
+  WS.filter='all';WS.score=0;WS.streak=0;WS.combo=1;WS.lastFoundTime=0;
+  document.querySelectorAll('[data-filter]').forEach(btn=>btn.classList.toggle('active',btn.dataset.filter==='all'));
+
+  const diff=WS_DIFFICULTY[WS.difficulty];
+  WS.size=diff.size;
+
+  // Direction hint
+  const hintEl=document.getElementById('ws-dir-hint');
+  if(hintEl){
+    hintEl.innerHTML=diff.dirs===4
+      ?`<span class="ws-dir-badge">→ Horizontal</span><span class="ws-dir-badge">↓ Vertical</span><span class="ws-dir-badge">${diff.emoji} Solo H+V</span>`
+      :`<span class="ws-dir-badge">→ Horizontal</span><span class="ws-dir-badge">↓ Vertical</span><span class="ws-dir-badge">↘ Diagonal</span><span class="ws-dir-badge">← Invertidas</span>`;
   }
 
-  // Choose up to 14 activities randomly
-  const pool = [...activities].sort(() => Math.random() - .5).slice(0, 14);
+  const activities=ws_getActivities();
+  if(activities.length===0){
+    document.getElementById('ws-empty-state').style.display='';
+    document.getElementById('ws-grid-wrap').style.display='none';
+    document.getElementById('ws-dir-hint').style.display='none';
+    document.getElementById('ws-timer').style.display='none';
+    document.getElementById('ws-win-banner').classList.remove('show');
+    document.getElementById('ws-subtitle').textContent='Crea actividades para jugar';
+    ws_updateScoreDisplay();return;
+  }
 
-  // Choose grid size
-  WS.size = pool.length <= 6 ? 10 : pool.length <= 10 ? 12 : 14;
+  const pool=[...activities].sort(()=>Math.random()-.5).slice(0,diff.maxWords);
+  const {grid,placed}=ws_generateGrid(pool);
+  WS.grid=grid;WS.words=placed;
 
-  // Generate grid
-  const {grid, placed} = ws_generateGrid(pool);
-  WS.grid = grid;
-  WS.words = placed;
-
-  // Show/hide UI
-  document.getElementById('ws-empty-state').style.display = 'none';
+  document.getElementById('ws-empty-state').style.display='none';
   document.getElementById('ws-win-banner').classList.remove('show');
-  document.getElementById('ws-dir-hint').style.display = '';
-  document.getElementById('ws-grid-wrap').style.display = '';
-  document.getElementById('ws-subtitle').textContent = `${placed.length} actividades ocultas — ¡encuéntralas!`;
+  document.getElementById('ws-dir-hint').style.display='';
+  document.getElementById('ws-grid-wrap').style.display='';
+  document.getElementById('ws-subtitle').textContent=`${diff.emoji} ${diff.label} · ${placed.length} palabras`;
 
+  ws_updateScoreDisplay();
   ws_renderGrid();
   ws_renderWordList();
   ws_updateStats();
   ws_bindGridEvents();
+  ws_renderRecords();
   ws_startTimer();
 }
 
 function ws_openGame(){
   openModal('wordSearchModal');
-  // slight delay so modal animation plays first
-  setTimeout(ws_newGame, 180);
+  setTimeout(()=>{ws_renderRecords();ws_newGame();},180);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -8999,45 +9287,74 @@ init();
      WORD SEARCH MINI GAME MODAL
 ═══════════════════════════════════════ -->
 <div class="overlay" id="wordSearchModal">
-  <div class="modal" style="max-width:940px;width:96vw;max-height:94vh;overflow:hidden;padding:0">
+  <div class="modal" style="max-width:960px;width:96vw;max-height:94vh;overflow:hidden;padding:0">
     <!-- Header -->
-    <div class="mh" style="padding:16px 22px 14px;background:linear-gradient(135deg,rgba(124,90,255,.18),rgba(52,211,153,.1));border-bottom:1px solid var(--border)">
+    <div class="mh" style="padding:11px 16px 10px;background:linear-gradient(135deg,rgba(124,90,255,.18),rgba(52,211,153,.1));border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px">
       <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-size:22px">🎮</span>
+        <span style="font-size:20px">🎮</span>
         <div>
-          <div class="mtitle" style="font-size:17px">Sopa de Letras</div>
+          <div class="mtitle" style="font-size:16px">Sopa de Letras</div>
           <div style="font-size:11px;color:var(--text2);margin-top:1px" id="ws-subtitle">Encuentra tus actividades</div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <button onclick="ws_newGame()" class="btn btn-s" style="padding:6px 14px;font-size:12px;height:32px" title="Nueva partida">🔄 Nueva</button>
+      <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+        <!-- Difficulty tabs -->
+        <div class="ws-diff-tabs">
+          <button class="ws-diff-tab easy"         data-diff="easy"   onclick="ws_setDifficulty('easy');ws_newGame()">🟢 Fácil</button>
+          <button class="ws-diff-tab normal active" data-diff="normal" onclick="ws_setDifficulty('normal');ws_newGame()">🟡 Normal</button>
+          <button class="ws-diff-tab hard"          data-diff="hard"   onclick="ws_setDifficulty('hard');ws_newGame()">🔴 Difícil</button>
+        </div>
+        <button id="ws-sound-btn" class="ws-sound-btn" onclick="ws_toggleSound()" title="Sonido on/off">🔊</button>
+        <button onclick="ws_newGame()" class="btn btn-s" style="padding:5px 11px;font-size:12px;height:30px" title="Nueva partida">🔄</button>
         <button class="mclose" onclick="closeModal('wordSearchModal')">×</button>
       </div>
     </div>
     <!-- Body: two-column layout -->
     <div class="ws-layout">
-      <!-- LEFT: Grid -->
+      <!-- LEFT: Grid area -->
       <div class="ws-left" id="ws-left-panel">
         <div id="ws-game-area" style="width:100%;display:flex;flex-direction:column;align-items:center">
+          <!-- Score row -->
+          <div class="ws-score-area" id="ws-score-area">
+            <div>
+              <div class="ws-score-big" id="ws-score-big-val">0</div>
+              <div class="ws-score-big-lbl">Puntos</div>
+            </div>
+            <div style="text-align:center;min-width:60px">
+              <div style="font-size:16px;font-weight:900;color:#fbbf24;min-height:20px;line-height:1" id="ws-combo-val"></div>
+              <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-top:3px">Combo</div>
+            </div>
+            <div class="ws-hi-score">
+              <div class="ws-hi-val" id="ws-hi-val">0</div>
+              <div class="ws-hi-lbl">Récord</div>
+            </div>
+          </div>
+          <!-- Empty state -->
           <div class="ws-empty-state" id="ws-empty-state" style="display:none">
             <div class="ws-empty-state-icon">🎯</div>
             <div style="font-size:14px;font-weight:600;color:var(--text2);margin-bottom:6px">Sin actividades disponibles</div>
             <div style="font-size:12px;color:var(--text3)">Inicia sesión y crea actividades para jugar</div>
           </div>
+          <!-- Direction hints -->
           <div class="ws-direction-hint" id="ws-dir-hint" style="display:none">
             <span class="ws-dir-badge">→ Horizontal</span>
             <span class="ws-dir-badge">↓ Vertical</span>
             <span class="ws-dir-badge">↘ Diagonal</span>
             <span class="ws-dir-badge">← Invertidas</span>
           </div>
+          <!-- Grid -->
           <div class="ws-grid-wrap" id="ws-grid-wrap" style="display:none">
             <div class="ws-grid" id="ws-grid"></div>
           </div>
-          <div class="ws-grid-timer" id="ws-timer" style="display:none">⏱ <span id="ws-timer-val">00:00</span></div>
+          <!-- Timer -->
+          <div class="ws-grid-timer" id="ws-timer" style="display:none">
+            <span id="ws-timer-ico">⏱</span> <span id="ws-timer-val">00:00</span>
+          </div>
+          <!-- Win banner -->
           <div class="ws-win-banner" id="ws-win-banner">
             <div class="ws-win-emoji">🎉</div>
-            <div style="font-size:18px;font-weight:800;color:var(--text);margin:10px 0 4px">¡Lo lograste!</div>
-            <div style="font-size:13px;color:var(--text2)" id="ws-win-time"></div>
+            <div style="font-size:18px;font-weight:800;color:var(--text);margin:10px 0 4px" data-win-title>¡Lo lograste!</div>
+            <div style="font-size:13px;color:var(--text2);max-width:280px;margin:0 auto" id="ws-win-time"></div>
             <button onclick="ws_newGame()" class="btn btn-p" style="margin-top:16px;padding:10px 24px">🔄 Jugar de nuevo</button>
           </div>
         </div>
@@ -9048,6 +9365,9 @@ init();
           <span class="ws-title">Actividades</span>
           <span class="ws-score-badge" id="ws-score">0 / 0</span>
         </div>
+        <!-- Progress bar -->
+        <div class="ws-progress-bar"><div class="ws-progress-fill" id="ws-progress-fill"></div></div>
+        <!-- Mini stats -->
         <div class="ws-stats">
           <div class="ws-stat">
             <div class="ws-stat-val" id="ws-stat-found">0</div>
@@ -9062,13 +9382,20 @@ init();
             <div class="ws-stat-lbl">Progreso</div>
           </div>
         </div>
+        <!-- Filters -->
         <div class="ws-filters">
           <button class="ws-filter-btn active" onclick="ws_setFilter('all')" data-filter="all">Todas</button>
           <button class="ws-filter-btn ws-f-personal" onclick="ws_setFilter('personal')" data-filter="personal">👤 Personal</button>
           <button class="ws-filter-btn ws-f-team" onclick="ws_setFilter('team')" data-filter="team">👥 Equipo</button>
           <button class="ws-filter-btn ws-f-project" onclick="ws_setFilter('project')" data-filter="project">🎯 Meta</button>
         </div>
+        <!-- Word list -->
         <div class="ws-word-list" id="ws-word-list"></div>
+        <!-- Records section -->
+        <div class="ws-records">
+          <div class="ws-records-title">📊 Mis récords</div>
+          <div id="ws-records-body"></div>
+        </div>
       </div>
     </div>
   </div>
