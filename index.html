@@ -11325,7 +11325,7 @@ const KB_COLS = [
 ];
 
 function renderKanban(container){
-  container.className = 'kanban-view';
+  container.classList.add('kanban-view');
   const calId = S.currentCalendarId;
   const evs = S.events.filter(e =>
     !e.deleted && !e.isDeadline &&
@@ -11694,7 +11694,7 @@ function exp_triggerDownload(blob, filename){
 const GANTT_DAYS = 60; // days visible in the timeline
 
 function renderGantt(container){
-  container.className = 'gantt-view';
+  container.classList.add('gantt-view');
 
   // Date window: today - 5 days to today + 54 days
   const today = new Date();
@@ -12215,13 +12215,16 @@ setView = function(v){
   render();
 };
 
-// Patch renderCal to include gantt
+// Patch renderCal to include gantt — always resets className to 'cal' to avoid
+// kanban-view / gantt-view class bleeding into other views (fixes Day/Week layout bug)
 const _origRenderCal = renderCal;
 renderCal = function(){
   const c = document.getElementById('cal');
   c.classList.add('view-fade');
   setTimeout(() => {
     c.innerHTML = '';
+    // ⚠️ Always reset to base class first — removes kanban-view / gantt-view pollution
+    c.className = 'cal';
     if(S.view === 'day')         renderDay(c);
     else if(S.view === 'week')   renderWeek(c);
     else if(S.view === 'agenda') renderAgenda(c);
