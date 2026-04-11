@@ -3577,29 +3577,30 @@ html.light-mode textarea:focus{
    QUICK WINS — Kanban · Focus/Pomodoro · Exportar · Duplicar
    ══════════════════════════════════════════════════════════ */
 
-/* ── KANBAN VIEW ── */
+/* ── KANBAN VIEW ── 2-column grid, 3 rows */
 #cal.kanban-view{
-  display:flex !important;
-  gap:14px;
+  display:grid !important;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:repeat(3,1fr);
+  gap:12px;
   padding:16px;
-  align-items:flex-start;
-  overflow-x:auto;
   height:calc(100vh - 110px);
   box-sizing:border-box;
+  overflow-y:auto;
+  overflow-x:hidden;
+  align-items:stretch;
 }
-#cal.kanban-view::-webkit-scrollbar{height:5px;}
+#cal.kanban-view::-webkit-scrollbar{width:4px;}
 #cal.kanban-view::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 
 .kb-col{
-  flex:0 0 260px;
   display:flex;flex-direction:column;
-  gap:0;
   background:var(--surface2);
   border:1px solid var(--border);
   border-radius:12px;
   overflow:hidden;
-  min-height:160px;
-  max-height:calc(100vh - 145px);
+  min-height:0; /* allow shrinking in grid */
+  max-height:calc((100vh - 150px) / 3 - 8px);
 }
 .kb-col-header{
   padding:12px 14px;
@@ -3623,9 +3624,14 @@ html.light-mode textarea:focus{
   padding:1px 7px;border-radius:10px;color:var(--text3);
 }
 .kb-cards{
-  flex:1;overflow-y:auto;padding:10px;
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:10px;
   display:flex;flex-direction:column;gap:7px;
+  min-height:0; /* critical: allows flex child to scroll */
 }
+.kb-cards::-webkit-scrollbar{width:3px;}
 .kb-cards::-webkit-scrollbar{width:3px;}
 .kb-cards::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 
@@ -3851,30 +3857,125 @@ html.light-mode .exp-formats{background:transparent;}
    MEDIO ESFUERZO — Gantt · Habits · Notes · Smart Search
    ══════════════════════════════════════════════════════════ */
 
-/* ── GANTT VIEW ── */
-#cal.gantt-view{display:flex!important;flex-direction:column;gap:0;padding:0;height:calc(100vh - 110px);overflow:hidden;}
-.gantt-wrap{display:flex;flex-direction:column;height:100%;overflow:hidden;}
-.gantt-header{display:flex;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:10;flex-shrink:0;}
-.gantt-label-col{width:200px;flex-shrink:0;padding:8px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);border-right:1px solid var(--border);}
-.gantt-dates-row{display:flex;flex:1;overflow:hidden;}
-.gantt-day-head{flex:0 0 var(--gday-w,38px);text-align:center;padding:6px 2px;font-size:10px;color:var(--text3);border-right:1px solid var(--border);font-weight:500;}
+/* ── GANTT VIEW ── single-container sticky approach (header+labels stay put) */
+#cal.gantt-view{
+  display:flex !important;
+  flex-direction:column;
+  gap:0;padding:0;
+  height:calc(100vh - 110px);
+  overflow:hidden;
+}
+.gantt-wrap{
+  display:flex;flex-direction:column;
+  height:100%;overflow:hidden;
+}
+/* One scrollable container — both axes */
+.gantt-scroll{
+  flex:1;
+  overflow:auto;
+  position:relative;
+}
+.gantt-scroll::-webkit-scrollbar{width:4px;height:4px;}
+.gantt-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+/* Header row — sticky to the top of gantt-scroll */
+.gantt-header{
+  display:flex;
+  position:sticky;top:0;z-index:12;
+  background:var(--surface);
+  border-bottom:2px solid var(--border);
+  min-width:max-content; /* stretch to full timeline width */
+}
+/* Corner cell — sticky top AND left */
+.gantt-label-col{
+  width:var(--gantt-lw,240px);
+  min-width:var(--gantt-lw,240px);
+  flex-shrink:0;
+  padding:8px 14px;
+  font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.5px;
+  color:var(--text3);
+  border-right:1px solid var(--border);
+  position:sticky;left:0;z-index:13;
+  background:var(--surface);
+}
+/* Date header cells */
+.gantt-day-head{
+  flex:0 0 var(--gday-w,38px);
+  text-align:center;
+  padding:6px 2px;
+  font-size:10px;color:var(--text3);
+  border-right:1px solid var(--border);
+  font-weight:500;user-select:none;
+}
 .gantt-day-head.today{color:var(--accent);font-weight:700;}
-.gantt-body{flex:1;overflow-y:auto;overflow-x:hidden;}
-.gantt-row{display:flex;border-bottom:1px solid var(--border);min-height:44px;align-items:center;position:relative;}
-.gantt-row:hover{background:var(--surface2);}
-.gantt-row-label{width:200px;flex-shrink:0;padding:6px 14px;display:flex;align-items:center;gap:8px;border-right:1px solid var(--border);overflow:hidden;}
-.gantt-row-label-text{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;}
+.gantt-day-head.month-start{
+  border-left:2px solid var(--border2);
+  color:var(--text2);font-weight:700;
+}
+/* Data rows */
+.gantt-row{
+  display:flex;
+  border-bottom:1px solid var(--border);
+  min-height:44px;
+  align-items:center;
+  min-width:max-content; /* prevent collapse */
+}
+.gantt-row:hover .gantt-row-label{background:var(--surface2);}
+.gantt-row:hover .gantt-cells{background:rgba(255,255,255,.015);}
+/* Label cell — sticky left, always visible */
+.gantt-row-label{
+  width:var(--gantt-lw,240px);
+  min-width:var(--gantt-lw,240px);
+  flex-shrink:0;
+  padding:6px 14px;
+  display:flex;align-items:center;gap:8px;
+  border-right:1px solid var(--border);
+  position:sticky;left:0;z-index:5;
+  background:var(--surface);
+  transition:background .12s;
+  cursor:pointer;
+}
+.gantt-row-label-text{
+  font-size:12px;font-weight:500;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  flex:1;min-width:0;
+  color:var(--text);
+}
 .gantt-type-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.gantt-cells{flex:1;display:flex;position:relative;min-height:44px;}
-.gantt-cell{flex:0 0 var(--gday-w,38px);border-right:1px solid var(--border);position:relative;}
+/* Day cells area */
+.gantt-cells{
+  display:flex;flex:1;
+  position:relative;
+  min-height:44px;
+}
+.gantt-cell{
+  flex:0 0 var(--gday-w,38px);
+  border-right:1px solid var(--border);
+  position:relative;min-height:44px;
+}
 .gantt-cell.today{background:rgba(94,106,210,.06);}
-.gantt-bar{position:absolute;top:50%;transform:translateY(-50%);height:22px;border-radius:6px;cursor:pointer;display:flex;align-items:center;padding:0 8px;font-size:10px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:filter .15s,transform .15s;z-index:2;box-shadow:0 1px 4px rgba(0,0,0,.18);}
-.gantt-bar:hover{filter:brightness(1.15);transform:translateY(-50%) scaleY(1.08);}
+.gantt-cell.weekend{background:rgba(255,255,255,.018);}
+/* Event bars */
+.gantt-bar{
+  position:absolute;top:50%;transform:translateY(-50%);
+  height:24px;border-radius:6px;
+  cursor:pointer;
+  display:flex;align-items:center;
+  padding:0 9px;
+  font-size:10px;font-weight:600;color:#fff;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  transition:filter .15s,box-shadow .15s;
+  z-index:2;
+  box-shadow:0 1px 4px rgba(0,0,0,.2);
+}
+.gantt-bar:hover{filter:brightness(1.18);box-shadow:0 3px 10px rgba(0,0,0,.35);}
 .gantt-bar.personal{background:linear-gradient(90deg,#7c6af7,#a78bfa);}
 .gantt-bar.team{background:linear-gradient(90deg,#3b82f6,#60a5fa);}
 .gantt-bar.project{background:linear-gradient(90deg,#10b981,#34d399);}
-.gantt-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;color:var(--text3);font-size:13px;padding:40px;}
-.gantt-scroll-wrap{display:flex;flex:1;overflow-x:auto;overflow-y:hidden;}
+.gantt-empty{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;gap:10px;color:var(--text3);font-size:13px;padding:40px;
+}
 
 /* ── HABIT TRACKER ── */
 .habits-section{margin-top:4px;}
@@ -4047,6 +4148,21 @@ mark{background:rgba(94,106,210,.25);color:var(--text);border-radius:2px;padding
     width: 100% !important;
     max-width: none !important;
     box-sizing: border-box !important;
+  }
+}
+
+/* ── Kanban responsive: 1 column on mobile ── */
+@media (max-width: 768px) {
+  #cal.kanban-view {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto !important;
+    height: auto !important;
+    overflow-y: auto !important;
+    padding: 10px !important;
+    gap: 10px !important;
+  }
+  .kb-col {
+    max-height: 50vh !important;
   }
 }
 
@@ -11818,29 +11934,25 @@ const GANTT_DAYS = 60; // days visible in the timeline
 function renderGantt(container){
   container.classList.add('gantt-view');
 
-  // Date window: today - 5 days to today + 54 days
-  const today = new Date();
+  // ── Date window: today −5 → today + (GANTT_DAYS−6) ──
+  const today  = new Date();
   const startD = new Date(today);
   startD.setDate(today.getDate() - 5);
-
-  // Build array of GANTT_DAYS Date objects
   const days = Array.from({length: GANTT_DAYS}, (_, i) => {
-    const d = new Date(startD);
-    d.setDate(startD.getDate() + i);
-    return d;
+    const d = new Date(startD); d.setDate(startD.getDate() + i); return d;
   });
   const todayStr = dk(today);
   const startStr = dk(startD);
   const endStr   = dk(days[days.length - 1]);
 
-  // Filter events that fall within the window and are not deleted
-  const typeF = { personal: S.filters.personal, team: S.filters.team, project: S.filters.project };
+  // ── Filter events ──
+  const typeF = {personal:S.filters.personal, team:S.filters.team, project:S.filters.project};
   let evs = S.events.filter(e => {
     if(e.deleted || e.isDeadline) return false;
     if(e.date < startStr || e.date > endStr) return false;
-    if(e.type === 'personal' && !typeF.personal) return false;
-    if(e.type === 'team'     && !typeF.team)     return false;
-    if(e.type === 'project'  && !typeF.project)  return false;
+    if(e.type==='personal' && !typeF.personal) return false;
+    if(e.type==='team'     && !typeF.team)     return false;
+    if(e.type==='project'  && !typeF.project)  return false;
     return true;
   });
   evs.sort((a,b) => a.date < b.date ? -1 : 1);
@@ -11850,106 +11962,121 @@ function renderGantt(container){
     return;
   }
 
-  // Day width based on container
-  const DAY_W = 38;
+  const DAY_W    = 38;   // px per day column
+  const LABEL_W  = 240;  // px for the activity label column
 
+  // ── Outer wrap — sets CSS vars ──
   const wrap = document.createElement('div');
   wrap.className = 'gantt-wrap';
-  wrap.style.setProperty('--gday-w', DAY_W + 'px');
+  wrap.style.cssText = `--gday-w:${DAY_W}px;--gantt-lw:${LABEL_W}px;`;
 
-  // ── HEADER ──
+  // ── Single scrollable container (syncs header + body scroll automatically) ──
+  const scroll = document.createElement('div');
+  scroll.className = 'gantt-scroll';
+
+  // ── HEADER ROW — sticky top, stretches to full timeline width ──
   const hdr = document.createElement('div');
   hdr.className = 'gantt-header';
-  hdr.innerHTML = `<div class="gantt-label-col">Actividad</div>`;
-  const datesRow = document.createElement('div');
-  datesRow.className = 'gantt-dates-row';
-  datesRow.style.cssText = 'flex:1;display:flex;overflow:hidden;';
-  days.forEach(d => {
-    const isToday = dk(d) === todayStr;
-    const cell = document.createElement('div');
-    cell.className = 'gantt-day-head' + (isToday ? ' today' : '');
-    cell.style.setProperty('--gday-w', DAY_W + 'px');
-    cell.style.cssText = `flex:0 0 ${DAY_W}px;text-align:center;padding:6px 2px;font-size:10px;border-right:1px solid var(--border);font-weight:${isToday?'700':'500'};color:${isToday?'var(--accent)':'var(--text3)'};`;
-    cell.textContent = d.getDate();
-    if(d.getDate() === 1 || (d === days[0])){
-      cell.style.fontWeight = '700';
-    }
-    datesRow.appendChild(cell);
-  });
-  hdr.appendChild(datesRow);
-  wrap.appendChild(hdr);
 
-  // ── BODY ──
-  const body = document.createElement('div');
-  body.className = 'gantt-body';
-  const scrollWrap = document.createElement('div');
-  scrollWrap.style.cssText = 'overflow-x:auto;';
+  // Corner cell — sticky top AND left
+  const corner = document.createElement('div');
+  corner.className = 'gantt-label-col';
+  corner.textContent = 'Actividad';
+  hdr.appendChild(corner);
+
+  // Date cells
+  const MONTHS_SHORT = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  days.forEach((d, i) => {
+    const isToday      = dk(d) === todayStr;
+    const isMonthStart = d.getDate() === 1;
+    const isWeekend    = d.getDay() === 0 || d.getDay() === 6;
+    const cell = document.createElement('div');
+    cell.className = 'gantt-day-head'
+      + (isToday      ? ' today'      : '')
+      + (isMonthStart ? ' month-start': '');
+    cell.style.cssText = `flex:0 0 ${DAY_W}px;`;
+    // Show month name on 1st of month, day number otherwise
+    cell.textContent = isMonthStart ? MONTHS_SHORT[d.getMonth()] : d.getDate();
+    cell.title = d.toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'});
+    hdr.appendChild(cell);
+  });
+  scroll.appendChild(hdr);
+
+  // ── DATA ROWS ──
+  const dotColors = {personal:'#a78bfa', team:'#3b82f6', project:'#10b981'};
+  const barGradients = {
+    personal:'linear-gradient(90deg,#7c6af7,#a78bfa)',
+    team:'linear-gradient(90deg,#3b82f6,#60a5fa)',
+    project:'linear-gradient(90deg,#10b981,#34d399)'
+  };
 
   evs.forEach(ev => {
     const row = document.createElement('div');
     row.className = 'gantt-row';
-    row.style.cssText = `display:flex;border-bottom:1px solid var(--border);min-height:44px;align-items:center;position:relative;`;
 
-    // Label
-    const labelDiv = document.createElement('div');
-    labelDiv.className = 'gantt-row-label';
-    labelDiv.style.cssText = `width:200px;flex-shrink:0;padding:6px 14px;display:flex;align-items:center;gap:8px;border-right:1px solid var(--border);overflow:hidden;cursor:pointer;`;
-    const dotColors = {personal:'#a78bfa', team:'#3b82f6', project:'#10b981'};
-    labelDiv.innerHTML = `<div style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:${dotColors[ev.type]||'var(--text3)'}"></div><div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1" title="${ev.title}">${ev.title}</div>`;
-    labelDiv.onclick = () => showEventDetail(ev);
-    row.appendChild(labelDiv);
+    // ── Label — sticky left ──
+    const label = document.createElement('div');
+    label.className = 'gantt-row-label';
+    const dot = document.createElement('div');
+    dot.className = 'gantt-type-dot';
+    dot.style.background = dotColors[ev.type] || 'var(--text3)';
+    const nameSpan = document.createElement('div');
+    nameSpan.className = 'gantt-row-label-text';
+    nameSpan.textContent = ev.title;
+    nameSpan.title = ev.title;
+    label.appendChild(dot);
+    label.appendChild(nameSpan);
+    label.onclick = () => showEventDetail(ev);
+    row.appendChild(label);
 
-    // Cells + bar
-    const cellsDiv = document.createElement('div');
-    cellsDiv.style.cssText = `flex:1;display:flex;position:relative;min-height:44px;`;
+    // ── Day cells + bar ──
+    const cells = document.createElement('div');
+    cells.className = 'gantt-cells';
+    cells.style.cssText = `position:relative;min-height:44px;display:flex;`;
 
-    // Calculate bar position
     const evStartIdx = days.findIndex(d => dk(d) === ev.date);
-    const durDays = Math.max(1, Math.ceil((ev.dur || 60) / (24*60)));
-    const barStart = evStartIdx >= 0 ? evStartIdx : 0;
-    const barWidth = durDays * DAY_W - 6;
-    const barLeft  = barStart * DAY_W + 3;
-    const barVisible = evStartIdx >= 0;
+    const durDays    = Math.max(1, Math.ceil((ev.dur || 60) / (24*60)));
+    const barStart   = evStartIdx >= 0 ? evStartIdx : -1;
+    const barLeft    = barStart * DAY_W + 3;
+    const barWidth   = Math.max(durDays * DAY_W - 6, 20);
 
-    days.forEach(d => {
-      const isToday = dk(d) === todayStr;
+    days.forEach((d, i) => {
+      const isToday   = dk(d) === todayStr;
+      const isWeekend = d.getDay() === 0 || d.getDay() === 6;
       const cell = document.createElement('div');
-      cell.style.cssText = `flex:0 0 ${DAY_W}px;border-right:1px solid var(--border);min-height:44px;${isToday?'background:rgba(94,106,210,.05)':''}`;
-      cellsDiv.appendChild(cell);
+      cell.className = 'gantt-cell'
+        + (isToday   ? ' today'   : '')
+        + (isWeekend ? ' weekend' : '');
+      cell.style.cssText = `flex:0 0 ${DAY_W}px;`;
+      cells.appendChild(cell);
     });
 
-    if(barVisible){
+    if(barStart >= 0){
       const bar = document.createElement('div');
-      const typeClass = ev.type || 'personal';
-      const barColors = {
-        personal:'linear-gradient(90deg,#7c6af7,#a78bfa)',
-        team:'linear-gradient(90deg,#3b82f6,#60a5fa)',
-        project:'linear-gradient(90deg,#10b981,#34d399)'
-      };
-      bar.style.cssText = `position:absolute;top:50%;transform:translateY(-50%);height:22px;border-radius:6px;cursor:pointer;display:flex;align-items:center;padding:0 8px;font-size:10px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:filter .15s;z-index:2;box-shadow:0 1px 4px rgba(0,0,0,.18);left:${barLeft}px;width:${Math.max(barWidth,24)}px;background:${barColors[typeClass]||barColors.personal};`;
+      bar.className = 'gantt-bar ' + (ev.type || 'personal');
+      bar.style.cssText = `left:${barLeft}px;width:${barWidth}px;`;
       bar.textContent = ev.title;
       bar.title = `${ev.title} — ${ev.date}`;
-      bar.onmouseenter = () => { bar.style.filter = 'brightness(1.15)'; };
-      bar.onmouseleave = () => { bar.style.filter = ''; };
-      bar.onclick = () => showEventDetail(ev);
-      cellsDiv.appendChild(bar);
+      bar.onclick = (e) => { e.stopPropagation(); showEventDetail(ev); };
+      cells.appendChild(bar);
     }
 
-    row.appendChild(cellsDiv);
-    body.appendChild(row);
+    row.appendChild(cells);
+    scroll.appendChild(row);
   });
 
-  wrap.appendChild(body);
+  wrap.appendChild(scroll);
   container.appendChild(wrap);
 
-  // Scroll so today is centered
+  // ── Scroll to center today on load ──
   setTimeout(() => {
     const todayIdx = days.findIndex(d => dk(d) === todayStr);
-    if(todayIdx >= 0 && body){
-      const scrollTo = Math.max(0, (todayIdx - 3) * DAY_W);
-      body.scrollLeft = scrollTo;
+    if(todayIdx >= 0){
+      const labelOffset = LABEL_W;
+      const targetPx = Math.max(0, (todayIdx - 4) * DAY_W);
+      scroll.scrollLeft = targetPx;
     }
-  }, 80);
+  }, 60);
 }
 
 /* ──────────────────────────────────────────────────────────
