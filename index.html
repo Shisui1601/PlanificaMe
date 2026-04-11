@@ -3680,12 +3680,53 @@ html.light-mode textarea:focus{
   font-size:11px;color:var(--text3);
   font-style:italic;
 }
-/* Drop zone highlight */
+/* ── Drop zone highlight ── */
 .kb-col.drag-over{
   border-color:var(--accent) !important;
-  background:rgba(94,106,210,.06) !important;
+  box-shadow:0 0 0 2px rgba(94,106,210,.25) !important;
 }
-.kb-card.dragging{opacity:.4;transform:scale(.96);}
+.kb-col.drag-over .kb-col-header{
+  background:rgba(94,106,210,.12) !important;
+}
+
+/* ── Dragging card ── */
+.kb-card.dragging{
+  opacity:.25;
+  transform:scale(.97);
+  pointer-events:none;
+  transition:opacity .15s,transform .15s;
+}
+
+/* ── Drop position indicator (the blue line between cards) ── */
+.kb-drop-indicator{
+  height:2px;
+  border-radius:2px;
+  background:var(--accent);
+  margin:0 2px;
+  display:none;
+  box-shadow:0 0 0 3px rgba(94,106,210,.18),0 0 10px rgba(94,106,210,.35);
+  flex-shrink:0;
+  position:relative;
+}
+.kb-drop-indicator::before{
+  content:'';
+  position:absolute;
+  left:-5px;top:-4px;
+  width:10px;height:10px;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 6px rgba(94,106,210,.6);
+}
+
+/* ── Cards animate when a drag is in progress ── */
+.kb-card.drag-shift-down{
+  transform:translateY(4px);
+  transition:transform .15s ease;
+}
+.kb-card.drag-shift-up{
+  transform:translateY(-4px);
+  transition:transform .15s ease;
+}
 
 /* ── FOCUS / POMODORO WIDGET ── */
 #focusWidget{
@@ -4164,6 +4205,40 @@ mark{background:rgba(94,106,210,.25);color:var(--text);border-radius:2px;padding
   .kb-col {
     max-height: 50vh !important;
   }
+}
+
+/* ── Detail Modal Footer — Grid 3×2 ── */
+#detFoot {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px !important;
+  padding: 14px 22px 22px !important;
+  justify-content: unset !important;
+}
+#detFoot .btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  font-size: 12px !important;
+  padding: 9px 8px !important;
+  border-radius: 10px !important;
+  font-weight: 500 !important;
+  white-space: nowrap !important;
+  width: 100% !important;
+  transition: all .15s !important;
+}
+#detFoot .btn svg { flex-shrink: 0; }
+#detFoot .det-close-only {
+  grid-column: 1 / -1;
+}
+@media (max-width: 480px) {
+  #detFoot {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  #detFoot .btn-icon-only { gap: 0 !important; }
+  #detFoot .btn .det-btn-label { display: none; }
+  #detFoot .btn { padding: 10px !important; }
 }
 
 /* END BUG FIXES */
@@ -7594,40 +7669,61 @@ function showEventDetail(ev){
 
   document.getElementById('detBody').innerHTML=html;
   const foot=document.getElementById('detFoot');foot.innerHTML='';
-  if(canEdit&&!isDeadlineEv){
-    const eb=document.createElement('button');eb.className='btn btn-s';eb.textContent='Editar';eb.onclick=()=>{closeModal('detModal');editEvent(ev);};foot.appendChild(eb);
-    const sb=document.createElement('button');sb.className='btn btn-s';sb.style.borderColor='var(--accent2)';sb.style.color='var(--accent2)';
-    sb.textContent='Estado';sb.onclick=()=>{closeModal('detModal');openStatusModal(ev);};foot.appendChild(sb);
-    // Duplicar
-    const dupb=document.createElement('button');dupb.className='btn btn-s';dupb.style.gap='5px';
-    dupb.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Duplicar';
-    dupb.onclick=()=>{closeModal('detModal');duplicateEvent(ev);};foot.appendChild(dupb);
-    // Focus / Pomodoro
+
+  // SVG icon helpers
+  const ico = {
+    edit:    `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>`,
+    status:  `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>`,
+    copy:    `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`,
+    focus:   `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    trash:   `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`,
+    close:   `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
+  };
+  const mkBtn = (cls, iconKey, label, title, onClick) => {
+    const b = document.createElement('button');
+    b.className = `btn ${cls}`;
+    b.title = title || label;
+    b.innerHTML = `${ico[iconKey]}<span class="det-btn-label">${label}</span>`;
+    b.onclick = onClick;
+    return b;
+  };
+
+  if(canEdit && !isDeadlineEv){
+    // Row 1: Editar | Estado | Duplicar
+    foot.appendChild(mkBtn('btn-s', 'edit',   'Editar',    'Editar actividad',     ()=>{ closeModal('detModal'); editEvent(ev); }));
+    foot.appendChild(mkBtn('btn-s', 'status', 'Estado',    'Cambiar estado',       ()=>{ closeModal('detModal'); openStatusModal(ev); }));
+    foot.appendChild(mkBtn('btn-s', 'copy',   'Duplicar',  'Duplicar actividad',   ()=>{ closeModal('detModal'); duplicateEvent(ev); }));
+
+    // Row 2: Focus | Eliminar | Cerrar
     if(!ev.isDeadline){
-      const focb=document.createElement('button');focb.className='btn btn-s';focb.style.gap='5px';focb.title='Iniciar sesión Pomodoro';
-      focb.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Focus';
-      focb.onclick=()=>{closeModal('detModal');openFocusWidget(ev);};foot.appendChild(focb);
-    }
-    // Botón eliminar — recurrentes tienen flujo especial, el resto usa soft delete
-    if(ev.isRecurring && ev.recurGroupId){
-      const db2=document.createElement('button');db2.className='btn btn-d';
-      db2.textContent='🗑 Eliminar';
-      db2.onclick=()=>deleteRecurringEvent(ev);
-      foot.appendChild(db2);
+      foot.appendChild(mkBtn('btn-s', 'focus', 'Focus', 'Iniciar sesión Pomodoro', ()=>{ closeModal('detModal'); openFocusWidget(ev); }));
     } else {
-      const db3=document.createElement('button');db3.className='btn btn-d';
-      db3.textContent='🗑 Eliminar';
-      db3.onclick=()=>{
+      // placeholder vacío para mantener el grid alineado
+      const ph = document.createElement('div'); foot.appendChild(ph);
+    }
+
+    // Botón eliminar
+    if(ev.isRecurring && ev.recurGroupId){
+      foot.appendChild(mkBtn('btn-d', 'trash', 'Eliminar', 'Eliminar actividad recurrente', ()=>deleteRecurringEvent(ev)));
+    } else {
+      foot.appendChild(mkBtn('btn-d', 'trash', 'Eliminar', 'Eliminar actividad', ()=>{
         closeModal('detModal');
         trash_softDelete(ev);
         render();
         trash_updateBadge();
-        toast_withUndo('Actividad enviada a la papelera',()=>{ trash_restore(ev.id); render(); trash_updateBadge(); });
-      };
-      foot.appendChild(db3);
+        toast_withUndo('Actividad enviada a la papelera', ()=>{ trash_restore(ev.id); render(); trash_updateBadge(); });
+      }));
     }
+
+    // Cerrar — cierra la fila 2
+    foot.appendChild(mkBtn('btn-p', 'close', 'Cerrar', 'Cerrar detalle', ()=>closeModal('detModal')));
+
+  } else {
+    // Sin permisos de edición — solo botón Cerrar a ancho completo
+    const cb = mkBtn('btn-p', 'close', 'Cerrar', 'Cerrar detalle', ()=>closeModal('detModal'));
+    cb.classList.add('det-close-only');
+    foot.appendChild(cb);
   }
-  const cb=document.createElement('button');cb.className='btn btn-p';cb.textContent='Cerrar';cb.onclick=()=>closeModal('detModal');foot.appendChild(cb);
   openModal('detModal');
 
   // Cargar archivos del evento en el detalle
@@ -11572,66 +11668,229 @@ function renderKanban(container){
   );
 
   const typeLabel = {personal:'Personal', team:'Equipo', project:'Meta'};
+  const statusLabel = {
+    'pending':'Pendiente','completed':'Completada',
+    'early-voluntary':'Adelantada voluntad','early-forced':'Adelantada obligación',
+    'extended':'Extendida','abandoned':'Abandonada'
+  };
 
-  container.innerHTML = KB_COLS.map(col => {
+  container.innerHTML = '';
+
+  // ── Shared drop-indicator element (one per Kanban, reused across all columns) ──
+  let _kbIndicator = document.getElementById('kb-drop-indicator');
+  if(!_kbIndicator){
+    _kbIndicator = document.createElement('div');
+    _kbIndicator.id = 'kb-drop-indicator';
+    _kbIndicator.className = 'kb-drop-indicator';
+    document.body.appendChild(_kbIndicator);
+  }
+  _kbIndicator.style.display = 'none';
+
+  KB_COLS.forEach(col => {
     const cards = evs.filter(e => (e.status||'pending') === col.status);
-    return `
-    <div class="kb-col" data-kbcol="${col.status}"
-      ondragover="kb_dragOver(event,this)" ondrop="kb_drop(event,this)"
-      ondragleave="this.classList.remove('drag-over')">
-      <div class="kb-col-header">
-        <div class="kb-col-dot" style="background:${col.dot};box-shadow:0 0 8px ${col.dot}66"></div>
-        <div class="kb-col-title">${col.label}</div>
-        <div class="kb-col-count">${cards.length}</div>
-      </div>
-      <div class="kb-cards" id="kbcards-${col.status}">
-        ${cards.length === 0
-          ? `<div class="kb-empty">Sin actividades</div>`
-          : cards.map(ev => `
-          <div class="kb-card ${ev.type}" draggable="true"
-            data-evid="${ev.id}"
-            ondragstart="kb_dragStart(event,'${ev.id}')"
-            ondragend="kb_dragEnd(event)"
-            onclick="showEventDetail(getEv('${ev.id}'))">
-            <div class="kb-card-title">${escapeHtml(ev.title)}</div>
-            <div class="kb-card-meta">
-              <span class="kb-card-badge">${typeLabel[ev.type]||ev.type}</span>
-              <span>${fmtDate(ev.date)}</span>
-              <span>${fmt12(ev.time)}</span>
-              ${ev.projId ? `<span style="color:var(--accent)">· ${(S.projects.find(p=>p.id===ev.projId)?.title||'').substring(0,18)}</span>`:''}
-            </div>
-          </div>`).join('')}
-      </div>
-    </div>`;
-  }).join('');
+
+    // ── Column ──
+    const colEl = document.createElement('div');
+    colEl.className = 'kb-col';
+    colEl.dataset.kbcol = col.status;
+
+    // Header
+    const hdr = document.createElement('div');
+    hdr.className = 'kb-col-header';
+    hdr.innerHTML = `
+      <div class="kb-col-dot" style="background:${col.dot};box-shadow:0 0 8px ${col.dot}66"></div>
+      <div class="kb-col-title">${col.label}</div>
+      <div class="kb-col-count" id="kb-count-${col.status}">${cards.length}</div>`;
+    colEl.appendChild(hdr);
+
+    // Cards container
+    const cardsEl = document.createElement('div');
+    cardsEl.className = 'kb-cards';
+    cardsEl.id = `kbcards-${col.status}`;
+
+    if(cards.length === 0){
+      const empty = document.createElement('div');
+      empty.className = 'kb-empty';
+      empty.textContent = 'Sin actividades';
+      cardsEl.appendChild(empty);
+    } else {
+      cards.forEach(ev => {
+        const proj = ev.projId ? S.projects.find(p=>p.id===ev.projId) : null;
+        const card = document.createElement('div');
+        card.className = `kb-card ${ev.type}`;
+        card.draggable = true;
+        card.dataset.evid = ev.id;
+        card.innerHTML = `
+          <div class="kb-card-title">${escapeHtml(ev.title)}</div>
+          <div class="kb-card-meta">
+            <span class="kb-card-badge">${typeLabel[ev.type]||ev.type}</span>
+            <span>${fmtDate(ev.date)}</span>
+            <span>${fmt12(ev.time)}</span>
+            ${proj ? `<span style="color:var(--accent)">· ${proj.title.substring(0,18)}</span>`:''}
+          </div>`;
+        // Events
+        card.addEventListener('dragstart', (e) => kb_dragStart(e, ev.id, card));
+        card.addEventListener('dragend',   (e) => kb_dragEnd(e));
+        card.addEventListener('dragover',  (e) => kb_cardDragOver(e, card, cardsEl));
+        card.addEventListener('click',     ()  => showEventDetail(ev));
+        cardsEl.appendChild(card);
+      });
+    }
+
+    // Column-level drag events
+    colEl.addEventListener('dragover',   (e) => kb_colDragOver(e, colEl, cardsEl));
+    colEl.addEventListener('dragleave',  (e) => kb_colDragLeave(e, colEl));
+    colEl.addEventListener('drop',       (e) => kb_drop(e, colEl));
+
+    colEl.appendChild(cardsEl);
+    container.appendChild(colEl);
+  });
 }
 
-// Kanban drag & drop
-let _kbDragId = null;
-function kb_dragStart(e, id){ _kbDragId=id; e.target.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; }
-function kb_dragEnd(e){ e.target.classList.remove('dragging'); document.querySelectorAll('.kb-col').forEach(c=>c.classList.remove('drag-over')); }
-function kb_dragOver(e, col){ e.preventDefault(); e.dataTransfer.dropEffect='move'; col.classList.add('drag-over'); }
-async function kb_drop(e, col){
+// ═══════════════════════════════════════════
+// KANBAN DRAG & DROP — v2 (card-level indicator)
+// ═══════════════════════════════════════════
+let _kbDrag = { id: null, el: null, sourceStatus: null };
+
+function kb_getIndicator(){
+  return document.getElementById('kb-drop-indicator');
+}
+
+function kb_dragStart(e, id, cardEl){
+  _kbDrag.id = id;
+  _kbDrag.el = cardEl;
+  const ev = S.events.find(x=>x.id===id);
+  _kbDrag.sourceStatus = ev ? (ev.status||'pending') : null;
+
+  // Custom ghost: clone of the card, slightly rotated
+  const ghost = cardEl.cloneNode(true);
+  ghost.style.cssText = `
+    position:fixed;top:-200px;left:-200px;
+    width:${cardEl.offsetWidth}px;
+    opacity:.95;transform:rotate(2deg) scale(1.03);
+    border-radius:10px;pointer-events:none;z-index:9999;
+    box-shadow:0 12px 40px rgba(0,0,0,.45);
+    border:1px solid var(--accent);
+  `;
+  document.body.appendChild(ghost);
+  e.dataTransfer.setDragImage(ghost, cardEl.offsetWidth / 2, 20);
+  setTimeout(() => ghost.remove(), 0);
+
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', id); // Firefox compat
+  requestAnimationFrame(() => cardEl.classList.add('dragging'));
+}
+
+function kb_dragEnd(e){
+  if(_kbDrag.el) _kbDrag.el.classList.remove('dragging');
+  document.querySelectorAll('.kb-col').forEach(c => c.classList.remove('drag-over'));
+  const ind = kb_getIndicator();
+  if(ind){ ind.style.display = 'none'; if(ind.parentNode) ind.parentNode.removeChild(ind); }
+  _kbDrag.id = null; _kbDrag.el = null; _kbDrag.sourceStatus = null;
+}
+
+// Card-level dragover: positions indicator above or below the target card
+function kb_cardDragOver(e, targetCard, cardsEl){
+  e.preventDefault(); e.stopPropagation();
+  if(!_kbDrag.id) return;
+  if(targetCard === _kbDrag.el) return;
+
+  e.dataTransfer.dropEffect = 'move';
+  const colEl = cardsEl.closest('.kb-col');
+  if(colEl) colEl.classList.add('drag-over');
+
+  const ind = kb_getIndicator();
+  if(!ind) return;
+  ind.style.display = 'block';
+
+  const rect = targetCard.getBoundingClientRect();
+  const midY = rect.top + rect.height / 2;
+  if(e.clientY < midY){
+    cardsEl.insertBefore(ind, targetCard);
+  } else {
+    cardsEl.insertBefore(ind, targetCard.nextSibling);
+  }
+}
+
+// Column-level dragover: indicator goes to bottom (no card below cursor)
+function kb_colDragOver(e, colEl, cardsEl){
   e.preventDefault();
-  col.classList.remove('drag-over');
-  if(!_kbDragId) return;
-  const newStatus = col.dataset.kbcol;
-  const ev = S.events.find(x=>x.id===_kbDragId);
-  if(!ev || ev.status === newStatus){ _kbDragId=null; return; }
-  const oldStatus = ev.status;
+  if(!_kbDrag.id) return;
+  e.dataTransfer.dropEffect = 'move';
+  colEl.classList.add('drag-over');
+
+  // Only handle if not over a card (cards call stopPropagation)
+  const ind = kb_getIndicator();
+  if(!ind) return;
+
+  // Check if cursor is below all cards
+  const cards = [...cardsEl.querySelectorAll('.kb-card:not(.dragging)')];
+  const lastCard = cards[cards.length - 1];
+  if(!lastCard || e.clientY > lastCard.getBoundingClientRect().bottom - 10){
+    ind.style.display = 'block';
+    cardsEl.appendChild(ind);
+  }
+}
+
+// Fixed dragleave: only fires when truly leaving the column (not entering a child)
+function kb_colDragLeave(e, colEl){
+  if(e.relatedTarget && colEl.contains(e.relatedTarget)) return;
+  colEl.classList.remove('drag-over');
+  const ind = kb_getIndicator();
+  if(ind && colEl.contains(ind)){ ind.style.display='none'; }
+}
+
+async function kb_drop(e, colEl){
+  e.preventDefault();
+  colEl.classList.remove('drag-over');
+
+  const ind = kb_getIndicator();
+  if(ind){ ind.style.display='none'; if(ind.parentNode) ind.parentNode.removeChild(ind); }
+
+  const id = _kbDrag.id;
+  if(!id){ _kbDrag.id=null; return; }
+
+  const newStatus  = colEl.dataset.kbcol;
+  const ev = S.events.find(x=>x.id===id);
+  if(!ev){ _kbDrag.id=null; return; }
+
+  if(ev.status === newStatus){
+    _kbDrag.id=null;
+    return; // dropped in same column — no-op (reorder not persisted)
+  }
+
+  const oldStatus = ev.status||'pending';
   ev.status = newStatus;
-  render();
-  // Persist via API
+  render(); // optimistic update
+
+  const statusLabel = {
+    'pending':'Pendiente','completed':'Completada',
+    'early-voluntary':'Adelantada voluntad','early-forced':'Adelantada obligación',
+    'extended':'Extendida','abandoned':'Abandonada'
+  };
+
   try{
     await fetch(`${API_URL}/events/${ev.id}`, {
       method:'PATCH',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({status:newStatus})
+      body:JSON.stringify({status:newStatus, user_id: ME&&ME.id?ME.id:undefined})
     });
-  } catch(err){ ev.status=oldStatus; render(); toast('Error al actualizar estado'); }
-  _kbDragId = null;
-  toast(`Estado actualizado: ${newStatus==='pending'?'Pendiente':newStatus==='completed'?'Completada':newStatus==='abandoned'?'Abandonada':newStatus}`);
+    toast(`✅ ${ev.title.substring(0,28)} → ${statusLabel[newStatus]||newStatus}`);
+  } catch(err){
+    ev.status = oldStatus;
+    render();
+    toast('❌ Error al actualizar estado');
+  }
+  _kbDrag.id = null;
 }
+
+// Keyboard: Esc cancels drag
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape' && _kbDrag.id){
+    kb_dragEnd({});
+    toast('Movimiento cancelado');
+  }
+});
 
 // ═══════════════════════════════════════════════════════════════════
 // QUICK WIN 3 — MODO FOCUS / POMODORO
