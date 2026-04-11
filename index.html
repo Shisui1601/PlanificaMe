@@ -3776,6 +3776,200 @@ html.light-mode .trash-footer{background:#f5f5fa;}
 html.light-mode .trash-bulk-btn{background:#fff;}
 html.light-mode .trash-icon-wrap{background:rgba(239,68,68,.08);}
 
+/* ══════════════════════════════════════════════════════
+   EMPTY TRASH CONFIRM MODAL — Danger Zone (Linear/Vercel)
+   ══════════════════════════════════════════════════════ */
+
+/* ── Modal shell ── */
+#emptyTrashModal .modal{
+  max-width:420px;
+  padding:0;
+  overflow:hidden;
+  background:var(--surface) !important;
+}
+
+/* ── Danger header band ── */
+.etm-header{
+  padding:28px 28px 22px;
+  background:linear-gradient(135deg,rgba(239,68,68,.1),rgba(239,68,68,.04));
+  border-bottom:1px solid rgba(239,68,68,.18);
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  position:relative;overflow:hidden;
+}
+.etm-header::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(239,68,68,.14),transparent 70%);
+  pointer-events:none;
+}
+
+/* ── Animated trash icon ── */
+.etm-icon-wrap{
+  width:60px;height:60px;border-radius:16px;
+  background:rgba(239,68,68,.12);
+  border:1px solid rgba(239,68,68,.25);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:14px;
+  position:relative;
+  animation:etm-icon-breathe 2.5s ease-in-out infinite;
+}
+@keyframes etm-icon-breathe{
+  0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.2),0 4px 16px rgba(239,68,68,.1);}
+  50%{box-shadow:0 0 0 8px rgba(239,68,68,.06),0 4px 20px rgba(239,68,68,.2);}
+}
+.etm-icon-wrap svg{color:#ef4444;}
+
+/* ── Count chip ── */
+.etm-count-chip{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(239,68,68,.12);
+  border:1px solid rgba(239,68,68,.25);
+  border-radius:20px;
+  padding:3px 10px;
+  font-size:11px;font-weight:700;color:#ef4444;
+  margin-bottom:10px;letter-spacing:.2px;
+}
+
+/* ── Title ── */
+.etm-title{
+  font-size:16px;font-weight:700;
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  margin-bottom:5px;
+}
+.etm-sub{
+  font-size:12px;color:var(--text3);
+  line-height:1.5;max-width:280px;
+}
+
+/* ── Body section ── */
+.etm-body{padding:20px 24px;}
+
+/* ── Warning list ── */
+.etm-warnings{
+  display:flex;flex-direction:column;gap:8px;
+  margin-bottom:20px;
+}
+.etm-warning-row{
+  display:flex;align-items:flex-start;gap:9px;
+  padding:10px 12px;
+  background:rgba(239,68,68,.06);
+  border:1px solid rgba(239,68,68,.14);
+  border-radius:8px;
+}
+.etm-warning-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:#ef4444;flex-shrink:0;margin-top:4px;
+}
+.etm-warning-text{font-size:12px;color:var(--text2);line-height:1.45;}
+.etm-warning-text strong{color:var(--text);font-weight:600;}
+
+/* ── Type-to-confirm input ── */
+.etm-confirm-wrap{margin-bottom:6px;}
+.etm-confirm-label{
+  font-size:11px;color:var(--text3);margin-bottom:6px;
+  font-weight:500;line-height:1.4;
+}
+.etm-confirm-label code{
+  display:inline-block;
+  background:rgba(239,68,68,.1);
+  border:1px solid rgba(239,68,68,.25);
+  color:#ef4444;
+  padding:1px 6px;border-radius:4px;
+  font-family:'JetBrains Mono','Fira Code',monospace;
+  font-size:11px;font-weight:700;letter-spacing:.5px;
+}
+.etm-confirm-input{
+  width:100%;padding:9px 12px;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:8px;
+  color:var(--text);font-family:'Inter',sans-serif;
+  font-size:13px;font-weight:500;
+  outline:none;transition:border-color .15s,box-shadow .15s;
+  box-sizing:border-box;
+}
+.etm-confirm-input:focus{
+  border-color:rgba(239,68,68,.5);
+  box-shadow:0 0 0 3px rgba(239,68,68,.1);
+}
+.etm-confirm-input.valid{
+  border-color:rgba(239,68,68,.6) !important;
+  box-shadow:0 0 0 3px rgba(239,68,68,.12) !important;
+}
+
+/* ── Footer buttons ── */
+.etm-footer{
+  display:flex;gap:8px;
+  padding:0 24px 20px;
+}
+.etm-btn-cancel{
+  flex:1;padding:10px 16px;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:9px;
+  color:var(--text2);font-size:13px;font-weight:600;
+  cursor:pointer;font-family:'Inter',sans-serif;
+  transition:all .15s;
+}
+.etm-btn-cancel:hover{background:var(--surface3);border-color:var(--border2);color:var(--text);}
+.etm-btn-empty{
+  flex:1;padding:10px 16px;
+  background:rgba(239,68,68,.15);
+  border:1px solid rgba(239,68,68,.35);
+  border-radius:9px;
+  color:#ef4444;font-size:13px;font-weight:700;
+  cursor:pointer;font-family:'Inter',sans-serif;
+  transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  opacity:.45;pointer-events:none; /* disabled until input matches */
+}
+.etm-btn-empty.enabled{
+  opacity:1;pointer-events:auto;
+}
+.etm-btn-empty.enabled:hover{
+  background:rgba(239,68,68,.25);
+  border-color:rgba(239,68,68,.55);
+  box-shadow:0 4px 12px rgba(239,68,68,.2);
+}
+.etm-btn-empty.enabled:active{
+  transform:scale(.98);
+}
+
+/* ── Executing state ── */
+.etm-btn-empty.running{
+  opacity:1;pointer-events:none;
+  background:rgba(239,68,68,.2);
+  gap:8px;
+}
+@keyframes etm-spin{to{transform:rotate(360deg);}}
+.etm-spinner{
+  width:13px;height:13px;border-radius:50%;
+  border:2px solid rgba(239,68,68,.3);
+  border-top-color:#ef4444;
+  animation:etm-spin .7s linear infinite;
+  flex-shrink:0;
+}
+
+/* ── Progress bar ── */
+.etm-progress-wrap{
+  height:3px;background:rgba(239,68,68,.1);
+  border-radius:2px;overflow:hidden;
+  margin-bottom:16px;display:none;
+}
+.etm-progress-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,#ef4444,#f87171);
+  border-radius:2px;
+  transition:width .25s ease;
+}
+
+/* ── Light mode ── */
+html.light-mode .etm-header{background:linear-gradient(135deg,rgba(239,68,68,.07),rgba(239,68,68,.02));}
+html.light-mode .etm-header::before{background:radial-gradient(ellipse at 50% 0%,rgba(239,68,68,.08),transparent 70%);}
+html.light-mode .etm-confirm-input{background:#fff;border-color:#e5e5ea;}
+html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
+
+/* END EMPTY TRASH CONFIRM MODAL */
 /* END TRASH SYSTEM */
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -10930,25 +11124,173 @@ function trash_restoreAll(){
   toast(`✅ ${items.length} actividad(es) restaurada(s)`);
 }
 
-// ── Empty trash (all visible) ──
+// ── Empty trash (all visible) → opens premium confirm modal ──
 function trash_emptyAll(){
   const items = _trashFilter === 'all' ? trash_load() : trash_load().filter(i=>i.type===_trashFilter);
   if(items.length === 0) return;
-  showConfirmDelete(
-    'Vaciar papelera',
-    `¿Eliminar permanentemente <b>${items.length} elemento(s)</b>?`,
-    'Esta acción no se puede deshacer.',
-    async () => {
-      for(const i of items) await trash_hardDelete(i.id);
-      trash_renderList();
-      trash_updateBadge();
-      toast(`🗑 ${items.length} elemento(s) eliminado(s) permanentemente`);
-    }
-  );
+  // Update modal copy with real count
+  const label = items.length === 1 ? '1 elemento' : `${items.length} elementos`;
+  const el = document.getElementById('etmCountLabel');
+  const el2 = document.getElementById('etmCountInline');
+  if(el) el.textContent = label;
+  if(el2) el2.textContent = items.length === 1 ? 'el elemento seleccionado' : `los ${items.length} elementos seleccionados`;
+  // Reset confirm input + button state
+  const inp = document.getElementById('etmConfirmInput');
+  const btn = document.getElementById('etmConfirmBtn');
+  const prog = document.getElementById('etmProgressWrap');
+  const cancelBtn = document.getElementById('etmCancelBtn');
+  if(inp){ inp.value = ''; inp.classList.remove('valid'); inp.disabled = false; }
+  if(btn){ btn.classList.remove('enabled','running'); btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Vaciar papelera`; }
+  if(prog){ prog.style.display='none'; document.getElementById('etmProgressFill').style.width='0%'; }
+  if(cancelBtn) cancelBtn.disabled = false;
+  openModal('emptyTrashModal');
+  setTimeout(()=>inp?.focus(),180);
+}
+
+// ── Input validation: enable button only when "VACIAR" typed ──
+function etm_onInput(inp){
+  const btn = document.getElementById('etmConfirmBtn');
+  const isValid = inp.value.trim().toUpperCase() === 'VACIAR';
+  inp.classList.toggle('valid', isValid);
+  if(btn){ btn.classList.toggle('enabled', isValid); }
+}
+
+// ── Close the modal ──
+function etm_close(){
+  closeModal('emptyTrashModal');
+}
+
+// ── Execute the empty ──
+async function etm_execute(){
+  const inp = document.getElementById('etmConfirmInput');
+  if(!inp || inp.value.trim().toUpperCase() !== 'VACIAR') return;
+  const items = _trashFilter === 'all' ? trash_load() : trash_load().filter(i=>i.type===_trashFilter);
+  if(items.length === 0){ etm_close(); return; }
+
+  // Show running state
+  const btn = document.getElementById('etmConfirmBtn');
+  const cancelBtn = document.getElementById('etmCancelBtn');
+  const prog = document.getElementById('etmProgressWrap');
+  const fill = document.getElementById('etmProgressFill');
+  if(inp) inp.disabled = true;
+  if(cancelBtn) cancelBtn.disabled = true;
+  if(btn){
+    btn.classList.add('running');
+    btn.innerHTML = `<div class="etm-spinner"></div> Eliminando…`;
+  }
+  if(prog) prog.style.display = 'block';
+
+  // Delete items one by one with progress
+  const total = items.length;
+  for(let idx = 0; idx < items.length; idx++){
+    await trash_hardDelete(items[idx].id);
+    const pct = Math.round(((idx+1)/total)*100);
+    if(fill) fill.style.width = pct + '%';
+    // Small pause so the bar is visible
+    await new Promise(r=>setTimeout(r,60));
+  }
+
+  // Done — close + feedback
+  setTimeout(()=>{
+    etm_close();
+    trash_renderList();
+    trash_updateBadge();
+    const n = total;
+    toast(`Papelera vaciada — ${n} elemento${n===1?'':'s'} eliminado${n===1?'':'s'}`);
+  }, 200);
 }
 
 // END TRASH SYSTEM
 </script>
+
+<!-- ══════════════════════════════════════════════════════
+     EMPTY TRASH CONFIRM MODAL — Danger Zone
+     ══════════════════════════════════════════════════════ -->
+<div class="overlay" id="emptyTrashModal">
+  <div class="modal" style="max-width:420px;padding:0">
+
+    <!-- Header danger zone -->
+    <div class="etm-header">
+      <div class="etm-icon-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          <line x1="10" y1="11" x2="10" y2="17"/>
+          <line x1="14" y1="11" x2="14" y2="17"/>
+        </svg>
+      </div>
+      <div class="etm-count-chip">
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span id="etmCountLabel">0 elementos</span>
+      </div>
+      <div class="etm-title">Vaciar papelera</div>
+      <div class="etm-sub">Esta acción eliminará todos los elementos de forma permanente y no puede deshacerse.</div>
+    </div>
+
+    <!-- Body -->
+    <div class="etm-body">
+
+      <!-- Progress bar (shown while deleting) -->
+      <div class="etm-progress-wrap" id="etmProgressWrap">
+        <div class="etm-progress-fill" id="etmProgressFill"></div>
+      </div>
+
+      <!-- Warning rows -->
+      <div class="etm-warnings">
+        <div class="etm-warning-row">
+          <div class="etm-warning-dot"></div>
+          <div class="etm-warning-text">Los elementos eliminados <strong>no podrán recuperarse</strong> después de esta acción.</div>
+        </div>
+        <div class="etm-warning-row">
+          <div class="etm-warning-dot"></div>
+          <div class="etm-warning-text">Se eliminarán <strong id="etmCountInline">todos los elementos</strong> de la vista actual.</div>
+        </div>
+        <div class="etm-warning-row">
+          <div class="etm-warning-dot"></div>
+          <div class="etm-warning-text">Los archivos adjuntos y subtareas asociadas también <strong>se eliminarán.</strong></div>
+        </div>
+      </div>
+
+      <!-- Type to confirm -->
+      <div class="etm-confirm-wrap">
+        <div class="etm-confirm-label">
+          Para confirmar, escribe <code>VACIAR</code> en el campo de abajo:
+        </div>
+        <input
+          class="etm-confirm-input"
+          id="etmConfirmInput"
+          type="text"
+          placeholder="Escribe VACIAR para continuar"
+          autocomplete="off"
+          oninput="etm_onInput(this)"
+          onpaste="setTimeout(()=>etm_onInput(this),0)"
+        >
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="etm-footer">
+      <button class="etm-btn-cancel" id="etmCancelBtn" onclick="etm_close()">Cancelar</button>
+      <button class="etm-btn-empty" id="etmConfirmBtn" onclick="etm_execute()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+        </svg>
+        Vaciar papelera
+      </button>
+    </div>
+
+  </div>
+</div>
 
 <!-- CONFIRM DELETE MODAL -->
 <div class="overlay" id="confirmDeleteModal">
