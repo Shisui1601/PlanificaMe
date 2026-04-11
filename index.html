@@ -3452,8 +3452,11 @@ html.light-mode .nbtn:hover { background: #f0f0f8 !important; }
   line-height:1.4;
 }
 
-/* ── Event block status indicators — replace emoji ::after with CSS dot ── */
-.evb{position:relative;}
+/* ── Event block status indicators — replace emoji ::after with CSS dot ──
+   NOTE: position:relative intentionally removed — .evb is already
+   position:absolute in the base rule (line ~782) which already establishes
+   a positioning context for ::after. Adding relative here was overriding
+   absolute and breaking Day/Week event placement. ── */
 .evb.status-completed::after{
   content:'';
   position:absolute;top:5px;right:5px;
@@ -3929,6 +3932,125 @@ html.light-mode .exp-formats{background:transparent;}
 .search-section-label{padding:6px 14px 3px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);}
 mark{background:rgba(94,106,210,.25);color:var(--text);border-radius:2px;padding:0 1px;}
 
+/* ══════════════════════════════════════════════════════════
+   BUG FIXES — must come AFTER all Premium/SaaS layers
+   so these overrides win the cascade
+   ══════════════════════════════════════════════════════════ */
+
+/* ── FIX 1: .evb positioning context
+   The Design System v2 accidentally added .evb{position:relative}
+   which was already removed from line ~3456, but enforce here to be safe.
+   Day/Week events MUST be position:absolute to align with the time grid. ── */
+.tinner .evb,
+.evcol .evb {
+  position: absolute !important;
+}
+
+/* ── FIX 2: Responsive header — mobile first
+   The SaaS layer sets .header-row1{height:48px} WITHOUT media query,
+   which overrides the earlier @media(max-width:768px){height:auto}.
+   We re-apply the mobile layout here, AFTER all SaaS/DS layers. ── */
+@media (max-width: 768px) {
+  /* Row 1: tabs (full width) + nav+date+actions (second line) */
+  .header-row1 {
+    height: auto !important;
+    min-height: unset !important;
+    padding: 6px 10px 4px !important;
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+    align-items: center !important;
+  }
+
+  /* Tabs row — full width, horizontally scrollable */
+  .hdr-left {
+    flex-basis: 100% !important;
+    order: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .vtabs {
+    flex: 1 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .vtabs::-webkit-scrollbar { display: none !important; }
+  .vtab {
+    flex-shrink: 0 !important;
+    padding: 5px 10px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Nav + date — second line, full width */
+  .hdr-center {
+    flex: 1 !important;
+    order: 2;
+    min-width: 0;
+    justify-content: flex-start !important;
+    gap: 4px !important;
+    overflow: hidden;
+  }
+  .period {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Action icons — same line as nav, right side */
+  .hdr-right {
+    order: 2;
+    gap: 2px !important;
+    flex-shrink: 0;
+  }
+  /* Hide less-critical icons on very small screens */
+  @media (max-width: 420px) {
+    .icon-btn-v2.hide-xs { display: none !important; }
+  }
+
+  /* Row 2: filters (scrollable) then search (full width) */
+  .header-row2 {
+    padding: 0 10px 8px !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+  }
+  .filters {
+    flex: 1 1 auto !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch;
+    min-width: 0 !important;
+    gap: 4px !important;
+  }
+  .filters::-webkit-scrollbar { display: none !important; }
+  .fbadge {
+    flex-shrink: 0 !important;
+    padding: 3px 9px !important;
+    font-size: 10px !important;
+    white-space: nowrap !important;
+  }
+  /* Search bar drops to its own full-width line */
+  .search-wrap {
+    flex-basis: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+  }
+  .sinp {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* END BUG FIXES */
 /* END MEDIO ESFUERZO CSS */
 /* END PREMIUM SAAS LAYER */
 
