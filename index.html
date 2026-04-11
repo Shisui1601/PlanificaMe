@@ -3843,6 +3843,93 @@ html.light-mode .exp-format-card{background:#fff;}
 html.light-mode .exp-formats{background:transparent;}
 
 /* END QUICK WINS CSS */
+
+/* ══════════════════════════════════════════════════════════
+   MEDIO ESFUERZO — Gantt · Habits · Notes · Smart Search
+   ══════════════════════════════════════════════════════════ */
+
+/* ── GANTT VIEW ── */
+#cal.gantt-view{display:flex!important;flex-direction:column;gap:0;padding:0;height:calc(100vh - 110px);overflow:hidden;}
+.gantt-wrap{display:flex;flex-direction:column;height:100%;overflow:hidden;}
+.gantt-header{display:flex;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:10;flex-shrink:0;}
+.gantt-label-col{width:200px;flex-shrink:0;padding:8px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);border-right:1px solid var(--border);}
+.gantt-dates-row{display:flex;flex:1;overflow:hidden;}
+.gantt-day-head{flex:0 0 var(--gday-w,38px);text-align:center;padding:6px 2px;font-size:10px;color:var(--text3);border-right:1px solid var(--border);font-weight:500;}
+.gantt-day-head.today{color:var(--accent);font-weight:700;}
+.gantt-body{flex:1;overflow-y:auto;overflow-x:hidden;}
+.gantt-row{display:flex;border-bottom:1px solid var(--border);min-height:44px;align-items:center;position:relative;}
+.gantt-row:hover{background:var(--surface2);}
+.gantt-row-label{width:200px;flex-shrink:0;padding:6px 14px;display:flex;align-items:center;gap:8px;border-right:1px solid var(--border);overflow:hidden;}
+.gantt-row-label-text{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;}
+.gantt-type-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.gantt-cells{flex:1;display:flex;position:relative;min-height:44px;}
+.gantt-cell{flex:0 0 var(--gday-w,38px);border-right:1px solid var(--border);position:relative;}
+.gantt-cell.today{background:rgba(94,106,210,.06);}
+.gantt-bar{position:absolute;top:50%;transform:translateY(-50%);height:22px;border-radius:6px;cursor:pointer;display:flex;align-items:center;padding:0 8px;font-size:10px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:filter .15s,transform .15s;z-index:2;box-shadow:0 1px 4px rgba(0,0,0,.18);}
+.gantt-bar:hover{filter:brightness(1.15);transform:translateY(-50%) scaleY(1.08);}
+.gantt-bar.personal{background:linear-gradient(90deg,#7c6af7,#a78bfa);}
+.gantt-bar.team{background:linear-gradient(90deg,#3b82f6,#60a5fa);}
+.gantt-bar.project{background:linear-gradient(90deg,#10b981,#34d399);}
+.gantt-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;color:var(--text3);font-size:13px;padding:40px;}
+.gantt-scroll-wrap{display:flex;flex:1;overflow-x:auto;overflow-y:hidden;}
+
+/* ── HABIT TRACKER ── */
+.habits-section{margin-top:4px;}
+.habit-item{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:9px;cursor:pointer;transition:background .15s;position:relative;}
+.habit-item:hover{background:var(--surface2);}
+.habit-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.habit-name{font-size:12px;font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.habit-streak{display:flex;align-items:center;gap:3px;font-size:11px;font-weight:700;color:var(--text3);flex-shrink:0;}
+.habit-streak.hot{color:#f97316;}
+.habit-streak-fire{font-size:13px;line-height:1;}
+.habit-pips{display:flex;gap:3px;flex-shrink:0;}
+.habit-pip{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.habit-pip.done{background:#10b981;}
+.habit-pip.today-done{background:#10b981;box-shadow:0 0 5px rgba(16,185,129,.5);}
+.habit-pip.missed{background:rgba(239,68,68,.35);}
+.habit-check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;cursor:pointer;}
+.habit-check.done{background:#10b981;border-color:#10b981;}
+.habit-check svg{opacity:0;transition:opacity .15s;}
+.habit-check.done svg{opacity:1;}
+.habits-empty{font-size:11px;color:var(--text3);padding:6px 10px;opacity:.7;}
+
+/* ── QUICK NOTES ── */
+#notesModal .modal{max-width:680px;padding:0;overflow:hidden;height:72vh;display:flex;flex-direction:column;}
+.notes-layout{display:flex;flex:1;overflow:hidden;}
+.notes-list-pane{width:200px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--surface);}
+.notes-list-head{padding:12px 14px 8px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.notes-list-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);}
+.notes-list-add{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.notes-list-add:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+.notes-list-body{flex:1;overflow-y:auto;padding:6px;}
+.note-list-item{padding:8px 9px;border-radius:8px;cursor:pointer;transition:background .15s;border:1px solid transparent;}
+.note-list-item:hover{background:var(--surface2);}
+.note-list-item.active{background:var(--surface2);border-color:var(--border2);}
+.note-list-item-title{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.note-list-item-preview{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+.note-list-item-date{font-size:9px;color:var(--text3);margin-top:3px;opacity:.7;}
+.notes-editor-pane{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.notes-editor-title{width:100%;border:none;background:none;color:var(--text);font-size:16px;font-weight:700;padding:16px 18px 6px;outline:none;font-family:'Inter';}
+.notes-editor-title::placeholder{color:var(--text3);}
+.notes-editor-body{flex:1;width:100%;border:none;background:none;color:var(--text);font-size:13px;padding:0 18px 16px;outline:none;resize:none;line-height:1.7;font-family:'Inter';}
+.notes-editor-body::placeholder{color:var(--text3);}
+.notes-editor-foot{padding:8px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.notes-editor-meta{font-size:10px;color:var(--text3);}
+.notes-empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--text3);font-size:13px;}
+.note-hdr{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.note-hdr-title{font-size:14px;font-weight:700;}
+
+/* ── SMART SEARCH ── */
+.search-suggestions{padding:8px 14px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:6px;}
+.search-suggestion-chip{padding:3px 9px;border-radius:20px;border:1px solid var(--border2);background:var(--surface2);font-size:11px;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.search-suggestion-chip:hover{border-color:var(--accent);color:var(--accent);}
+.search-suggestion-chip.recent{border-style:dashed;}
+.search-did-you-mean{padding:6px 14px;font-size:12px;color:var(--text3);border-bottom:1px solid var(--border);display:none;}
+.search-did-you-mean a{color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+.search-section-label{padding:6px 14px 3px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);}
+mark{background:rgba(94,106,210,.25);color:var(--text);border-radius:2px;padding:0 1px;}
+
+/* END MEDIO ESFUERZO CSS */
 /* END PREMIUM SAAS LAYER */
 
 /* ══════════════════════════════════════════════════════════
@@ -4386,6 +4473,14 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
     </div>
     <div class="team-list" id="teamList"></div>
   </div>
+  <!-- ── HABIT TRACKER ── -->
+  <div class="sb-sec habits-section" id="habitsSection" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div class="sb-title">Hábitos</div>
+      <span style="font-size:10px;color:var(--text3);cursor:pointer" onclick="openHabitsInfo()" title="¿Qué es esto?">?</span>
+    </div>
+    <div id="habitsList"></div>
+  </div>
 
 </aside>
 
@@ -4404,6 +4499,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
           <button class="vtab" id="tab-month" onclick="setView('month')">Mes</button>
           <button class="vtab" id="tab-agenda" onclick="setView('agenda')">Agenda</button>
           <button class="vtab" id="tab-kanban" onclick="setView('kanban')">Kanban</button>
+          <button class="vtab" id="tab-gantt" onclick="setView('gantt')">Gantt</button>
         </div>
       </div>
       <!-- CENTRO: navegación + periodo -->
@@ -4416,6 +4512,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
       <!-- DERECHA: acciones -->
       <div class="hdr-right">
         <button class="btn btn-p guest-login-btn btn-sm" id="guestLoginBtn" onclick="openModal('authModal')" title="Iniciar sesión" style="display:none;gap:5px"><i data-lucide="log-in" class="icon icon-sm"></i> Iniciar sesión</button>
+        <button class="nbtn icon-btn icon-btn-v2" onclick="openNotesModal()" title="Notas rápidas (N)"><i data-lucide="notebook-pen" class="icon"></i></button>
         <button class="nbtn icon-btn icon-btn-v2" onclick="openExportModal()" title="Exportar datos"><i data-lucide="download" class="icon"></i></button>
         <button class="nbtn icon-btn icon-btn-v2" onclick="ws_openGame()" title="Modo Juego"><i data-lucide="gamepad-2" class="icon"></i></button>
         <button class="nbtn icon-btn icon-btn-v2" onclick="openStatsModal()" title="Estadísticas"><i data-lucide="bar-chart-3" class="icon"></i></button>
@@ -4533,6 +4630,9 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
         <button class="sf-btn" onclick="clearSearchFilters()" style="border-color:var(--danger);color:var(--danger)">✕ Limpiar</button>
       </div>
     </div>
+    <!-- Smart suggestions + recent searches -->
+    <div class="search-suggestions" id="searchSuggestions" style="display:none"></div>
+    <div class="search-did-you-mean" id="searchDidYouMean"></div>
     <div class="search-results-body" id="searchResults">
       <div class="sempty">
         <i data-lucide="search" class="icon icon-lg icon-muted" style="margin-bottom:8px;width:32px;height:32px"></i>
@@ -4543,6 +4643,42 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
     <div class="search-footer">
       <span id="searchCount">—</span>
       <span>Esc cerrar · Ctrl+K abrir</span>
+    </div>
+  </div>
+</div>
+
+<!-- NOTES MODAL -->
+<div class="overlay" id="notesModal" onclick="if(event.target===this)closeModal('notesModal')">
+  <div class="modal" style="max-width:680px;padding:0;overflow:hidden;height:72vh;display:flex;flex-direction:column;">
+    <div class="note-hdr">
+      <span class="note-hdr-title">Notas rápidas</span>
+      <button onclick="closeModal('notesModal')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;line-height:1;padding:2px">✕</button>
+    </div>
+    <div class="notes-layout">
+      <!-- List pane -->
+      <div class="notes-list-pane">
+        <div class="notes-list-head">
+          <span class="notes-list-title">Notas</span>
+          <button class="notes-list-add" onclick="notes_new()" title="Nueva nota">+</button>
+        </div>
+        <div class="notes-list-body" id="notesListBody"></div>
+      </div>
+      <!-- Editor pane -->
+      <div class="notes-editor-pane" id="notesEditorPane">
+        <div class="notes-empty-state" id="notesEmptyState">
+          <i data-lucide="notebook-pen" class="icon" style="width:32px;height:32px;opacity:.3"></i>
+          <div>Selecciona una nota o crea una nueva</div>
+          <button class="btn btn-s" onclick="notes_new()" style="margin-top:4px">+ Nueva nota</button>
+        </div>
+        <div id="notesEditor" style="display:none;flex-direction:column;flex:1;overflow:hidden;display:none">
+          <input id="noteTitleInp" class="notes-editor-title" placeholder="Título de la nota..." oninput="notes_autoSave()">
+          <textarea id="noteBodyInp" class="notes-editor-body" placeholder="Escribe aquí tus ideas, apuntes, listas..." oninput="notes_autoSave()"></textarea>
+          <div class="notes-editor-foot">
+            <span class="notes-editor-meta" id="notesMeta">—</span>
+            <button class="btn btn-d" style="padding:4px 10px;font-size:11px" onclick="notes_delete()">Eliminar</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -11546,6 +11682,583 @@ function exp_triggerDownload(blob, filename){
 }
 
 // END QUICK WINS JS
+
+// ═══════════════════════════════════════════════════════════
+// MEDIO ESFUERZO — Gantt · Habits · Notes · Smart Search
+// ═══════════════════════════════════════════════════════════
+
+/* ──────────────────────────────────────────────────────────
+   FEATURE 5 — TIMELINE / GANTT VIEW
+   Shows all events as horizontal bars on a 60-day timeline
+   ────────────────────────────────────────────────────────── */
+const GANTT_DAYS = 60; // days visible in the timeline
+
+function renderGantt(container){
+  container.className = 'gantt-view';
+
+  // Date window: today - 5 days to today + 54 days
+  const today = new Date();
+  const startD = new Date(today);
+  startD.setDate(today.getDate() - 5);
+
+  // Build array of GANTT_DAYS Date objects
+  const days = Array.from({length: GANTT_DAYS}, (_, i) => {
+    const d = new Date(startD);
+    d.setDate(startD.getDate() + i);
+    return d;
+  });
+  const todayStr = dk(today);
+  const startStr = dk(startD);
+  const endStr   = dk(days[days.length - 1]);
+
+  // Filter events that fall within the window and are not deleted
+  const typeF = { personal: S.filters.personal, team: S.filters.team, project: S.filters.project };
+  let evs = S.events.filter(e => {
+    if(e.deleted || e.isDeadline) return false;
+    if(e.date < startStr || e.date > endStr) return false;
+    if(e.type === 'personal' && !typeF.personal) return false;
+    if(e.type === 'team'     && !typeF.team)     return false;
+    if(e.type === 'project'  && !typeF.project)  return false;
+    return true;
+  });
+  evs.sort((a,b) => a.date < b.date ? -1 : 1);
+
+  if(!evs.length){
+    container.innerHTML = '<div class="gantt-empty"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.3"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><div>Sin actividades en este período</div><div style="font-size:11px;opacity:.6">Mostrando ±30 días desde hoy</div></div>';
+    return;
+  }
+
+  // Day width based on container
+  const DAY_W = 38;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'gantt-wrap';
+  wrap.style.setProperty('--gday-w', DAY_W + 'px');
+
+  // ── HEADER ──
+  const hdr = document.createElement('div');
+  hdr.className = 'gantt-header';
+  hdr.innerHTML = `<div class="gantt-label-col">Actividad</div>`;
+  const datesRow = document.createElement('div');
+  datesRow.className = 'gantt-dates-row';
+  datesRow.style.cssText = 'flex:1;display:flex;overflow:hidden;';
+  days.forEach(d => {
+    const isToday = dk(d) === todayStr;
+    const cell = document.createElement('div');
+    cell.className = 'gantt-day-head' + (isToday ? ' today' : '');
+    cell.style.setProperty('--gday-w', DAY_W + 'px');
+    cell.style.cssText = `flex:0 0 ${DAY_W}px;text-align:center;padding:6px 2px;font-size:10px;border-right:1px solid var(--border);font-weight:${isToday?'700':'500'};color:${isToday?'var(--accent)':'var(--text3)'};`;
+    cell.textContent = d.getDate();
+    if(d.getDate() === 1 || (d === days[0])){
+      cell.style.fontWeight = '700';
+    }
+    datesRow.appendChild(cell);
+  });
+  hdr.appendChild(datesRow);
+  wrap.appendChild(hdr);
+
+  // ── BODY ──
+  const body = document.createElement('div');
+  body.className = 'gantt-body';
+  const scrollWrap = document.createElement('div');
+  scrollWrap.style.cssText = 'overflow-x:auto;';
+
+  evs.forEach(ev => {
+    const row = document.createElement('div');
+    row.className = 'gantt-row';
+    row.style.cssText = `display:flex;border-bottom:1px solid var(--border);min-height:44px;align-items:center;position:relative;`;
+
+    // Label
+    const labelDiv = document.createElement('div');
+    labelDiv.className = 'gantt-row-label';
+    labelDiv.style.cssText = `width:200px;flex-shrink:0;padding:6px 14px;display:flex;align-items:center;gap:8px;border-right:1px solid var(--border);overflow:hidden;cursor:pointer;`;
+    const dotColors = {personal:'#a78bfa', team:'#3b82f6', project:'#10b981'};
+    labelDiv.innerHTML = `<div style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:${dotColors[ev.type]||'var(--text3)'}"></div><div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1" title="${ev.title}">${ev.title}</div>`;
+    labelDiv.onclick = () => showEventDetail(ev);
+    row.appendChild(labelDiv);
+
+    // Cells + bar
+    const cellsDiv = document.createElement('div');
+    cellsDiv.style.cssText = `flex:1;display:flex;position:relative;min-height:44px;`;
+
+    // Calculate bar position
+    const evStartIdx = days.findIndex(d => dk(d) === ev.date);
+    const durDays = Math.max(1, Math.ceil((ev.dur || 60) / (24*60)));
+    const barStart = evStartIdx >= 0 ? evStartIdx : 0;
+    const barWidth = durDays * DAY_W - 6;
+    const barLeft  = barStart * DAY_W + 3;
+    const barVisible = evStartIdx >= 0;
+
+    days.forEach(d => {
+      const isToday = dk(d) === todayStr;
+      const cell = document.createElement('div');
+      cell.style.cssText = `flex:0 0 ${DAY_W}px;border-right:1px solid var(--border);min-height:44px;${isToday?'background:rgba(94,106,210,.05)':''}`;
+      cellsDiv.appendChild(cell);
+    });
+
+    if(barVisible){
+      const bar = document.createElement('div');
+      const typeClass = ev.type || 'personal';
+      const barColors = {
+        personal:'linear-gradient(90deg,#7c6af7,#a78bfa)',
+        team:'linear-gradient(90deg,#3b82f6,#60a5fa)',
+        project:'linear-gradient(90deg,#10b981,#34d399)'
+      };
+      bar.style.cssText = `position:absolute;top:50%;transform:translateY(-50%);height:22px;border-radius:6px;cursor:pointer;display:flex;align-items:center;padding:0 8px;font-size:10px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:filter .15s;z-index:2;box-shadow:0 1px 4px rgba(0,0,0,.18);left:${barLeft}px;width:${Math.max(barWidth,24)}px;background:${barColors[typeClass]||barColors.personal};`;
+      bar.textContent = ev.title;
+      bar.title = `${ev.title} — ${ev.date}`;
+      bar.onmouseenter = () => { bar.style.filter = 'brightness(1.15)'; };
+      bar.onmouseleave = () => { bar.style.filter = ''; };
+      bar.onclick = () => showEventDetail(ev);
+      cellsDiv.appendChild(bar);
+    }
+
+    row.appendChild(cellsDiv);
+    body.appendChild(row);
+  });
+
+  wrap.appendChild(body);
+  container.appendChild(wrap);
+
+  // Scroll so today is centered
+  setTimeout(() => {
+    const todayIdx = days.findIndex(d => dk(d) === todayStr);
+    if(todayIdx >= 0 && body){
+      const scrollTo = Math.max(0, (todayIdx - 3) * DAY_W);
+      body.scrollLeft = scrollTo;
+    }
+  }, 80);
+}
+
+/* ──────────────────────────────────────────────────────────
+   FEATURE 6 — HABIT TRACKER
+   Shows daily recurring activities as habits with streak count
+   ────────────────────────────────────────────────────────── */
+const HABIT_STORAGE_KEY = () => `planificame_habits_${ME && ME.id ? ME.id : 'guest'}`;
+const HABIT_LOOKBACK = 7; // days to show in pip display
+
+function habit_load(){
+  try{ return JSON.parse(localStorage.getItem(HABIT_STORAGE_KEY())) || {}; }catch(e){ return {}; }
+}
+function habit_save(data){ localStorage.setItem(HABIT_STORAGE_KEY(), JSON.stringify(data)); }
+
+function habit_getHabits(){
+  // A "habit" is a recurring daily event (freq='daily' or daily occurrences in events)
+  return S.events.filter(e =>
+    !e.deleted &&
+    e.type === 'personal' &&
+    e.isRecurring &&
+    (e.recurFreq === 'daily' || e.recurFreq === 'day')
+  );
+}
+
+function habit_calcStreak(habitId, data){
+  const today = new Date();
+  let streak = 0;
+  let d = new Date(today);
+  // Walk backwards from today
+  for(let i = 0; i < 365; i++){
+    const key = dk(d);
+    if(data[habitId] && data[habitId][key]){
+      streak++;
+      d.setDate(d.getDate() - 1);
+    } else {
+      // Allow today as pending (don't break if it's today and not yet marked)
+      if(i === 0) { d.setDate(d.getDate() - 1); continue; }
+      break;
+    }
+  }
+  return streak;
+}
+
+function habit_isDoneToday(habitId, data){
+  return !!(data[habitId] && data[habitId][dk(new Date())]);
+}
+
+function habit_toggle(habitId){
+  const data = habit_load();
+  const today = dk(new Date());
+  if(!data[habitId]) data[habitId] = {};
+  if(data[habitId][today]){
+    delete data[habitId][today];
+  } else {
+    data[habitId][today] = true;
+  }
+  habit_save(data);
+  habit_render();
+  const streak = habit_calcStreak(habitId, data);
+  const done = habit_isDoneToday(habitId, data);
+  if(done && streak > 0) toast(`✅ Hábito marcado — racha: ${streak} día${streak!==1?'s':''}`);
+}
+
+function habit_render(){
+  const habits = habit_getHabits();
+  const section = document.getElementById('habitsSection');
+  const list    = document.getElementById('habitsList');
+  if(!section || !list) return;
+
+  if(!habits.length){ section.style.display = 'none'; return; }
+  section.style.display = '';
+
+  const data = habit_load();
+  const today = new Date();
+  const dotColors = {personal:'#a78bfa', team:'#3b82f6', project:'#10b981'};
+
+  list.innerHTML = '';
+  habits.slice(0, 6).forEach(h => {
+    const streak = habit_calcStreak(h.id, data);
+    const doneToday = habit_isDoneToday(h.id, data);
+    const isHot = streak >= 3;
+
+    // Build last 7-day pip history
+    const pips = [];
+    for(let i = HABIT_LOOKBACK - 1; i >= 0; i--){
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const key = dk(d);
+      const isDone = data[h.id] && data[h.id][key];
+      const isToday2 = i === 0;
+      pips.push({ done: isDone, isToday: isToday2 });
+    }
+
+    const item = document.createElement('div');
+    item.className = 'habit-item';
+    item.title = h.title;
+
+    // Check button
+    const check = document.createElement('div');
+    check.className = 'habit-check' + (doneToday ? ' done' : '');
+    check.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+    check.onclick = (e) => { e.stopPropagation(); habit_toggle(h.id); };
+
+    // Dot
+    const dot = document.createElement('div');
+    dot.className = 'habit-dot';
+    dot.style.background = dotColors[h.type] || '#a78bfa';
+
+    // Name
+    const name = document.createElement('div');
+    name.className = 'habit-name';
+    name.textContent = h.title;
+
+    // Pips
+    const pipWrap = document.createElement('div');
+    pipWrap.className = 'habit-pips';
+    pips.forEach(p => {
+      const pip = document.createElement('div');
+      pip.className = 'habit-pip' + (p.done && p.isToday ? ' today-done' : p.done ? ' done' : p.isToday ? '' : '');
+      pipWrap.appendChild(pip);
+    });
+
+    // Streak
+    const streakEl = document.createElement('div');
+    streakEl.className = 'habit-streak' + (isHot ? ' hot' : '');
+    streakEl.innerHTML = streak > 0
+      ? `<span class="habit-streak-fire">${isHot ? '🔥' : '●'}</span>${streak}`
+      : `<span style="opacity:.4">—</span>`;
+
+    item.appendChild(check);
+    item.appendChild(dot);
+    item.appendChild(name);
+    item.appendChild(pipWrap);
+    item.appendChild(streakEl);
+    list.appendChild(item);
+  });
+}
+
+function openHabitsInfo(){
+  toast('ℹ️ Actividades recurrentes diarias aparecen aquí como hábitos');
+}
+
+/* ──────────────────────────────────────────────────────────
+   FEATURE 7 — NOTAS RÁPIDAS (QUICK NOTES)
+   Scratchpad modal with multi-note CRUD, localStorage persisted
+   ────────────────────────────────────────────────────────── */
+const NOTES_KEY = () => `planificame_notes_${ME && ME.id ? ME.id : 'guest'}`;
+let _notesCurrentId = null;
+let _notesSaveTimer = null;
+
+function notes_load(){ try{ return JSON.parse(localStorage.getItem(NOTES_KEY())) || []; }catch(e){ return []; } }
+function notes_save(arr){ localStorage.setItem(NOTES_KEY(), JSON.stringify(arr)); }
+
+function openNotesModal(){
+  openModal('notesModal');
+  notes_renderList();
+  if(window.lucide) lucide.createIcons();
+}
+
+function notes_renderList(){
+  const arr = notes_load();
+  const body = document.getElementById('notesListBody');
+  if(!body) return;
+  body.innerHTML = '';
+  if(!arr.length){
+    body.innerHTML = '<div class="habits-empty">Sin notas aún.<br>Pulsa + para crear.</div>';
+    notes_showEmpty();
+    return;
+  }
+  arr.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'note-list-item' + (n.id === _notesCurrentId ? ' active' : '');
+    const preview = (n.body || '').replace(/\n/g, ' ').slice(0, 60);
+    const dateStr = n.updatedAt ? new Date(n.updatedAt).toLocaleDateString('es-ES', {day:'2-digit', month:'short'}) : '';
+    el.innerHTML = `
+      <div class="note-list-item-title">${n.title || 'Sin título'}</div>
+      <div class="note-list-item-preview">${preview || '&nbsp;'}</div>
+      <div class="note-list-item-date">${dateStr}</div>`;
+    el.onclick = () => notes_open(n.id);
+    body.appendChild(el);
+  });
+}
+
+function notes_open(id){
+  _notesCurrentId = id;
+  const arr = notes_load();
+  const note = arr.find(n => n.id === id);
+  if(!note) return;
+
+  document.getElementById('notesEmptyState').style.display = 'none';
+  const editor = document.getElementById('notesEditor');
+  editor.style.display = 'flex';
+  editor.style.flexDirection = 'column';
+  editor.style.flex = '1';
+  editor.style.overflow = 'hidden';
+
+  document.getElementById('noteTitleInp').value = note.title || '';
+  document.getElementById('noteBodyInp').value  = note.body  || '';
+  const dateStr = note.updatedAt
+    ? new Date(note.updatedAt).toLocaleString('es-ES', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'})
+    : '—';
+  document.getElementById('notesMeta').textContent = `Editado: ${dateStr}`;
+  notes_renderList();
+}
+
+function notes_showEmpty(){
+  _notesCurrentId = null;
+  document.getElementById('notesEmptyState').style.display = 'flex';
+  const editor = document.getElementById('notesEditor');
+  editor.style.display = 'none';
+}
+
+function notes_new(){
+  const arr = notes_load();
+  const id = 'note_' + Date.now();
+  arr.unshift({ id, title: '', body: '', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+  notes_save(arr);
+  notes_renderList();
+  notes_open(id);
+  setTimeout(() => document.getElementById('noteTitleInp').focus(), 60);
+}
+
+function notes_autoSave(){
+  clearTimeout(_notesSaveTimer);
+  _notesSaveTimer = setTimeout(() => {
+    if(!_notesCurrentId) return;
+    const arr = notes_load();
+    const idx = arr.findIndex(n => n.id === _notesCurrentId);
+    if(idx === -1) return;
+    arr[idx].title = document.getElementById('noteTitleInp').value;
+    arr[idx].body  = document.getElementById('noteBodyInp').value;
+    arr[idx].updatedAt = new Date().toISOString();
+    // Move to top
+    const [note] = arr.splice(idx, 1);
+    arr.unshift(note);
+    notes_save(arr);
+    const dateStr = new Date(note.updatedAt).toLocaleString('es-ES', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'});
+    document.getElementById('notesMeta').textContent = `Editado: ${dateStr}`;
+    notes_renderList();
+  }, 600);
+}
+
+function notes_delete(){
+  if(!_notesCurrentId) return;
+  let arr = notes_load();
+  arr = arr.filter(n => n.id !== _notesCurrentId);
+  notes_save(arr);
+  notes_showEmpty();
+  notes_renderList();
+  toast('🗑 Nota eliminada');
+}
+
+/* ──────────────────────────────────────────────────────────
+   FEATURE 8 — BÚSQUEDA SEMÁNTICA MEJORADA
+   Recent searches, title autocomplete suggestions, fuzzy "did you mean?"
+   ────────────────────────────────────────────────────────── */
+const SEARCH_HISTORY_KEY = () => `planificame_search_history_${ME && ME.id ? ME.id : 'guest'}`;
+const SEARCH_HISTORY_MAX = 8;
+
+function searchHistory_load(){ try{ return JSON.parse(localStorage.getItem(SEARCH_HISTORY_KEY())) || []; }catch(e){ return []; } }
+function searchHistory_save(arr){ localStorage.setItem(SEARCH_HISTORY_KEY(), JSON.stringify(arr)); }
+
+function searchHistory_push(term){
+  if(!term || term.length < 2) return;
+  let arr = searchHistory_load().filter(t => t !== term);
+  arr.unshift(term);
+  arr = arr.slice(0, SEARCH_HISTORY_MAX);
+  searchHistory_save(arr);
+}
+
+function search_fuzzyScore(query, target){
+  // Returns a score 0–1 of how well query fuzzy-matches target
+  query = query.toLowerCase(); target = target.toLowerCase();
+  if(target.includes(query)) return 1;
+  let qi = 0;
+  for(let ti = 0; ti < target.length && qi < query.length; ti++){
+    if(target[ti] === query[qi]) qi++;
+  }
+  return qi / query.length;
+}
+
+function search_didYouMean(q, evs){
+  // Find the event title closest to the query (fuzzy)
+  if(!q || q.length < 3) return null;
+  let best = null, bestScore = 0;
+  evs.forEach(e => {
+    const title = (e.title || '').toLowerCase();
+    if(title.includes(q.toLowerCase())) return; // exact match, no suggestion needed
+    const score = search_fuzzyScore(q, title);
+    if(score > bestScore && score > 0.6){
+      bestScore = score;
+      best = e.title;
+    }
+  });
+  return best;
+}
+
+function search_updateSuggestions(q){
+  const sugEl = document.getElementById('searchSuggestions');
+  const dymEl = document.getElementById('searchDidYouMean');
+  if(!sugEl || !dymEl) return;
+
+  const history = searchHistory_load();
+  const chips = [];
+
+  if(!q){
+    // Show recent searches
+    history.slice(0, 5).forEach(term => {
+      chips.push({ label: `🕐 ${term}`, term, cls: 'recent' });
+    });
+    // Show popular titles from events (up to 3)
+    const titles = [...new Set(S.events.filter(e => !e.deleted).map(e => e.title))].slice(0, 3);
+    titles.forEach(t => {
+      if(!history.includes(t)) chips.push({ label: t, term: t, cls: '' });
+    });
+    dymEl.style.display = 'none';
+  } else {
+    // Show title completions that match the partial query
+    const matches = [...new Set(
+      S.events
+        .filter(e => !e.deleted && (e.title||'').toLowerCase().includes(q.toLowerCase()))
+        .map(e => e.title)
+    )].slice(0, 5);
+    matches.forEach(t => {
+      if(t.toLowerCase() !== q.toLowerCase()) chips.push({ label: t, term: t, cls: '' });
+    });
+
+    // Did you mean?
+    const dym = search_didYouMean(q, S.events.filter(e => !e.deleted));
+    if(dym && !matches.length){
+      dymEl.style.display = 'block';
+      dymEl.innerHTML = `¿Quisiste decir <a onclick="search_applyDym('${dym.replace(/'/g,"\\'")}')">«${dym}»</a>?`;
+    } else {
+      dymEl.style.display = 'none';
+    }
+  }
+
+  if(!chips.length){ sugEl.style.display = 'none'; return; }
+  sugEl.style.display = 'flex';
+  sugEl.innerHTML = chips.map(c =>
+    `<span class="search-suggestion-chip ${c.cls}" onclick="search_applyChip('${c.term.replace(/'/g,"\\'")}')">${c.label}</span>`
+  ).join('');
+}
+
+function search_applyChip(term){
+  const inp = document.getElementById('searchModalInput');
+  inp.value = term;
+  runAdvancedSearch();
+  inp.focus();
+}
+
+function search_applyDym(term){
+  const inp = document.getElementById('searchModalInput');
+  inp.value = term;
+  runAdvancedSearch();
+}
+
+// ── PATCH: wire smart search into existing functions ──
+const _origOpenSearch = openSearchModal;
+openSearchModal = function(){
+  _origOpenSearch();
+  const inp = document.getElementById('searchModalInput');
+  search_updateSuggestions(inp ? inp.value : '');
+};
+
+const _origRunSearch = runAdvancedSearch;
+runAdvancedSearch = function(){
+  _origRunSearch();
+  const inp = document.getElementById('searchModalInput');
+  const q = inp ? inp.value.trim() : '';
+  search_updateSuggestions(q);
+  // Save to history on non-empty search
+  if(q.length >= 2) searchHistory_push(q);
+};
+
+/// ── PATCH: wire Gantt and Habits into existing lifecycle ──
+// Extend setView to include 'gantt' tab
+setView = function(v){
+  S.view = v;
+  ['day','week','month','agenda','kanban','gantt'].forEach(x => {
+    const el = document.getElementById('tab-' + x);
+    if(el) el.classList.toggle('active', x === v);
+  });
+  if(window.innerWidth <= 768) closeSidebar();
+  render();
+};
+
+// Patch renderCal to include gantt
+const _origRenderCal = renderCal;
+renderCal = function(){
+  const c = document.getElementById('cal');
+  c.classList.add('view-fade');
+  setTimeout(() => {
+    c.innerHTML = '';
+    if(S.view === 'day')         renderDay(c);
+    else if(S.view === 'week')   renderWeek(c);
+    else if(S.view === 'agenda') renderAgenda(c);
+    else if(S.view === 'kanban') renderKanban(c);
+    else if(S.view === 'gantt')  renderGantt(c);
+    else                         renderMonth(c);
+    c.classList.remove('view-fade');
+  }, 100);
+};
+
+// Patch updatePeriod to handle gantt
+const _origUpdatePeriod = updatePeriod;
+updatePeriod = function(){
+  if(S.view === 'gantt'){
+    document.getElementById('period').textContent = 'Vista Gantt';
+    return;
+  }
+  _origUpdatePeriod();
+};
+
+// Patch render to also update habits
+const _origRender = render;
+render = function(){
+  _origRender();
+  habit_render();
+};
+
+// Keyboard shortcut N → open notes
+document.addEventListener('keydown', e => {
+  if(e.key === 'n' && !e.ctrlKey && !e.metaKey && !e.altKey){
+    const active = document.activeElement;
+    if(active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
+    openNotesModal();
+  }
+});
+
+// END MEDIO ESFUERZO JS
 
 // ═══════════════════════════════════════════════════════════
 // TRASH SYSTEM — Papelera de reciclaje con Soft Delete
