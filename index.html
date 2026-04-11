@@ -4208,37 +4208,102 @@ mark{background:rgba(94,106,210,.25);color:var(--text);border-radius:2px;padding
 }
 
 /* ── Detail Modal Footer — Grid 3×2 ── */
+/* ── Detail Modal Footer — Notion-style action grid ── */
 #detFoot {
   display: grid !important;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px !important;
-  padding: 14px 22px 22px !important;
+  gap: 4px !important;
+  padding: 8px 14px 16px !important;
   justify-content: unset !important;
+  border-top: 1px solid var(--border) !important;
+  margin-top: 4px;
 }
+
+/* Reset all btn flavors inside detFoot to ghost baseline */
 #detFoot .btn {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 6px !important;
+  gap: 5px !important;
   font-size: 12px !important;
-  padding: 9px 8px !important;
-  border-radius: 10px !important;
   font-weight: 500 !important;
+  padding: 7px 6px !important;
+  border-radius: 6px !important;
   white-space: nowrap !important;
   width: 100% !important;
-  transition: all .15s !important;
+  letter-spacing: .1px;
+  /* Ghost base — override btn-s / btn-p defaults */
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--text2) !important;
+  transform: none !important;
+  transition: background .12s ease, color .1s ease !important;
 }
-#detFoot .btn svg { flex-shrink: 0; }
+#detFoot .btn:hover:not(:disabled) {
+  background: var(--surface3) !important;
+  color: var(--text) !important;
+  box-shadow: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+#detFoot .btn:active:not(:disabled) {
+  background: var(--surface2) !important;
+  transform: scale(.97) !important;
+}
+#detFoot .btn svg {
+  flex-shrink: 0;
+  opacity: .7;
+  transition: opacity .1s;
+}
+#detFoot .btn:hover svg { opacity: 1; }
+
+/* Danger (Eliminar) — red text, red hover bg */
+#detFoot .btn-d {
+  color: var(--danger) !important;
+}
+#detFoot .btn-d svg { color: var(--danger); opacity: .75; }
+#detFoot .btn-d:hover:not(:disabled) {
+  background: rgba(248,113,113,.1) !important;
+  color: var(--danger) !important;
+}
+
+/* Primary (Cerrar) — subtle filled, stands out from ghost row */
+#detFoot .btn-p {
+  background: var(--surface2) !important;
+  border: 1px solid var(--border2) !important;
+  color: var(--text) !important;
+}
+#detFoot .btn-p:hover:not(:disabled) {
+  background: var(--surface3) !important;
+  border-color: var(--border) !important;
+}
+
+/* Focus btn — accent tint */
+#detFoot .btn-focus-action {
+  color: var(--accent) !important;
+}
+#detFoot .btn-focus-action svg { color: var(--accent); opacity: .8; }
+#detFoot .btn-focus-action:hover:not(:disabled) {
+  background: rgba(124,90,255,.1) !important;
+  color: var(--accent) !important;
+}
+
+/* Close-only: full width */
 #detFoot .det-close-only {
   grid-column: 1 / -1;
 }
+
+/* Mobile ≤480px → 2 cols, labels hidden */
 @media (max-width: 480px) {
   #detFoot {
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 2px !important;
+    padding: 6px 10px 14px !important;
   }
-  #detFoot .btn-icon-only { gap: 0 !important; }
-  #detFoot .btn .det-btn-label { display: none; }
-  #detFoot .btn { padding: 10px !important; }
+  #detFoot .btn { padding: 8px 4px !important; font-size: 11px !important; gap: 3px !important; }
+  #detFoot .det-btn-label { display: none !important; }
+  #detFoot .btn svg { width: 15px !important; height: 15px !important; opacity: .85; }
 }
 
 /* END BUG FIXES */
@@ -7696,7 +7761,7 @@ function showEventDetail(ev){
 
     // Row 2: Focus | Eliminar | Cerrar
     if(!ev.isDeadline){
-      foot.appendChild(mkBtn('btn-s', 'focus', 'Focus', 'Iniciar sesión Pomodoro', ()=>{ closeModal('detModal'); openFocusWidget(ev); }));
+      foot.appendChild(mkBtn('btn-s btn-focus-action', 'focus', 'Focus', 'Iniciar sesión Pomodoro', ()=>{ closeModal('detModal'); openFocusWidget(ev); }));
     } else {
       // placeholder vacío para mantener el grid alineado
       const ph = document.createElement('div'); foot.appendChild(ph);
