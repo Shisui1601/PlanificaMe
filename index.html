@@ -3569,6 +3569,280 @@ html.light-mode textarea:focus{
 }
 
 /* END DESIGN SYSTEM v2 */
+
+/* ══════════════════════════════════════════════════════════
+   QUICK WINS — Kanban · Focus/Pomodoro · Exportar · Duplicar
+   ══════════════════════════════════════════════════════════ */
+
+/* ── KANBAN VIEW ── */
+#cal.kanban-view{
+  display:flex !important;
+  gap:14px;
+  padding:16px;
+  align-items:flex-start;
+  overflow-x:auto;
+  height:calc(100vh - 110px);
+  box-sizing:border-box;
+}
+#cal.kanban-view::-webkit-scrollbar{height:5px;}
+#cal.kanban-view::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+.kb-col{
+  flex:0 0 260px;
+  display:flex;flex-direction:column;
+  gap:0;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  min-height:160px;
+  max-height:calc(100vh - 145px);
+}
+.kb-col-header{
+  padding:12px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+  background:var(--surface3);
+  flex-shrink:0;
+  gap:8px;
+}
+.kb-col-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+}
+.kb-col-title{
+  font-size:11px;font-weight:700;letter-spacing:.5px;
+  text-transform:uppercase;color:var(--text2);flex:1;
+  font-family:'Inter',sans-serif;
+}
+.kb-col-count{
+  font-size:10px;font-weight:700;
+  background:var(--surface);border:1px solid var(--border2);
+  padding:1px 7px;border-radius:10px;color:var(--text3);
+}
+.kb-cards{
+  flex:1;overflow-y:auto;padding:10px;
+  display:flex;flex-direction:column;gap:7px;
+}
+.kb-cards::-webkit-scrollbar{width:3px;}
+.kb-cards::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+.kb-card{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:9px;
+  padding:11px 12px;
+  cursor:pointer;
+  transition:all .18s;
+  position:relative;
+  overflow:hidden;
+}
+.kb-card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--card-accent,var(--border2));
+  border-radius:3px 0 0 3px;
+}
+.kb-card:hover{
+  border-color:var(--border2);
+  background:var(--surface3);
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(0,0,0,.3);
+}
+.kb-card.personal{--card-accent:#a78bfa;}
+.kb-card.team{--card-accent:#34d399;}
+.kb-card.project{--card-accent:#fbbf24;}
+.kb-card-title{
+  font-size:12px;font-weight:600;color:var(--text);
+  margin-bottom:6px;line-height:1.35;
+  font-family:'Inter',sans-serif;
+}
+.kb-card-meta{
+  display:flex;align-items:center;flex-wrap:wrap;gap:5px;
+  font-size:10px;color:var(--text3);
+}
+.kb-card-badge{
+  padding:1px 6px;border-radius:4px;font-size:9px;font-weight:700;
+  letter-spacing:.3px;text-transform:uppercase;
+}
+.kb-card.personal .kb-card-badge{background:rgba(167,139,250,.15);color:#a78bfa;}
+.kb-card.team .kb-card-badge{background:rgba(52,211,153,.15);color:#34d399;}
+.kb-card.project .kb-card-badge{background:rgba(251,191,36,.15);color:#fbbf24;}
+.kb-empty{
+  text-align:center;padding:24px 12px;
+  font-size:11px;color:var(--text3);
+  font-style:italic;
+}
+/* Drop zone highlight */
+.kb-col.drag-over{
+  border-color:var(--accent) !important;
+  background:rgba(94,106,210,.06) !important;
+}
+.kb-card.dragging{opacity:.4;transform:scale(.96);}
+
+/* ── FOCUS / POMODORO WIDGET ── */
+#focusWidget{
+  position:fixed;
+  bottom:24px;right:24px;
+  z-index:9000;
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:16px;
+  box-shadow:0 8px 32px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.04);
+  overflow:hidden;
+  font-family:'Inter',sans-serif;
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  display:none;
+}
+#focusWidget.visible{display:flex;flex-direction:column;}
+#focusWidget.minimized{
+  border-radius:24px;
+  width:auto !important;
+}
+.fw-header{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;
+  border-bottom:1px solid var(--border);
+  background:var(--surface2);
+}
+.fw-dot{
+  width:9px;height:9px;border-radius:50%;
+  background:#10b981;flex-shrink:0;
+  box-shadow:0 0 8px rgba(16,185,129,.5);
+  animation:fw-pulse 2s ease-in-out infinite;
+}
+.fw-dot.break{background:#3b82f6;box-shadow:0 0 8px rgba(59,130,246,.5);}
+.fw-dot.paused{background:#f59e0b;animation:none;}
+@keyframes fw-pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+
+.fw-title{font-size:11px;font-weight:700;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;}
+.fw-phase{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);}
+.fw-close-btn{
+  width:22px;height:22px;border-radius:6px;
+  background:transparent;border:none;cursor:pointer;
+  color:var(--text3);display:flex;align-items:center;justify-content:center;
+  transition:all .15s;font-size:14px;
+}
+.fw-close-btn:hover{background:var(--surface3);color:var(--text);}
+
+.fw-body{padding:16px 18px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+
+/* Circular progress ring */
+.fw-ring-wrap{position:relative;width:100px;height:100px;}
+.fw-ring-svg{transform:rotate(-90deg);}
+.fw-ring-bg{fill:none;stroke:var(--border2);stroke-width:7;}
+.fw-ring-fill{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset .8s ease;}
+.fw-time{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:22px;font-weight:800;color:var(--text);letter-spacing:-1px;
+  font-variant-numeric:tabular-nums;
+}
+.fw-session-label{font-size:10px;color:var(--text3);text-align:center;line-height:1.4;}
+.fw-controls{display:flex;gap:7px;}
+.fw-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 14px;border-radius:8px;font-size:11px;font-weight:700;
+  border:1px solid var(--border2);background:var(--surface2);
+  color:var(--text2);cursor:pointer;transition:all .15s;
+  font-family:'Inter',sans-serif;
+}
+.fw-btn:hover{background:var(--surface3);color:var(--text);}
+.fw-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+.fw-btn.primary:hover{opacity:.88;}
+.fw-sessions-count{
+  font-size:10px;color:var(--text3);
+  display:flex;align-items:center;gap:5px;flex-wrap:wrap;justify-content:center;
+}
+.fw-session-pip{
+  width:8px;height:8px;border-radius:2px;
+  background:var(--border2);
+}
+.fw-session-pip.done{background:var(--accent);}
+
+/* ── EXPORT MODAL ── */
+#exportModal .modal{
+  max-width:480px;padding:0;overflow:hidden;
+  background:var(--surface) !important;
+}
+.exp-header{
+  padding:20px 24px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+}
+.exp-icon-wrap{
+  width:38px;height:38px;border-radius:10px;
+  background:var(--accent-soft);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.exp-title{font-size:14px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;}
+.exp-sub{font-size:11px;color:var(--text3);margin-top:1px;}
+.exp-close{
+  margin-left:auto;width:30px;height:30px;border-radius:8px;
+  border:1px solid transparent;background:transparent;
+  cursor:pointer;color:var(--text3);font-size:16px;
+  display:flex;align-items:center;justify-content:center;transition:all .15s;
+}
+.exp-close:hover{background:var(--surface3);border-color:var(--border2);color:var(--text);}
+
+.exp-filters{
+  padding:16px 24px 0;
+  display:flex;flex-direction:column;gap:10px;
+}
+.exp-filter-row{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.exp-filter-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;min-width:60px;}
+.exp-filter-tabs{display:flex;gap:3px;background:var(--surface2);padding:3px;border-radius:8px;border:1px solid var(--border);}
+.exp-filter-tab{
+  padding:4px 11px;border-radius:5px;font-size:11px;font-weight:600;
+  border:none;background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;
+}
+.exp-filter-tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.2);}
+
+.exp-formats{
+  display:flex;flex-direction:column;gap:8px;
+  padding:16px 24px;
+}
+.exp-format-card{
+  display:flex;align-items:center;gap:14px;
+  padding:13px 14px;
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  cursor:pointer;transition:all .18s;
+  text-decoration:none;
+}
+.exp-format-card:hover{
+  border-color:var(--accent);
+  background:rgba(94,106,210,.07);
+  transform:translateX(2px);
+}
+.exp-format-icon{
+  width:36px;height:36px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.exp-format-body{flex:1;min-width:0;}
+.exp-format-name{font-size:13px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;}
+.exp-format-desc{font-size:11px;color:var(--text3);margin-top:1px;}
+.exp-format-arrow{color:var(--text3);transition:transform .15s;}
+.exp-format-card:hover .exp-format-arrow{transform:translateX(3px);color:var(--accent);}
+.exp-footer{
+  padding:12px 24px;border-top:1px solid var(--border);
+  font-size:11px;color:var(--text3);
+  background:var(--surface2);
+  border-radius:0 0 14px 14px;
+}
+
+/* Light mode */
+html.light-mode .kb-col{background:#f5f5fa;}
+html.light-mode .kb-col-header{background:#ededf8;}
+html.light-mode .kb-card{background:#fff;}
+html.light-mode #focusWidget{box-shadow:0 8px 32px rgba(0,0,0,.12);}
+html.light-mode .fw-header{background:#f5f5fa;}
+html.light-mode .exp-filter-tabs{background:#ededf8;}
+html.light-mode .exp-filter-tab.active{background:#fff;}
+html.light-mode .exp-format-card{background:#fff;}
+html.light-mode .exp-formats{background:transparent;}
+
+/* END QUICK WINS CSS */
 /* END PREMIUM SAAS LAYER */
 
 /* ══════════════════════════════════════════════════════════
@@ -4129,6 +4403,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
           <button class="vtab" id="tab-week" onclick="setView('week')">Semana</button>
           <button class="vtab" id="tab-month" onclick="setView('month')">Mes</button>
           <button class="vtab" id="tab-agenda" onclick="setView('agenda')">Agenda</button>
+          <button class="vtab" id="tab-kanban" onclick="setView('kanban')">Kanban</button>
         </div>
       </div>
       <!-- CENTRO: navegación + periodo -->
@@ -4141,6 +4416,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
       <!-- DERECHA: acciones -->
       <div class="hdr-right">
         <button class="btn btn-p guest-login-btn btn-sm" id="guestLoginBtn" onclick="openModal('authModal')" title="Iniciar sesión" style="display:none;gap:5px"><i data-lucide="log-in" class="icon icon-sm"></i> Iniciar sesión</button>
+        <button class="nbtn icon-btn icon-btn-v2" onclick="openExportModal()" title="Exportar datos"><i data-lucide="download" class="icon"></i></button>
         <button class="nbtn icon-btn icon-btn-v2" onclick="ws_openGame()" title="Modo Juego"><i data-lucide="gamepad-2" class="icon"></i></button>
         <button class="nbtn icon-btn icon-btn-v2" onclick="openStatsModal()" title="Estadísticas"><i data-lucide="bar-chart-3" class="icon"></i></button>
         <div class="trash-nav-wrap">
@@ -4740,6 +5016,9 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
     <div class="mf">
       <button class="btn btn-s" onclick="closeModal('taskModal')">Cancelar</button>
       <button class="btn btn-d" id="btnDel" style="display:none" onclick="deleteTask()">Eliminar</button>
+      <button class="btn btn-s" id="btnDuplicate" style="display:none;gap:6px" onclick="duplicateCurrentEvent()" title="Duplicar actividad">
+        <i data-lucide="copy" class="icon icon-sm"></i> Duplicar
+      </button>
       <button class="btn btn-p" onclick="saveTask()">Guardar</button>
     </div>
   </div>
@@ -5653,6 +5932,7 @@ function updatePeriod(){
   if(S.view==='day'){t=d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});t=t.charAt(0).toUpperCase()+t.slice(1);}
   else if(S.view==='week'){const mon=new Date(d);mon.setDate(d.getDate()-d.getDay()+1);const sun=new Date(mon);sun.setDate(mon.getDate()+6);t=`${mon.getDate()} ${MONTHS[mon.getMonth()].slice(0,3)} — ${sun.getDate()} ${MONTHS[sun.getMonth()].slice(0,3)} ${sun.getFullYear()}`;}
   else if(S.view==='agenda'){const end=new Date(d);end.setDate(d.getDate()+13);t=`${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)} — ${end.getDate()} ${MONTHS[end.getMonth()].slice(0,3)} ${end.getFullYear()}`;}
+  else if(S.view==='kanban'){t='Vista Kanban';}
   else{t=`${MONTHS[d.getMonth()]} ${d.getFullYear()}`;}
   document.getElementById('period').textContent=t;
 }
@@ -5665,7 +5945,8 @@ function renderCal(){
     if(S.view==='day')renderDay(c);
     else if(S.view==='week')renderWeek(c);
     else if(S.view==='agenda')renderAgenda(c);
-  else renderMonth(c);
+    else if(S.view==='kanban')renderKanban(c);
+    else renderMonth(c);
     c.classList.remove('view-fade');
   },100);
 }
@@ -6525,6 +6806,7 @@ function openTaskModal(date,time){
   S.editId=null;
   document.getElementById('taskModalTitle').textContent='Nueva Tarea';
   document.getElementById('btnDel').style.display='none';
+  document.getElementById('btnDuplicate').style.display='none';
   document.getElementById('tTitle').value='';document.getElementById('tDesc').value='';renderEmailFields(['']);
   document.getElementById('tDur').value='60';document.getElementById('tRemind').value='15';
   document.getElementById('tDate').value=date||dk(S.cur);
@@ -6566,6 +6848,7 @@ function openProjModal(){
   S.editId=null;
   document.getElementById('taskModalTitle').textContent='Nuevo Proyecto Meta';
   document.getElementById('btnDel').style.display='none';
+  document.getElementById('btnDuplicate').style.display='none';
   document.getElementById('tTitle').value='';document.getElementById('tDesc').value='';renderEmailFields(['']);
   document.getElementById('tDate').value=dk(S.cur);
   document.getElementById('tDeadlineDate').value='';
@@ -6792,6 +7075,7 @@ function editEvent(ev){
   S.editId=ev.id;
   document.getElementById('taskModalTitle').textContent='Editar Evento';
   document.getElementById('btnDel').style.display='inline-flex';
+  document.getElementById('btnDuplicate').style.display='inline-flex';
   document.getElementById('tTitle').value=ev.title.replace(/^🎯 /,'');
   document.getElementById('tDesc').value=ev.desc||'';
   document.getElementById('tDate').value=ev.date;
@@ -6939,7 +7223,17 @@ function showEventDetail(ev){
   if(canEdit&&!isDeadlineEv){
     const eb=document.createElement('button');eb.className='btn btn-s';eb.textContent='Editar';eb.onclick=()=>{closeModal('detModal');editEvent(ev);};foot.appendChild(eb);
     const sb=document.createElement('button');sb.className='btn btn-s';sb.style.borderColor='var(--accent2)';sb.style.color='var(--accent2)';
-    sb.textContent='📊 Estado';sb.onclick=()=>{closeModal('detModal');openStatusModal(ev);};foot.appendChild(sb);
+    sb.textContent='Estado';sb.onclick=()=>{closeModal('detModal');openStatusModal(ev);};foot.appendChild(sb);
+    // Duplicar
+    const dupb=document.createElement('button');dupb.className='btn btn-s';dupb.style.gap='5px';
+    dupb.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Duplicar';
+    dupb.onclick=()=>{closeModal('detModal');duplicateEvent(ev);};foot.appendChild(dupb);
+    // Focus / Pomodoro
+    if(!ev.isDeadline){
+      const focb=document.createElement('button');focb.className='btn btn-s';focb.style.gap='5px';focb.title='Iniciar sesión Pomodoro';
+      focb.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Focus';
+      focb.onclick=()=>{closeModal('detModal');openFocusWidget(ev);};foot.appendChild(focb);
+    }
     // Botón eliminar — recurrentes tienen flujo especial, el resto usa soft delete
     if(ev.isRecurring && ev.recurGroupId){
       const db2=document.createElement('button');db2.className='btn btn-d';
@@ -7910,7 +8204,7 @@ function closeRightPanelMobile(){
 // Close sidebar when navigating on mobile
 function setView(v){
   S.view=v;
-  ['day','week','month','agenda'].forEach(x=>{const el=document.getElementById('tab-'+x);if(el)el.classList.toggle('active',x===v)});
+  ['day','week','month','agenda','kanban'].forEach(x=>{const el=document.getElementById('tab-'+x);if(el)el.classList.toggle('active',x===v)});
   if(window.innerWidth<=768) closeSidebar();
   render();
 }
@@ -10831,6 +11125,428 @@ async function init(){
 }
 init();
 
+// ═══════════════════════════════════════════════════════════════════
+// QUICK WIN 1 — DUPLICAR ACTIVIDAD
+// ═══════════════════════════════════════════════════════════════════
+
+function duplicateEvent(ev){
+  if(!requireAuth('Inicia sesión para duplicar actividades.')) return;
+  // Compute next day as default date for the copy
+  const parts = ev.date.split('-').map(Number);
+  const d = new Date(parts[0], parts[1]-1, parts[2]);
+  d.setDate(d.getDate()+1);
+  const nextDate = dk(d);
+
+  S.editId = null; // new event
+  document.getElementById('taskModalTitle').textContent = 'Duplicar actividad';
+  document.getElementById('btnDel').style.display = 'none';
+  document.getElementById('btnDuplicate').style.display = 'none';
+  document.getElementById('tTitle').value = ev.title.replace(/^🎯 /,'');
+  document.getElementById('tDesc').value = ev.desc||'';
+  renderEmailFields(ev.email ? ev.email.split(',').map(e=>e.trim()) : ['']);
+  document.getElementById('tDur').value = ev.dur;
+  document.getElementById('tRemind').value = ev.remind;
+  document.getElementById('tDate').value = nextDate;
+  document.getElementById('tDeadlineDate').value = ev.deadlineDate||'';
+  genTimeOpts();
+  document.getElementById('tTime').value = ev.time;
+  document.getElementById('tDeadlineTime').value = ev.deadlineTime||'17:00';
+  fillProjSel(); fillCalendarSel();
+  document.getElementById('tCalendar').value = ev.calendar_id||'';
+  document.getElementById('tProj').value = ev.projId||'';
+  selType(ev.type);
+  if(ev.color) selColor(ev.color);
+  document.getElementById('filesSection').style.display = 'block';
+  _pendingFiles = []; _pendingLinks = [];
+  updateFileListUI();
+  _eventTags = []; _subtasks = []; window._pendingMentions = [];
+  showTagSections(true);
+  document.getElementById('tagPicker').style.display = 'none';
+  renderEventTagsList(); renderSubtasks(0);
+  openModal('taskModal');
+  toast('Actividad duplicada — ajusta la fecha y guarda');
+}
+
+function duplicateCurrentEvent(){
+  if(!S.editId) return;
+  const ev = S.events.find(e=>e.id===S.editId);
+  if(!ev) return;
+  closeModal('taskModal');
+  duplicateEvent(ev);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// QUICK WIN 2 — VISTA KANBAN
+// ═══════════════════════════════════════════════════════════════════
+
+const KB_COLS = [
+  {status:'pending',   label:'Pendiente',  dot:'#6b7280', showAll:true},
+  {status:'completed', label:'Completada', dot:'#10b981'},
+  {status:'early-voluntary', label:'Adelantada',  dot:'#f7e26a'},
+  {status:'early-forced',    label:'Obligación',  dot:'#3b82f6'},
+  {status:'extended',  label:'Extendida',  dot:'#6ab4f7'},
+  {status:'abandoned', label:'Abandonada', dot:'#ef4444'},
+];
+
+function renderKanban(container){
+  container.className = 'kanban-view';
+  const calId = S.currentCalendarId;
+  const evs = S.events.filter(e =>
+    !e.deleted && !e.isDeadline &&
+    ((e.type==='personal'&&S.filters.personal)||(e.type==='team'&&S.filters.team)||(e.type==='project'&&S.filters.project)) &&
+    (!calId || e.calendar_id === calId)
+  );
+
+  const typeLabel = {personal:'Personal', team:'Equipo', project:'Meta'};
+
+  container.innerHTML = KB_COLS.map(col => {
+    const cards = evs.filter(e => (e.status||'pending') === col.status);
+    return `
+    <div class="kb-col" data-kbcol="${col.status}"
+      ondragover="kb_dragOver(event,this)" ondrop="kb_drop(event,this)"
+      ondragleave="this.classList.remove('drag-over')">
+      <div class="kb-col-header">
+        <div class="kb-col-dot" style="background:${col.dot};box-shadow:0 0 8px ${col.dot}66"></div>
+        <div class="kb-col-title">${col.label}</div>
+        <div class="kb-col-count">${cards.length}</div>
+      </div>
+      <div class="kb-cards" id="kbcards-${col.status}">
+        ${cards.length === 0
+          ? `<div class="kb-empty">Sin actividades</div>`
+          : cards.map(ev => `
+          <div class="kb-card ${ev.type}" draggable="true"
+            data-evid="${ev.id}"
+            ondragstart="kb_dragStart(event,'${ev.id}')"
+            ondragend="kb_dragEnd(event)"
+            onclick="showEventDetail(getEv('${ev.id}'))">
+            <div class="kb-card-title">${escapeHtml(ev.title)}</div>
+            <div class="kb-card-meta">
+              <span class="kb-card-badge">${typeLabel[ev.type]||ev.type}</span>
+              <span>${fmtDate(ev.date)}</span>
+              <span>${fmt12(ev.time)}</span>
+              ${ev.projId ? `<span style="color:var(--accent)">· ${(S.projects.find(p=>p.id===ev.projId)?.title||'').substring(0,18)}</span>`:''}
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Kanban drag & drop
+let _kbDragId = null;
+function kb_dragStart(e, id){ _kbDragId=id; e.target.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; }
+function kb_dragEnd(e){ e.target.classList.remove('dragging'); document.querySelectorAll('.kb-col').forEach(c=>c.classList.remove('drag-over')); }
+function kb_dragOver(e, col){ e.preventDefault(); e.dataTransfer.dropEffect='move'; col.classList.add('drag-over'); }
+async function kb_drop(e, col){
+  e.preventDefault();
+  col.classList.remove('drag-over');
+  if(!_kbDragId) return;
+  const newStatus = col.dataset.kbcol;
+  const ev = S.events.find(x=>x.id===_kbDragId);
+  if(!ev || ev.status === newStatus){ _kbDragId=null; return; }
+  const oldStatus = ev.status;
+  ev.status = newStatus;
+  render();
+  // Persist via API
+  try{
+    await fetch(`${API_URL}/events/${ev.id}`, {
+      method:'PATCH',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({status:newStatus})
+    });
+  } catch(err){ ev.status=oldStatus; render(); toast('Error al actualizar estado'); }
+  _kbDragId = null;
+  toast(`Estado actualizado: ${newStatus==='pending'?'Pendiente':newStatus==='completed'?'Completada':newStatus==='abandoned'?'Abandonada':newStatus}`);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// QUICK WIN 3 — MODO FOCUS / POMODORO
+// ═══════════════════════════════════════════════════════════════════
+
+const FOCUS_WORK  = 25 * 60; // 25 min
+const FOCUS_BREAK =  5 * 60; //  5 min
+const FOCUS_SESSIONS = 4;
+
+const FW = {
+  running: false, phase: 'work', // 'work' | 'break'
+  timeLeft: FOCUS_WORK, total: FOCUS_WORK,
+  session: 1, interval: null,
+  activityTitle: '',
+  completedSessions: 0,
+};
+
+function openFocusWidget(ev){
+  FW.activityTitle = ev ? ev.title : 'Modo Focus';
+  focusReset();
+  document.getElementById('focusWidget').classList.add('visible');
+  if(typeof lucide !== 'undefined') lucide.createIcons({el:document.getElementById('focusWidget')});
+}
+
+function focusStop(){
+  clearInterval(FW.interval); FW.running = false;
+  document.getElementById('focusWidget').classList.remove('visible');
+}
+
+function focusToggle(){
+  if(FW.running){ clearInterval(FW.interval); FW.running=false; fw_updateUI(); }
+  else { FW.running=true; FW.interval=setInterval(fw_tick,1000); fw_updateUI(); }
+}
+
+function focusSkip(){
+  clearInterval(FW.interval); FW.running=false;
+  fw_nextPhase();
+}
+
+function focusReset(){
+  clearInterval(FW.interval);
+  FW.running=false; FW.phase='work'; FW.session=1; FW.completedSessions=0;
+  FW.timeLeft=FOCUS_WORK; FW.total=FOCUS_WORK;
+  fw_updateUI();
+}
+
+function fw_tick(){
+  FW.timeLeft--;
+  if(FW.timeLeft <= 0){ fw_nextPhase(); return; }
+  if(FW.timeLeft <= 10 && FW.phase === 'work') fw_beep(440, 0.08); // gentle tick near end
+  fw_updateUI();
+}
+
+function fw_nextPhase(){
+  clearInterval(FW.interval); FW.running=false;
+  if(FW.phase === 'work'){
+    FW.completedSessions++;
+    fw_beep(880, 0.25); // work done bell
+    FW.phase = 'break';
+    FW.timeLeft = FW.total = FOCUS_BREAK;
+    if(FW.completedSessions >= FOCUS_SESSIONS){
+      toast('Completaste 4 sesiones focus. Tómate un descanso largo.');
+      focusReset(); return;
+    }
+  } else {
+    fw_beep(660, 0.2); // break done
+    FW.phase = 'work'; FW.session++;
+    FW.timeLeft = FW.total = FOCUS_WORK;
+  }
+  fw_updateUI();
+  // Auto-start next phase
+  FW.running=true; FW.interval=setInterval(fw_tick,1000);
+}
+
+function fw_updateUI(){
+  const mm=String(Math.floor(FW.timeLeft/60)).padStart(2,'0');
+  const ss=String(FW.timeLeft%60).padStart(2,'0');
+  const timeStr=`${mm}:${ss}`;
+  const pct = 1 - FW.timeLeft/FW.total;
+  const circumference = 2*Math.PI*42; // r=42
+  const offset = circumference * (1-pct);
+  const isWork = FW.phase === 'work';
+  const color = isWork ? '#10b981' : '#3b82f6';
+
+  const timeEl = document.getElementById('fwTime');
+  const phaseEl = document.getElementById('fwPhase');
+  const dotEl = document.getElementById('fwDot');
+  const ringEl = document.getElementById('fwRingFill');
+  const titleEl = document.getElementById('fwTitle');
+  const playBtn = document.getElementById('fwPlayBtn');
+  const sessionEl = document.getElementById('fwSessionLabel');
+  const pipsEl = document.getElementById('fwPips');
+
+  if(timeEl) timeEl.textContent = timeStr;
+  if(phaseEl) phaseEl.textContent = `${isWork?'TRABAJO':'DESCANSO'} · ${timeStr}`;
+  if(titleEl) titleEl.textContent = FW.activityTitle||'Modo Focus';
+  if(dotEl){ dotEl.className='fw-dot'+(isWork?'':' break')+(FW.running?'':' paused'); }
+  if(ringEl){ ringEl.setAttribute('stroke',color); ringEl.setAttribute('stroke-dashoffset', String(offset)); }
+  if(playBtn) playBtn.textContent = FW.running ? '⏸ Pausa' : '▶ Iniciar';
+  if(sessionEl) sessionEl.textContent = `Sesión ${FW.session} de ${FOCUS_SESSIONS}`;
+  if(pipsEl){
+    pipsEl.innerHTML = Array.from({length:FOCUS_SESSIONS},(_,i)=>
+      `<div class="fw-session-pip${i<FW.completedSessions?' done':''}"></div>`
+    ).join('');
+  }
+}
+
+function fw_beep(freq=880, vol=0.15){
+  try{
+    const ctx = new(window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator(); const g=ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value=freq; o.type='sine';
+    g.gain.setValueAtTime(vol,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.8);
+    o.start(ctx.currentTime); o.stop(ctx.currentTime+0.8);
+  } catch(e){}
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// QUICK WIN 4 — EXPORTAR (CSV · PDF · JSON)
+// ═══════════════════════════════════════════════════════════════════
+
+let _expPeriod = 'month', _expType = 'all';
+
+function openExportModal(){
+  _expPeriod='month'; _expType='all';
+  document.querySelectorAll('#expPeriodTabs .exp-filter-tab').forEach(t=>t.classList.toggle('active',t.dataset.period==='month'));
+  document.querySelectorAll('#expTypeTabs .exp-filter-tab').forEach(t=>t.classList.toggle('active',t.dataset.etype==='all'));
+  exp_updateCount();
+  openModal('exportModal');
+}
+
+function exp_setPeriod(p, btn){
+  _expPeriod=p;
+  document.querySelectorAll('#expPeriodTabs .exp-filter-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  exp_updateCount();
+}
+function exp_setType(t, btn){
+  _expType=t;
+  document.querySelectorAll('#expTypeTabs .exp-filter-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  exp_updateCount();
+}
+
+function exp_getEvents(){
+  const now = new Date();
+  const ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const yr = `${now.getFullYear()}`;
+  return S.events.filter(e => {
+    if(e.deleted || e.isDeadline) return false;
+    if(_expType !== 'all' && e.type !== _expType) return false;
+    if(_expPeriod === 'month') return e.date.startsWith(ym);
+    if(_expPeriod === 'year')  return e.date.startsWith(yr);
+    return true;
+  });
+}
+
+function exp_updateCount(){
+  const n = exp_getEvents().length;
+  const el = document.getElementById('expCountLabel');
+  if(el) el.textContent = n;
+}
+
+function exp_download(format){
+  const evs = exp_getEvents();
+  if(evs.length === 0){ toast('Sin actividades para exportar con los filtros actuales'); return; }
+
+  if(format === 'csv') exp_csv(evs);
+  else if(format === 'pdf') exp_pdf(evs);
+  else if(format === 'json') exp_json(evs);
+}
+
+function exp_csv(evs){
+  const headers = ['ID','Título','Tipo','Fecha','Hora','Duración(min)','Estado','Descripción','Proyecto','Creador','Calendario','Color'];
+  const rows = evs.map(e => {
+    const proj = e.projId ? (S.projects.find(p=>p.id===e.projId)?.title||'') : '';
+    const creator = S.users.find(u=>u.id===e.creatorId)?.name || e.creatorName || '';
+    const cal = e.calendar_id ? (S.calendars.find(c=>c.id===e.calendar_id)?.name||'') : '';
+    return [e.id, e.title, e.type, e.date, e.time, e.dur, e.status||'pending',
+      (e.desc||'').replace(/[\n\r,]/g,' '), proj, creator, cal, e.color||''].map(v=>`"${String(v).replace(/"/g,'""')}"`);
+  });
+  const csv = [headers.join(','), ...rows.map(r=>r.join(','))].join('\n');
+  const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8;'});
+  exp_triggerDownload(blob, `planificame_export_${dk(new Date())}.csv`);
+  toast('CSV descargado');
+}
+
+function exp_json(evs){
+  const data = {
+    exported_at: new Date().toISOString(),
+    app: 'PlanificaMe',
+    period: _expPeriod,
+    type_filter: _expType,
+    total: evs.length,
+    events: evs,
+    projects: S.projects,
+    calendars: S.calendars.map(c=>({id:c.id,name:c.name,color:c.color})),
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  exp_triggerDownload(blob, `planificame_backup_${dk(new Date())}.json`);
+  toast('JSON descargado');
+}
+
+function exp_pdf(evs){
+  const now = new Date();
+  const periodLabel = _expPeriod==='month'?`${MONTHS[now.getMonth()]} ${now.getFullYear()}`:_expPeriod==='year'?String(now.getFullYear()):'Todos los períodos';
+  const typeLabel = {personal:'Personal',team:'Equipo',project:'Meta',all:'Todos los tipos'};
+  const statusMap = {pending:'Pendiente',completed:'Completada','early-voluntary':'Adelantada','early-forced':'Adelantada-Obligación',extended:'Extendida',abandoned:'Abandonada'};
+  const typeColor = {personal:'#a78bfa',team:'#34d399',project:'#fbbf24'};
+  const statusColor = {pending:'#6b7280',completed:'#10b981','early-voluntary':'#f7e26a','early-forced':'#3b82f6',extended:'#6ab4f7',abandoned:'#ef4444'};
+
+  const grouped = {};
+  evs.forEach(e=>{ if(!grouped[e.date]) grouped[e.date]=[]; grouped[e.date].push(e); });
+  const sortedDates = Object.keys(grouped).sort();
+
+  const rowsHTML = sortedDates.map(date => {
+    const label = new Date(date+'T12:00:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const evRows = grouped[date].map(e=>{
+      const proj = e.projId ? (S.projects.find(p=>p.id===e.projId)?.title||'') : '';
+      return `<tr>
+        <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${typeColor[e.type]||'#888'};margin-right:6px"></span>${escapeHtml(e.title)}</td>
+        <td>${fmt12(e.time)}</td>
+        <td>${e.dur<60?e.dur+'min':Math.round(e.dur/60*10)/10+'h'}</td>
+        <td style="color:${typeColor[e.type]||'#888'};font-weight:600;font-size:10px">${e.type}</td>
+        <td style="color:${statusColor[e.status||'pending']};font-weight:600;font-size:10px">${statusMap[e.status||'pending']||e.status}</td>
+        <td style="color:#888;font-size:10px">${proj}</td>
+      </tr>`;
+    }).join('');
+    return `<tr><td colspan="6" style="background:#f0f0f8;padding:6px 10px;font-weight:700;font-size:12px;border-top:2px solid #7c6af7;color:#3a3a6a">${label.charAt(0).toUpperCase()+label.slice(1)}</td></tr>${evRows}`;
+  }).join('');
+
+  const html = `<!DOCTYPE html><html><head><meta charset="utf-8">
+  <title>PlanificaMe — Reporte</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inter','Helvetica Neue',sans-serif;color:#1a1a2e;background:#fff;padding:32px;}
+    .report-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:16px;border-bottom:2px solid #7c6af7;}
+    .report-logo{font-size:22px;font-weight:900;color:#7c6af7;letter-spacing:-1px;}
+    .report-meta{text-align:right;font-size:11px;color:#888;}
+    .report-meta strong{display:block;color:#333;font-size:13px;margin-bottom:2px;}
+    .stats-row{display:flex;gap:12px;margin-bottom:24px;}
+    .stat-box{flex:1;background:#f5f5ff;border-radius:8px;padding:14px;text-align:center;}
+    .stat-num{font-size:24px;font-weight:800;color:#7c6af7;}
+    .stat-lbl{font-size:10px;color:#888;margin-top:2px;text-transform:uppercase;letter-spacing:.5px;}
+    table{width:100%;border-collapse:collapse;font-size:12px;}
+    th{background:#7c6af7;color:#fff;padding:8px 10px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;}
+    td{padding:7px 10px;border-bottom:1px solid #eee;vertical-align:middle;}
+    tr:last-child td{border-bottom:none;}
+    .footer{margin-top:20px;font-size:10px;color:#bbb;text-align:center;}
+    @media print{body{padding:16px;}@page{margin:1.5cm;}}
+  </style></head><body>
+  <div class="report-header">
+    <div class="report-logo">PlanificaMe</div>
+    <div class="report-meta">
+      <strong>${periodLabel}</strong>
+      ${typeLabel[_expType]||_expType} · ${evs.length} actividades<br>
+      Generado: ${new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})}
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">${evs.length}</div><div class="stat-lbl">Total</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:#10b981">${evs.filter(e=>['completed','early-voluntary','early-forced'].includes(e.status)).length}</div><div class="stat-lbl">Completadas</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:#f59e0b">${evs.filter(e=>!e.status||e.status==='pending').length}</div><div class="stat-lbl">Pendientes</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:#ef4444">${evs.filter(e=>e.status==='abandoned').length}</div><div class="stat-lbl">Abandonadas</div></div>
+  </div>
+  <table>
+    <thead><tr><th>Actividad</th><th>Hora</th><th>Duración</th><th>Tipo</th><th>Estado</th><th>Proyecto</th></tr></thead>
+    <tbody>${rowsHTML}</tbody>
+  </table>
+  <div class="footer">PlanificaMe · planificame.app · Reporte generado automáticamente</div>
+  <script>window.onload=()=>{setTimeout(()=>window.print(),400);}<\/script>
+  </body></html>`;
+
+  const w = window.open('','_blank','width=900,height=700');
+  if(w){ w.document.write(html); w.document.close(); }
+  else toast('Habilita las ventanas emergentes para el PDF');
+}
+
+function exp_triggerDownload(blob, filename){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download=filename; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); },1000);
+}
+
+// END QUICK WINS JS
+
 // ═══════════════════════════════════════════════════════════
 // TRASH SYSTEM — Papelera de reciclaje con Soft Delete
 // ═══════════════════════════════════════════════════════════
@@ -11534,6 +12250,117 @@ async function etm_execute(){
           <div id="ws-records-body"></div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     FOCUS / POMODORO WIDGET
+     ══════════════════════════════════════════════════════ -->
+<div id="focusWidget">
+  <div class="fw-header">
+    <div class="fw-dot" id="fwDot"></div>
+    <div style="flex:1;min-width:0">
+      <div class="fw-title" id="fwTitle">Modo Focus</div>
+      <div class="fw-phase" id="fwPhase">TRABAJO · 25:00</div>
+    </div>
+    <button class="fw-close-btn" onclick="focusStop()" title="Cerrar">×</button>
+  </div>
+  <div class="fw-body">
+    <div class="fw-ring-wrap">
+      <svg class="fw-ring-svg" width="100" height="100" viewBox="0 0 100 100">
+        <circle class="fw-ring-bg" cx="50" cy="50" r="42"/>
+        <circle class="fw-ring-fill" id="fwRingFill" cx="50" cy="50" r="42"
+          stroke="#10b981" stroke-dasharray="264" stroke-dashoffset="0"/>
+      </svg>
+      <div class="fw-time" id="fwTime">25:00</div>
+    </div>
+    <div class="fw-session-label" id="fwSessionLabel">Sesión 1 de 4</div>
+    <div class="fw-sessions-count" id="fwPips"></div>
+    <div class="fw-controls">
+      <button class="fw-btn" onclick="focusSkip()" title="Saltar fase">Saltar</button>
+      <button class="fw-btn primary" id="fwPlayBtn" onclick="focusToggle()">▶ Iniciar</button>
+      <button class="fw-btn" onclick="focusReset()" title="Reiniciar">↺</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     EXPORT MODAL
+     ══════════════════════════════════════════════════════ -->
+<div class="overlay" id="exportModal">
+  <div class="modal" style="max-width:480px;padding:0">
+    <div class="exp-header">
+      <div class="exp-icon-wrap">
+        <i data-lucide="download" class="icon" style="color:var(--accent)"></i>
+      </div>
+      <div>
+        <div class="exp-title">Exportar datos</div>
+        <div class="exp-sub">Descarga tus actividades en el formato que necesites</div>
+      </div>
+      <button class="exp-close" onclick="closeModal('exportModal')">×</button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="exp-filters">
+      <div class="exp-filter-row">
+        <div class="exp-filter-label">Período</div>
+        <div class="exp-filter-tabs" id="expPeriodTabs">
+          <button class="exp-filter-tab active" data-period="month" onclick="exp_setPeriod('month',this)">Este mes</button>
+          <button class="exp-filter-tab" data-period="year" onclick="exp_setPeriod('year',this)">Este año</button>
+          <button class="exp-filter-tab" data-period="all" onclick="exp_setPeriod('all',this)">Todo</button>
+        </div>
+      </div>
+      <div class="exp-filter-row">
+        <div class="exp-filter-label">Tipo</div>
+        <div class="exp-filter-tabs" id="expTypeTabs">
+          <button class="exp-filter-tab active" data-etype="all" onclick="exp_setType('all',this)">Todos</button>
+          <button class="exp-filter-tab" data-etype="personal" onclick="exp_setType('personal',this)">Personal</button>
+          <button class="exp-filter-tab" data-etype="team" onclick="exp_setType('team',this)">Equipo</button>
+          <button class="exp-filter-tab" data-etype="project" onclick="exp_setType('project',this)">Meta</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);padding-top:2px">
+        <span id="expCountLabel" style="font-weight:600;color:var(--text2)">0</span> actividades seleccionadas
+      </div>
+    </div>
+
+    <!-- Formats -->
+    <div class="exp-formats">
+      <button class="exp-format-card" onclick="exp_download('csv')">
+        <div class="exp-format-icon" style="background:rgba(16,185,129,.12)">
+          <i data-lucide="file-spreadsheet" class="icon" style="color:#10b981"></i>
+        </div>
+        <div class="exp-format-body">
+          <div class="exp-format-name">CSV — Excel / Sheets</div>
+          <div class="exp-format-desc">Tabla plana compatible con Excel, Google Sheets y Numbers</div>
+        </div>
+        <i data-lucide="chevron-right" class="icon exp-format-arrow"></i>
+      </button>
+      <button class="exp-format-card" onclick="exp_download('pdf')">
+        <div class="exp-format-icon" style="background:rgba(239,68,68,.1)">
+          <i data-lucide="file-text" class="icon" style="color:#ef4444"></i>
+        </div>
+        <div class="exp-format-body">
+          <div class="exp-format-name">PDF — Reporte visual</div>
+          <div class="exp-format-desc">Reporte estilizado listo para imprimir o compartir</div>
+        </div>
+        <i data-lucide="chevron-right" class="icon exp-format-arrow"></i>
+      </button>
+      <button class="exp-format-card" onclick="exp_download('json')">
+        <div class="exp-format-icon" style="background:rgba(94,106,210,.12)">
+          <i data-lucide="code-2" class="icon" style="color:var(--accent)"></i>
+        </div>
+        <div class="exp-format-body">
+          <div class="exp-format-name">JSON — Backup completo</div>
+          <div class="exp-format-desc">Exporta todos los datos para backup o importar en otro sistema</div>
+        </div>
+        <i data-lucide="chevron-right" class="icon exp-format-arrow"></i>
+      </button>
+    </div>
+
+    <div class="exp-footer">
+      Solo se exportan actividades activas (no las que están en la papelera)
     </div>
   </div>
 </div>
