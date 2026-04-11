@@ -4322,6 +4322,85 @@ mark{background:rgba(94,106,210,.25);color:var(--text);border-radius:2px;padding
   #detFoot .btn svg { width: 15px !important; height: 15px !important; opacity: .85; }
 }
 
+/* ── Year View ───────────────────────────────────────────── */
+#cal.year-view {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  padding: 18px;
+  overflow-y: auto;
+  align-content: start;
+}
+.yr-month {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 12px 10px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.yr-month:hover { border-color: rgba(124,90,255,.35); box-shadow: 0 2px 12px rgba(0,0,0,.12); }
+.yr-month-hdr {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px;
+}
+.yr-month-title {
+  font-size: 12px; font-weight: 700; color: var(--text);
+  cursor: pointer; padding: 2px 6px; border-radius: 6px;
+  transition: background .12s, color .12s;
+}
+.yr-month-title:hover { background: rgba(124,90,255,.12); color: var(--accent); }
+.yr-month-count {
+  font-size: 10px; font-weight: 600; color: var(--text3);
+  background: var(--surface2); border-radius: 10px; padding: 1px 7px;
+}
+.yr-month-count.has-evs { color: var(--accent); background: rgba(124,90,255,.12); }
+.yr-dlbls {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 4px;
+}
+.yr-dlbl {
+  font-size: 9px; color: var(--text3); text-align: center;
+  font-weight: 700; letter-spacing: .3px;
+}
+.yr-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.yr-day {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  font-size: 10px; border-radius: 50%; cursor: pointer;
+  position: relative; color: var(--text2);
+  transition: background .1s, color .1s;
+}
+.yr-day:hover:not(.yr-other) { background: var(--surface3); color: var(--text); }
+.yr-day.yr-other { color: var(--text3); opacity: .35; cursor: default; }
+.yr-day.yr-today {
+  background: var(--accent) !important;
+  color: white !important; font-weight: 700;
+}
+/* Dot indicator for days with events */
+.yr-day.yr-has-ev::after {
+  content: '';
+  position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%);
+  width: 3px; height: 3px; border-radius: 50%;
+  background: var(--accent2);
+}
+.yr-day.yr-today::after { background: rgba(255,255,255,.8); }
+.yr-day.yr-has-deadline::after { background: var(--danger); }
+/* Current month highlight */
+.yr-month.yr-current-month { border-color: rgba(124,90,255,.4); }
+
+/* Responsive */
+@media (max-width: 1100px) {
+  #cal.year-view { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  #cal.year-view { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 12px; }
+  .yr-month { padding: 10px 8px 8px; }
+  .yr-month-title { font-size: 11px; }
+  .yr-day { font-size: 9px; }
+}
+@media (max-width: 420px) {
+  #cal.year-view { grid-template-columns: 1fr 1fr; gap: 8px; }
+}
+
 /* END BUG FIXES */
 /* END MEDIO ESFUERZO CSS */
 /* END PREMIUM SAAS LAYER */
@@ -5036,6 +5115,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
           <button class="vtab active" id="tab-day" onclick="setView('day')">Día</button>
           <button class="vtab" id="tab-week" onclick="setView('week')">Semana</button>
           <button class="vtab" id="tab-month" onclick="setView('month')">Mes</button>
+          <button class="vtab" id="tab-year"  onclick="setView('year')">Año</button>
           <button class="vtab" id="tab-agenda" onclick="setView('agenda')">Agenda</button>
           <button class="vtab" id="tab-kanban" onclick="setView('kanban')">Kanban</button>
           <button class="vtab" id="tab-gantt" onclick="setView('gantt')">Gantt</button>
@@ -6072,7 +6152,7 @@ function filtered(){
 // ═══════════════════════════════════
 // NAVIGATION
 // ═══════════════════════════════════
-function navigate(d){const c=new Date(S.cur);if(S.view==='day')c.setDate(c.getDate()+d);else if(S.view==='week')c.setDate(c.getDate()+d*7);else if(S.view==='agenda')c.setDate(c.getDate()+d*14);else c.setMonth(c.getMonth()+d);S.cur=c;render();}
+function navigate(d){const c=new Date(S.cur);if(S.view==='day')c.setDate(c.getDate()+d);else if(S.view==='week')c.setDate(c.getDate()+d*7);else if(S.view==='agenda')c.setDate(c.getDate()+d*14);else if(S.view==='year')c.setFullYear(c.getFullYear()+d);else c.setMonth(c.getMonth()+d);S.cur=c;render();}
 function goToday(){S.cur=new Date();render();}
 function toggleFilter(f){S.filters[f]=!S.filters[f];document.getElementById('f-'+f).classList.toggle('on',S.filters[f]);renderCal();}
 
@@ -12968,7 +13048,7 @@ runAdvancedSearch = function(){
 // Extend setView to include 'gantt' tab
 setView = function(v){
   S.view = v;
-  ['day','week','month','agenda','kanban','gantt'].forEach(x => {
+  ['day','week','month','year','agenda','kanban','gantt'].forEach(x => {
     const el = document.getElementById('tab-' + x);
     if(el) el.classList.toggle('active', x === v);
   });
@@ -12991,16 +13071,21 @@ renderCal = function(){
     else if(S.view === 'agenda') renderAgenda(c);
     else if(S.view === 'kanban') renderKanban(c);
     else if(S.view === 'gantt')  renderGantt(c);
+    else if(S.view === 'year')   renderYear(c);
     else                         renderMonth(c);
     c.classList.remove('view-fade');
   }, 100);
 };
 
-// Patch updatePeriod to handle gantt
+// Patch updatePeriod to handle gantt + year
 const _origUpdatePeriod = updatePeriod;
 updatePeriod = function(){
   if(S.view === 'gantt'){
     document.getElementById('period').textContent = 'Vista Gantt';
+    return;
+  }
+  if(S.view === 'year'){
+    document.getElementById('period').textContent = String(S.cur.getFullYear());
     return;
   }
   _origUpdatePeriod();
@@ -13021,6 +13106,139 @@ document.addEventListener('keydown', e => {
     openNotesModal();
   }
 });
+
+// ──────────────────────────────────────────────────────────
+// YEAR VIEW
+// ──────────────────────────────────────────────────────────
+function renderYear(container) {
+  container.classList.add('year-view');
+
+  const year     = S.cur.getFullYear();
+  const today    = new Date();
+  const todayStr = dk(today);
+  const curMonth = today.getMonth();
+  const curYear  = today.getFullYear();
+
+  // Build a fast lookup: date string → array of events
+  const evMap = {};
+  (filtered() || []).forEach(ev => {
+    if(!ev.date) return;
+    if(!evMap[ev.date]) evMap[ev.date] = [];
+    evMap[ev.date].push(ev);
+  });
+
+  const MONTH_NAMES = [
+    'Enero','Febrero','Marzo','Abril','Mayo','Junio',
+    'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
+  ];
+  const DAY_ABBR = ['D','L','M','X','J','V','S'];
+
+  for(let m = 0; m < 12; m++) {
+    const isCurrentMonth = (year === curYear && m === curMonth);
+    const card = document.createElement('div');
+    card.className = 'yr-month' + (isCurrentMonth ? ' yr-current-month' : '');
+
+    // Count events this month
+    let monthEvCount = 0;
+    for(let d = 1; d <= 31; d++) {
+      const dt = new Date(year, m, d);
+      if(dt.getMonth() !== m) break;
+      const ds = dk(dt);
+      if(evMap[ds]) monthEvCount += evMap[ds].length;
+    }
+
+    // Header
+    const hdr = document.createElement('div');
+    hdr.className = 'yr-month-hdr';
+
+    const title = document.createElement('div');
+    title.className = 'yr-month-title';
+    title.textContent = MONTH_NAMES[m];
+    title.title = `Ver ${MONTH_NAMES[m]} ${year}`;
+    title.onclick = () => {
+      S.cur = new Date(year, m, 1);
+      setView('month');
+    };
+
+    const badge = document.createElement('div');
+    badge.className = 'yr-month-count' + (monthEvCount > 0 ? ' has-evs' : '');
+    badge.textContent = monthEvCount > 0 ? `${monthEvCount}` : '–';
+    badge.title = monthEvCount > 0 ? `${monthEvCount} actividad${monthEvCount !== 1 ? 'es' : ''}` : 'Sin actividades';
+
+    hdr.appendChild(title);
+    hdr.appendChild(badge);
+    card.appendChild(hdr);
+
+    // Day-of-week labels
+    const dlbls = document.createElement('div');
+    dlbls.className = 'yr-dlbls';
+    DAY_ABBR.forEach(l => {
+      const lbl = document.createElement('div');
+      lbl.className = 'yr-dlbl';
+      lbl.textContent = l;
+      dlbls.appendChild(lbl);
+    });
+    card.appendChild(dlbls);
+
+    // Day grid
+    const grid = document.createElement('div');
+    grid.className = 'yr-grid';
+
+    const firstDay = new Date(year, m, 1).getDay(); // 0=Sun
+    const daysInMonth = new Date(year, m + 1, 0).getDate();
+
+    // Leading empty cells
+    for(let i = 0; i < firstDay; i++) {
+      const empty = document.createElement('div');
+      empty.className = 'yr-day yr-other';
+      // Show prev month day number (faded)
+      const prevDate = new Date(year, m, -firstDay + i + 1);
+      empty.textContent = prevDate.getDate();
+      grid.appendChild(empty);
+    }
+
+    // Actual days
+    for(let d = 1; d <= daysInMonth; d++) {
+      const dt  = new Date(year, m, d);
+      const ds  = dk(dt);
+      const evs = evMap[ds] || [];
+      const hasDeadline = evs.some(e => e.isDeadline || e.deadlineDate === ds);
+      const hasEv       = evs.length > 0;
+      const isToday_    = ds === todayStr;
+
+      const cell = document.createElement('div');
+      let cls = 'yr-day';
+      if(isToday_)    cls += ' yr-today';
+      if(hasDeadline) cls += ' yr-has-deadline';
+      else if(hasEv)  cls += ' yr-has-ev';
+      cell.className = cls;
+      cell.textContent = d;
+
+      if(hasEv) {
+        cell.title = evs.map(e => e.title).slice(0,3).join('\n') + (evs.length > 3 ? `\n+${evs.length-3} más` : '');
+      }
+
+      cell.onclick = () => {
+        S.cur = new Date(year, m, d);
+        setView('day');
+      };
+      grid.appendChild(cell);
+    }
+
+    // Trailing empty cells (to complete last row)
+    const total = firstDay + daysInMonth;
+    const trailing = (7 - total % 7) % 7;
+    for(let i = 1; i <= trailing; i++) {
+      const empty = document.createElement('div');
+      empty.className = 'yr-day yr-other';
+      empty.textContent = i;
+      grid.appendChild(empty);
+    }
+
+    card.appendChild(grid);
+    container.appendChild(card);
+  }
+}
 
 // END MEDIO ESFUERZO JS
 
