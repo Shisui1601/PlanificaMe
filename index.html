@@ -4,6 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PlanificaMe</title>
+
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7c5aff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PlanificaMe">
+<meta name="application-name" content="PlanificaMe">
+<meta name="msapplication-TileColor" content="#7c5aff">
+<meta name="description" content="Tu asistente de productividad y calendario inteligente">
+<!-- Open Graph -->
+<meta property="og:title" content="PlanificaMe">
+<meta property="og:description" content="Organiza tu vida, cumple tus metas.">
+<meta property="og:type" content="website">
+
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
@@ -4710,6 +4726,151 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
 
 /* END EMPTY TRASH CONFIRM MODAL */
 /* END TRASH SYSTEM */
+
+/* ══════════════════════════════════════════════════════════
+   PWA — Install Banner + Notification Permission
+   ══════════════════════════════════════════════════════════ */
+
+/* Install Banner */
+#pwa-install-banner {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 16px; padding: 14px 20px;
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: 0 8px 40px rgba(0,0,0,.4), 0 0 0 1px rgba(124,90,255,.15);
+  z-index: 9999; min-width: 300px; max-width: 420px;
+  animation: pwa-slide-up .35s cubic-bezier(.34,1.56,.64,1);
+  backdrop-filter: blur(12px);
+}
+@keyframes pwa-slide-up {
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0);    }
+}
+.pwa-banner-icon { font-size: 32px; flex-shrink: 0; }
+.pwa-banner-text { flex: 1; }
+.pwa-banner-title { font-weight: 700; font-size: 13px; color: var(--text); }
+.pwa-banner-sub   { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.pwa-banner-btns  { display: flex; gap: 6px; margin-top: 8px; }
+.pwa-btn-install  {
+  background: var(--accent); color: white;
+  border: none; border-radius: 8px; padding: 6px 14px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  transition: filter .15s;
+}
+.pwa-btn-install:hover { filter: brightness(1.1); }
+.pwa-btn-later {
+  background: transparent; color: var(--text3);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 6px 12px; font-size: 12px; cursor: pointer;
+}
+.pwa-btn-later:hover { background: var(--surface2); }
+
+/* Notification Permission Toast */
+#notif-perm-banner {
+  position: fixed; top: 70px; right: 20px;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 14px; padding: 14px 18px;
+  display: flex; align-items: flex-start; gap: 12px;
+  box-shadow: 0 6px 30px rgba(0,0,0,.3);
+  z-index: 9998; max-width: 320px;
+  animation: pwa-slide-right .3s ease;
+}
+@keyframes pwa-slide-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0);    }
+}
+.notif-perm-icon { font-size: 24px; flex-shrink: 0; margin-top: 1px; }
+.notif-perm-text  { flex: 1; }
+.notif-perm-title { font-weight: 600; font-size: 13px; color: var(--text); }
+.notif-perm-sub   { font-size: 11px; color: var(--text3); margin: 3px 0 10px; line-height: 1.4; }
+.notif-perm-btns  { display: flex; gap: 6px; }
+.notif-btn-allow  {
+  background: linear-gradient(135deg,#7c5aff,#5b3acc);
+  color: white; border: none; border-radius: 7px;
+  padding: 5px 14px; font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.notif-btn-deny {
+  background: transparent; color: var(--text3);
+  border: 1px solid var(--border); border-radius: 7px;
+  padding: 5px 12px; font-size: 12px; cursor: pointer;
+}
+.notif-close-x {
+  background: none; border: none; color: var(--text3);
+  cursor: pointer; padding: 0; font-size: 16px; line-height: 1;
+}
+
+/* Online/Offline indicator */
+#pwa-offline-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 10000;
+  background: #f59e0b; color: #000; text-align: center;
+  padding: 6px 12px; font-size: 12px; font-weight: 600;
+  display: none; animation: pwa-slide-down .3s ease;
+}
+@keyframes pwa-slide-down {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(0); }
+}
+
+/* ICS Modal */
+.ics-section { margin-bottom: 20px; }
+.ics-section-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .6px; color: var(--text3); margin-bottom: 10px;
+}
+.ics-action-row {
+  display: flex; gap: 10px; align-items: center;
+}
+.ics-drop-zone {
+  border: 2px dashed var(--border2); border-radius: 12px;
+  padding: 24px; text-align: center; cursor: pointer;
+  transition: all .2s; color: var(--text3);
+  font-size: 13px;
+}
+.ics-drop-zone:hover, .ics-drop-zone.drag-active {
+  border-color: var(--accent); background: rgba(124,90,255,.05);
+  color: var(--accent);
+}
+.ics-drop-icon { font-size: 28px; margin-bottom: 6px; }
+.ics-preview-list {
+  max-height: 240px; overflow-y: auto;
+  border: 1px solid var(--border); border-radius: 10px;
+  margin-top: 12px;
+}
+.ics-preview-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 14px; border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+.ics-preview-item:last-child { border-bottom: none; }
+.ics-preview-item input[type=checkbox] { accent-color: var(--accent); }
+.ics-ev-title { font-weight: 600; color: var(--text); flex: 1; }
+.ics-ev-date  { color: var(--text3); font-size: 11px; white-space: nowrap; }
+
+/* Digest Modal */
+.digest-stat-row {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  margin-bottom: 18px;
+}
+.digest-stat {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px; text-align: center;
+}
+.digest-stat-num  { font-size: 28px; font-weight: 700; color: var(--accent); }
+.digest-stat-lbl  { font-size: 10px; color: var(--text3); margin-top: 2px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+.digest-upcoming-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: 8px;
+  transition: background .12s;
+}
+.digest-upcoming-item:hover { background: var(--surface2); }
+.digest-upcoming-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.digest-email-preview {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px; margin-top: 12px;
+  font-size: 12px; color: var(--text2); line-height: 1.6;
+}
+
+/* END PWA CSS */
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -5164,6 +5325,31 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
         <div class="umenu-item-text">
           <div class="umenu-item-label" id="umenuThemeLabel">Cambiar Tema</div>
           <div class="umenu-item-sub" id="umenuThemeSub">Modo oscuro activo</div>
+        </div>
+      </button>
+      <div class="umenu-divider"></div>
+      <div class="umenu-section">Herramientas</div>
+      <button class="umenu-item" onclick="closeModal('userMenuModal');openModal('icsModal');ics_init()">
+        <div class="umenu-item-icon" style="background:rgba(16,185,129,.12);color:#10b981"><i data-lucide="calendar-arrow-up" class="icon"></i></div>
+        <div class="umenu-item-text">
+          <div class="umenu-item-label">Importar / Exportar</div>
+          <div class="umenu-item-sub">Archivos .ics — Google Cal, Outlook</div>
+        </div>
+        <i data-lucide="chevron-right" class="icon icon-sm icon-muted"></i>
+      </button>
+      <button class="umenu-item" onclick="closeModal('userMenuModal');openDigestModal()">
+        <div class="umenu-item-icon" style="background:rgba(245,158,11,.12);color:var(--accent2)"><i data-lucide="bar-chart-2" class="icon"></i></div>
+        <div class="umenu-item-text">
+          <div class="umenu-item-label">Digest Semanal</div>
+          <div class="umenu-item-sub">Resumen de productividad por email</div>
+        </div>
+        <i data-lucide="chevron-right" class="icon icon-sm icon-muted"></i>
+      </button>
+      <button class="umenu-item" id="umenu-notif-btn" onclick="closeModal('userMenuModal');pwa_showNotifBanner()" style="display:none">
+        <div class="umenu-item-icon" style="background:rgba(124,90,255,.12);color:var(--accent)"><i data-lucide="bell" class="icon"></i></div>
+        <div class="umenu-item-text">
+          <div class="umenu-item-label" id="umenu-notif-label">Activar notificaciones</div>
+          <div class="umenu-item-sub" id="umenu-notif-sub">Recordatorios push del navegador</div>
         </div>
       </button>
       <div class="umenu-divider"></div>
@@ -8559,6 +8745,8 @@ async function onAuthSuccess(userData, token){
   const onboardKey = `planificame_onboarded_${ME.id}`;
   const isNew = !localStorage.getItem(onboardKey) && S.calendars.length === 0;
   if(isNew) setTimeout(showOnboarding, 800);
+  // PWA: inicializar notificaciones y suscripción
+  if(typeof pwa_onLogin === 'function') pwa_onLogin();
 }
 
 // Realizar login
@@ -13206,6 +13394,562 @@ async function etm_execute(){
 }
 
 // END TRASH SYSTEM
+
+// ══════════════════════════════════════════════════════════════
+// PWA — Service Worker + Install Prompt + Push Notifications
+// ══════════════════════════════════════════════════════════════
+
+let _pwaInstallPrompt = null;
+
+// ── Registro del Service Worker ──────────────────────────────
+(function pwa_register() {
+  if (!('serviceWorker' in navigator)) return;
+  window.addEventListener('load', async () => {
+    try {
+      const reg = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+      console.log('✅ SW registrado:', reg.scope);
+
+      // Detectar actualización disponible
+      reg.addEventListener('updatefound', () => {
+        const newSW = reg.installing;
+        newSW.addEventListener('statechange', () => {
+          if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+            toast('🔄 Nueva versión disponible — recarga para actualizar');
+          }
+        });
+      });
+    } catch (e) {
+      console.warn('SW registro fallido:', e);
+    }
+  });
+})();
+
+// ── Mensaje del SW (click en notificación) ───────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('message', e => {
+    if (e.data?.type === 'NOTIFICATION_CLICK') {
+      const url = e.data.url || '/';
+      if (url.includes('?action=new')) openTaskModal();
+    }
+  });
+}
+
+// ── Online / Offline ─────────────────────────────────────────
+window.addEventListener('offline', () => {
+  document.getElementById('pwa-offline-bar').style.display = 'block';
+});
+window.addEventListener('online', () => {
+  document.getElementById('pwa-offline-bar').style.display = 'none';
+  toast('🌐 Conexión restaurada');
+});
+
+// ── Install Prompt (beforeinstallprompt) ─────────────────────
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _pwaInstallPrompt = e;
+  // Mostrar banner solo si no fue descartado antes
+  if (!localStorage.getItem('pwa_install_dismissed')) {
+    setTimeout(() => pwa_showInstallBanner(), 3000);
+  }
+});
+
+window.addEventListener('appinstalled', () => {
+  pwa_dismissBanner();
+  toast('🎉 PlanificaMe instalada correctamente');
+  _pwaInstallPrompt = null;
+});
+
+function pwa_showInstallBanner() {
+  const banner = document.getElementById('pwa-install-banner');
+  if (banner) banner.style.display = 'flex';
+}
+
+function pwa_dismissBanner() {
+  const banner = document.getElementById('pwa-install-banner');
+  if (banner) banner.style.display = 'none';
+  localStorage.setItem('pwa_install_dismissed', '1');
+}
+
+async function pwa_install() {
+  if (!_pwaInstallPrompt) { toast('Para instalar: menú del navegador → "Instalar app"'); return; }
+  const { outcome } = await _pwaInstallPrompt.prompt();
+  if (outcome === 'accepted') { pwa_dismissBanner(); }
+}
+
+// ── Notificaciones Push ───────────────────────────────────────
+function pwa_initNotifications() {
+  if (!('Notification' in window)) return;
+  const perm = Notification.permission;
+  const btn  = document.getElementById('umenu-notif-btn');
+  const lbl  = document.getElementById('umenu-notif-label');
+  const sub  = document.getElementById('umenu-notif-sub');
+  if (!btn) return;
+  if (perm === 'default') {
+    btn.style.display = 'flex';
+    lbl.textContent = 'Activar notificaciones';
+    sub.textContent = 'Recordatorios push del navegador';
+    // Mostrar banner automático 10s después de carga (solo 1 vez)
+    if (!localStorage.getItem('notif_perm_asked')) {
+      setTimeout(() => pwa_showNotifBanner(), 10000);
+    }
+  } else if (perm === 'granted') {
+    btn.style.display = 'flex';
+    lbl.textContent = 'Notificaciones activas ✓';
+    sub.textContent = 'Click para enviar notificación de prueba';
+    btn.onclick = () => { closeModal('userMenuModal'); pwa_testNotification(); };
+  }
+}
+
+function pwa_showNotifBanner() {
+  if (Notification.permission !== 'default') return;
+  const banner = document.getElementById('notif-perm-banner');
+  if (banner) banner.style.display = 'flex';
+  localStorage.setItem('notif_perm_asked', '1');
+}
+
+function pwa_dismissNotifBanner() {
+  const banner = document.getElementById('notif-perm-banner');
+  if (banner) banner.style.display = 'none';
+}
+
+async function pwa_requestNotifPermission() {
+  pwa_dismissNotifBanner();
+  try {
+    const perm = await Notification.requestPermission();
+    if (perm === 'granted') {
+      toast('🔔 Notificaciones activadas — recibirás recordatorios de tus actividades');
+      pwa_initNotifications();
+      pwa_subscribeToServer();
+    } else {
+      toast('Notificaciones bloqueadas en el navegador');
+    }
+  } catch (e) {
+    console.warn('Notif permission error:', e);
+  }
+}
+
+function pwa_testNotification() {
+  if (Notification.permission !== 'granted') { pwa_showNotifBanner(); return; }
+  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.ready.then(reg => {
+      reg.showNotification('📅 PlanificaMe', {
+        body: '¡Las notificaciones funcionan correctamente!',
+        tag: 'test',
+        vibrate: [100, 50, 100],
+        actions: [{ action: 'open', title: '📅 Abrir' }]
+      });
+    });
+  } else {
+    new Notification('📅 PlanificaMe', {
+      body: '¡Las notificaciones funcionan correctamente!',
+    });
+  }
+}
+
+// Enviar subscription al servidor (para push cuando app está cerrada)
+async function pwa_subscribeToServer() {
+  try {
+    const reg    = await navigator.serviceWorker.ready;
+    const pubKey = await fetch(`${API_URL}/push/vapid-key`).then(r => r.json()).catch(() => null);
+    if (!pubKey?.public_key) return; // Sin VAPID configurado, sin push server-side
+
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly:      true,
+      applicationServerKey: urlBase64ToUint8Array(pubKey.public_key)
+    });
+    await fetch(`${API_URL}/push/subscribe`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: ME?.id, subscription: sub.toJSON() })
+    });
+    console.log('✅ Push subscription enviada al servidor');
+  } catch (e) {
+    console.warn('Push subscribe error (no crítico):', e);
+  }
+}
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64  = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const raw     = atob(base64);
+  return new Uint8Array([...raw].map(c => c.charCodeAt(0)));
+}
+
+// Llamar después del login
+function pwa_onLogin() {
+  setTimeout(pwa_initNotifications, 1000);
+}
+
+// ══════════════════════════════════════════════════════════════
+// ICS — Import / Export
+// ══════════════════════════════════════════════════════════════
+
+let _icsEvents = []; // eventos parseados del archivo .ics
+
+function ics_init() {
+  // Rellenar selector de calendarios
+  const sel = document.getElementById('ics-cal-select');
+  if (sel) {
+    sel.innerHTML = (S.calendars||[]).map(c =>
+      `<option value="${c.id}">${c.name}</option>`
+    ).join('');
+  }
+  document.getElementById('ics-preview').style.display = 'none';
+  document.getElementById('ics-import-btn').style.display = 'none';
+  document.getElementById('ics-import-status').textContent = '';
+  document.getElementById('ics-preview-list').innerHTML = '';
+  _icsEvents = [];
+}
+
+// ── Drag & Drop ───────────────────────────────────────────────
+function ics_onDragOver(e) {
+  e.preventDefault();
+  document.getElementById('ics-drop-zone').classList.add('drag-active');
+}
+function ics_onDragLeave(e) {
+  document.getElementById('ics-drop-zone').classList.remove('drag-active');
+}
+function ics_onDrop(e) {
+  e.preventDefault();
+  ics_onDragLeave(e);
+  const file = e.dataTransfer.files[0];
+  if (file) ics_parseFile(file);
+}
+function ics_onFileSelect(e) {
+  const file = e.target.files[0];
+  if (file) ics_parseFile(file);
+}
+
+// ── Parser .ics ───────────────────────────────────────────────
+function ics_parseFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const events = ics_parse(e.target.result);
+      _icsEvents = events;
+      ics_renderPreview(events);
+    } catch (err) {
+      toast('❌ Error al leer el archivo .ics');
+    }
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function ics_parse(text) {
+  // Unfold multi-line values (RFC 5545)
+  text = text.replace(/\r?\n[ \t]/g, '');
+  const events = [];
+  const blocks = text.split('BEGIN:VEVENT');
+  blocks.shift(); // quitar cabecera VCALENDAR
+
+  for (const block of blocks) {
+    const get = key => {
+      // Captura: KEY;params:value o KEY:value
+      const m = block.match(new RegExp(`^${key}(?:;[^:]+)?:(.+)$`, 'm'));
+      return m ? m[1].trim() : '';
+    };
+    const parseDate = raw => {
+      if (!raw) return '';
+      // YYYYMMDDTHHMMSS o YYYYMMDDTHHMMSSZ o YYYYMMDD
+      const d = raw.replace(/[TZ]/g, '').replace(/(\d{4})(\d{2})(\d{2}).*/, '$1-$2-$3');
+      return d;
+    };
+    const parseTime = raw => {
+      if (!raw || raw.length < 13) return '';
+      // YYYYMMDDTHHMMSS → HH:MM
+      const t = raw.replace(/.*T(\d{2})(\d{2}).*/, '$1:$2');
+      return t.includes(':') ? t : '';
+    };
+
+    const dtstart  = get('DTSTART');
+    const dtend    = get('DTEND');
+    const summary  = get('SUMMARY').replace(/\\,/g,',').replace(/\\n/g,'\n').replace(/\\;/g,';').replace(/\\\\/g,'\\');
+    const desc     = get('DESCRIPTION').replace(/\\n/g,'\n').replace(/\\,/g,',');
+    const uid      = get('UID');
+    const location = get('LOCATION');
+
+    if (!summary || !dtstart) continue;
+
+    const startDate = parseDate(dtstart);
+    const startTime = parseTime(dtstart);
+    const endDate   = parseDate(dtend);
+    const endTime   = parseTime(dtend);
+
+    // Calcular duración en minutos
+    let dur = 60;
+    if (startTime && endTime) {
+      const [sh,sm] = startTime.split(':').map(Number);
+      const [eh,em] = endTime.split(':').map(Number);
+      dur = Math.max(15, (eh*60+em) - (sh*60+sm));
+    }
+
+    events.push({ uid, title: summary, date: startDate, time: startTime||'09:00', dur, desc, location, endDate });
+  }
+  return events;
+}
+
+function ics_renderPreview(events) {
+  const list  = document.getElementById('ics-preview-list');
+  const count = document.getElementById('ics-preview-count');
+  const preview = document.getElementById('ics-preview');
+  const btn   = document.getElementById('ics-import-btn');
+
+  count.textContent = `${events.length} evento${events.length!==1?'s':''} encontrado${events.length!==1?'s':''}`;
+  list.innerHTML = events.map((ev, i) => `
+    <div class="ics-preview-item">
+      <input type="checkbox" id="ics-ev-${i}" checked>
+      <div class="ics-ev-title">${ev.title}</div>
+      <div class="ics-ev-date">${ev.date}${ev.time?' · '+ev.time:''}</div>
+    </div>
+  `).join('');
+
+  preview.style.display = events.length ? 'block' : 'none';
+  btn.style.display = events.length ? 'inline-flex' : 'none';
+  document.getElementById('ics-import-status').textContent = '';
+}
+
+function ics_selectAll(checked) {
+  _icsEvents.forEach((_, i) => {
+    const cb = document.getElementById(`ics-ev-${i}`);
+    if (cb) cb.checked = checked;
+  });
+}
+
+async function ics_importSelected() {
+  const calId = document.getElementById('ics-cal-select')?.value;
+  const statusEl = document.getElementById('ics-import-status');
+  const btn = document.getElementById('ics-import-btn');
+
+  const selected = _icsEvents.filter((_, i) => {
+    const cb = document.getElementById(`ics-ev-${i}`);
+    return cb?.checked;
+  });
+
+  if (!selected.length) { toast('Selecciona al menos un evento'); return; }
+  if (!calId) { toast('Selecciona un calendario destino'); return; }
+
+  btn.disabled = true;
+  statusEl.textContent = `Importando ${selected.length} eventos…`;
+
+  let ok = 0, fail = 0;
+  const cal = S.calendars?.find(c=>c.id===calId)||S.calendars?.[0];
+
+  for (const ev of selected) {
+    try {
+      const body = {
+        title:       ev.title,
+        type:        'personal',
+        date:        ev.date,
+        time:        ev.time || '09:00',
+        duration:    ev.dur || 60,
+        description: [ev.desc, ev.location].filter(Boolean).join('\n'),
+        calendar_id: calId,
+        creator_id:  ME.id,
+        remind:      30,
+      };
+      const res = await fetch(`${API_URL}/events`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(body)
+      });
+      if (res.ok) {
+        const saved = await res.json();
+        S.events.push({ ...body, id: saved.id||uid(),
+          calendarName: cal?.name||null, calendarColor: cal?.color||null,
+          creatorId: ME.id });
+        ok++;
+      } else { fail++; }
+    } catch { fail++; }
+  }
+
+  render();
+  btn.disabled = false;
+  statusEl.textContent = `✅ ${ok} importado${ok!==1?'s':''} ${fail?'· ❌ '+fail+' error'+( fail!==1?'s':''):''}`;
+  if (ok) toast(`✅ ${ok} actividad${ok!==1?'es':''} importada${ok!==1?'s':''} correctamente`);
+}
+
+// ── Exportar .ics ─────────────────────────────────────────────
+function ics_buildVCalendar(events) {
+  const fmt = dt => dt.replace(/-/g,'').replace(':','') + '00';
+  const esc = s => (s||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
+
+  const vevents = events.map(ev => {
+    const dtstart = ev.date.replace(/-/g,'') + (ev.time ? 'T' + ev.time.replace(':','') + '00' : '');
+    const dur     = parseInt(ev.dur)||60;
+    const end     = new Date(new Date(`${ev.date}T${ev.time||'00:00'}:00`).getTime() + dur*60000);
+    const dtend   = end.toISOString().slice(0,16).replace(/[-:T]/g,(m,i)=>i<10?'':i===13?'T':'').replace('T','T');
+    // Formato limpio
+    const ds = dtstart.includes('T') ? dtstart : dtstart + 'T000000';
+    const de = isNaN(end) ? ds : (end.getFullYear()+''+String(end.getMonth()+1).padStart(2,'0')+String(end.getDate()).padStart(2,'0')+'T'+String(end.getHours()).padStart(2,'0')+String(end.getMinutes()).padStart(2,'0')+'00');
+    return [
+      'BEGIN:VEVENT',
+      `UID:${ev.id||uid()}@planificame`,
+      `DTSTART:${ds}`,
+      `DTEND:${de}`,
+      `SUMMARY:${esc(ev.title)}`,
+      ev.desc ? `DESCRIPTION:${esc(ev.desc)}` : '',
+      `STATUS:${ev.status === 'completed' ? 'COMPLETED' : 'CONFIRMED'}`,
+      `CREATED:${new Date().toISOString().replace(/[-:.]/g,'').slice(0,15)}Z`,
+      'END:VEVENT'
+    ].filter(Boolean).join('\r\n');
+  }).join('\r\n');
+
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//PlanificaMe//ES',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    `X-WR-CALNAME:PlanificaMe — ${ME?.name||'Mi Calendario'}`,
+    'X-WR-TIMEZONE:America/Santo_Domingo',
+    vevents,
+    'END:VCALENDAR'
+  ].join('\r\n');
+}
+
+function ics_download(content, filename) {
+  const blob = new Blob([content], { type: 'text/calendar;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function ics_exportAll() {
+  const evs = (S.events||[]).filter(e=>!e.isDeadline);
+  if (!evs.length) { toast('No hay actividades para exportar'); return; }
+  ics_download(ics_buildVCalendar(evs), 'planificame-completo.ics');
+  toast(`📅 Exportadas ${evs.length} actividades`);
+}
+
+function ics_exportMonth() {
+  const d    = S.date||new Date();
+  const y    = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0');
+  const pfx  = `${y}-${m}`;
+  const evs  = (S.events||[]).filter(e=>!e.isDeadline && e.date?.startsWith(pfx));
+  if (!evs.length) { toast('No hay actividades este mes'); return; }
+  ics_download(ics_buildVCalendar(evs), `planificame-${y}-${m}.ics`);
+  toast(`📆 Exportadas ${evs.length} actividades de ${y}-${m}`);
+}
+
+function ics_exportSelected() {
+  const evs = (S.events||[]).filter(e=>!e.isDeadline && !['completed','early-voluntary','early-forced','abandoned'].includes(e.status));
+  if (!evs.length) { toast('No hay actividades activas para exportar'); return; }
+  ics_download(ics_buildVCalendar(evs), 'planificame-activas.ics');
+  toast(`📋 Exportadas ${evs.length} actividades activas`);
+}
+
+// ══════════════════════════════════════════════════════════════
+// WEEKLY DIGEST
+// ══════════════════════════════════════════════════════════════
+
+function openDigestModal() {
+  openModal('digestModal');
+  digest_loadData();
+}
+
+function digest_loadData() {
+  const today   = new Date();
+  const todayStr = today.toISOString().slice(0,10);
+  const in7str   = new Date(today.getTime() + 7*864e5).toISOString().slice(0,10);
+  const ago7str  = new Date(today.getTime() - 7*864e5).toISOString().slice(0,10);
+
+  const evs = S.events || [];
+
+  // Completadas esta semana (últimos 7 días)
+  const completed = evs.filter(e =>
+    ['completed','early-voluntary','early-forced'].includes(e.status) &&
+    e.date >= ago7str && e.date <= todayStr
+  ).length;
+
+  // Próximas 7 días (no completadas, no isDeadline)
+  const upcoming = evs.filter(e =>
+    !e.isDeadline &&
+    !['completed','early-voluntary','early-forced','abandoned'].includes(e.status) &&
+    e.date >= todayStr && e.date <= in7str
+  ).sort((a,b) => (a.date+a.time) > (b.date+b.time) ? 1 : -1);
+
+  // Vencidas
+  const overdue = evs.filter(e =>
+    e.deadlineDate && e.deadlineDate < todayStr &&
+    !['completed','early-voluntary','early-forced','abandoned'].includes(e.status)
+  ).length;
+
+  // Stats
+  document.getElementById('dg-completed').textContent = completed;
+  document.getElementById('dg-upcoming').textContent  = upcoming.length;
+  document.getElementById('dg-overdue').textContent   = overdue;
+
+  // Lista próximas
+  const listEl = document.getElementById('digest-upcoming-list');
+  if (upcoming.length === 0) {
+    listEl.innerHTML = `<div style="color:var(--text3);font-size:13px;padding:8px 0">🎉 Sin actividades pendientes esta semana</div>`;
+  } else {
+    const typeColor = { personal:'var(--accent)', team:'var(--accent3)', project:'var(--accent2)' };
+    listEl.innerHTML = upcoming.slice(0,8).map(ev => `
+      <div class="digest-upcoming-item">
+        <div class="digest-upcoming-dot" style="background:${ev.color||typeColor[ev.type]||'var(--accent)'}"></div>
+        <div style="flex:1;font-size:12px">
+          <span style="font-weight:600;color:var(--text)">${ev.title}</span>
+          <span style="color:var(--text3);font-size:11px;margin-left:6px">${fmtDate(ev.date)}${ev.time?' · '+fmt12(ev.time):''}</span>
+        </div>
+      </div>
+    `).join('') + (upcoming.length > 8 ? `<div style="padding:8px 12px;font-size:11px;color:var(--text3)">+${upcoming.length-8} más…</div>` : '');
+  }
+
+  // Preview del email
+  const emailEl = document.getElementById('digest-email-preview');
+  const userEmail = ME?.email || '';
+  const streak = completed >= 5 ? '🔥' : completed >= 3 ? '⭐' : '📌';
+  emailEl.innerHTML = `
+    <div style="margin-bottom:8px">
+      <strong>Para:</strong> ${userEmail || '<em>Configura tu email en Editar Perfil</em>'}<br>
+      <strong>Asunto:</strong> 📊 Tu resumen semanal de PlanificaMe
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px">
+      Hola <strong>${ME?.name||'Usuario'}</strong> ${streak}<br><br>
+      Esta semana completaste <strong>${completed} actividade${completed!==1?'s':''}</strong>.
+      Tienes <strong>${upcoming.length} pendiente${upcoming.length!==1?'s':''}</strong> para los próximos 7 días
+      ${overdue > 0 ? ` y <strong style="color:var(--danger)">${overdue} vencida${overdue!==1?'s':''}</strong>` : ''}.
+    </div>
+  `;
+
+  document.getElementById('digest-send-status').textContent = userEmail
+    ? `Se enviará a ${userEmail}`
+    : 'Sin email configurado';
+}
+
+async function digest_sendNow() {
+  const btn = document.getElementById('digest-send-btn');
+  const statusEl = document.getElementById('digest-send-status');
+
+  if (!ME?.email) {
+    toast('⚠️ Configura tu email en Editar Perfil para recibir el digest');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Enviando…';
+  statusEl.textContent = 'Preparando resumen…';
+
+  try {
+    const res = await fetch(`${API_URL}/digest/send/${ME.id}`, { method: 'POST' });
+    if (res.ok) {
+      const data = await res.json();
+      statusEl.textContent = `✅ Enviado a ${ME.email}`;
+      toast(`📨 Digest enviado a ${ME.email}`);
+    } else {
+      throw new Error('API error');
+    }
+  } catch {
+    statusEl.textContent = '❌ Error al enviar — revisa tu conexión';
+    toast('❌ Error al enviar el digest');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '📨 Enviar ahora';
+  }
+}
+
+// END PWA + ICS + DIGEST JS
 </script>
 
 <!-- ══════════════════════════════════════════════════════
@@ -13711,6 +14455,178 @@ async function etm_execute(){
       <button class="btn btn-s" style="font-size:11px;padding:5px 12px" onclick="closeModal('trashModal')">Cerrar</button>
     </div>
 
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PWA: Offline Bar
+     ═══════════════════════════════════════════════════════════ -->
+<div id="pwa-offline-bar">
+  📡 Sin conexión — mostrando datos en caché
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PWA: Install Banner (se muestra dinámicamente con JS)
+     ═══════════════════════════════════════════════════════════ -->
+<div id="pwa-install-banner" style="display:none">
+  <div class="pwa-banner-icon">📅</div>
+  <div class="pwa-banner-text">
+    <div class="pwa-banner-title">Instalar PlanificaMe</div>
+    <div class="pwa-banner-sub">Acceso rápido desde tu pantalla de inicio, sin navegador</div>
+    <div class="pwa-banner-btns">
+      <button class="pwa-btn-install" onclick="pwa_install()">Instalar app</button>
+      <button class="pwa-btn-later"   onclick="pwa_dismissBanner()">Ahora no</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PWA: Notification Permission Banner
+     ═══════════════════════════════════════════════════════════ -->
+<div id="notif-perm-banner" style="display:none">
+  <div class="notif-perm-icon">🔔</div>
+  <div class="notif-perm-text">
+    <div class="notif-perm-title">Activar notificaciones</div>
+    <div class="notif-perm-sub">Recibe recordatorios de tus actividades aunque tengas otra pestaña abierta.</div>
+    <div class="notif-perm-btns">
+      <button class="notif-btn-allow" onclick="pwa_requestNotifPermission()">Activar</button>
+      <button class="notif-btn-deny"  onclick="pwa_dismissNotifBanner()">No, gracias</button>
+    </div>
+  </div>
+  <button class="notif-close-x" onclick="pwa_dismissNotifBanner()">×</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ICS Import / Export Modal
+     ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="icsModal">
+  <div class="modal" style="width:520px;max-height:88vh">
+    <div class="mtop">
+      <div class="mtitle">📂 Importar / Exportar Calendario</div>
+      <button class="mclose" onclick="closeModal('icsModal')">×</button>
+    </div>
+    <div class="mb" style="overflow-y:auto;max-height:calc(88vh - 120px)">
+
+      <!-- EXPORT -->
+      <div class="ics-section">
+        <div class="ics-section-title">⬇️ Exportar</div>
+        <p style="font-size:12px;color:var(--text3);margin:0 0 12px">
+          Descarga tus actividades como archivo .ics compatible con Google Calendar, Outlook y Apple Calendar.
+        </p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-s btn-sm" onclick="ics_exportAll()">
+            📅 Exportar todo
+          </button>
+          <button class="btn btn-s btn-sm" onclick="ics_exportMonth()">
+            📆 Solo este mes
+          </button>
+          <button class="btn btn-s btn-sm" onclick="ics_exportSelected()">
+            📋 Solo activas
+          </button>
+        </div>
+      </div>
+
+      <div style="height:1px;background:var(--border);margin:18px 0"></div>
+
+      <!-- IMPORT -->
+      <div class="ics-section">
+        <div class="ics-section-title">⬆️ Importar</div>
+        <div id="ics-drop-zone" class="ics-drop-zone"
+             onclick="document.getElementById('ics-file-input').click()"
+             ondragover="ics_onDragOver(event)"
+             ondragleave="ics_onDragLeave(event)"
+             ondrop="ics_onDrop(event)">
+          <div class="ics-drop-icon">📁</div>
+          <div style="font-weight:600;margin-bottom:2px">Arrastra un archivo .ics aquí</div>
+          <div style="font-size:11px">o haz clic para seleccionar</div>
+        </div>
+        <input type="file" id="ics-file-input" accept=".ics,.ical" style="display:none" onchange="ics_onFileSelect(event)">
+
+        <!-- Preview de eventos encontrados -->
+        <div id="ics-preview" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;margin-bottom:6px">
+            <span style="font-size:12px;font-weight:600;color:var(--text)" id="ics-preview-count">0 eventos encontrados</span>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-s btn-xs" onclick="ics_selectAll(true)">Todos</button>
+              <button class="btn btn-s btn-xs" onclick="ics_selectAll(false)">Ninguno</button>
+            </div>
+          </div>
+          <div class="ics-preview-list" id="ics-preview-list"></div>
+          <div style="margin-top:14px;display:flex;gap:8px;align-items:center">
+            <div style="font-size:11px;color:var(--text3)">Calendario destino:</div>
+            <select class="fsel" style="flex:1;font-size:12px;padding:6px 10px" id="ics-cal-select"></select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mf" id="ics-foot" style="justify-content:space-between">
+      <div id="ics-import-status" style="font-size:12px;color:var(--text3)"></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-p btn-sm" id="ics-import-btn" style="display:none" onclick="ics_importSelected()">
+          ⬆️ Importar seleccionados
+        </button>
+        <button class="btn btn-s btn-sm" onclick="closeModal('icsModal')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     Weekly Digest Modal
+     ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="digestModal">
+  <div class="modal" style="width:500px;max-height:88vh">
+    <div class="mtop">
+      <div class="mtitle">📊 Digest Semanal</div>
+      <button class="mclose" onclick="closeModal('digestModal')">×</button>
+    </div>
+    <div class="mb" style="overflow-y:auto;max-height:calc(88vh - 120px)">
+
+      <!-- Stats rápidas -->
+      <div class="digest-stat-row" id="digest-stats">
+        <div class="digest-stat">
+          <div class="digest-stat-num" id="dg-completed">–</div>
+          <div class="digest-stat-lbl">Completadas</div>
+        </div>
+        <div class="digest-stat">
+          <div class="digest-stat-num" id="dg-upcoming">–</div>
+          <div class="digest-stat-lbl">Esta semana</div>
+        </div>
+        <div class="digest-stat">
+          <div class="digest-stat-num" id="dg-overdue">–</div>
+          <div class="digest-stat-lbl">Vencidas</div>
+        </div>
+      </div>
+
+      <!-- Próximas actividades -->
+      <div style="margin-bottom:16px">
+        <div class="ics-section-title">📅 Próximas actividades (7 días)</div>
+        <div id="digest-upcoming-list" style="font-size:13px"></div>
+      </div>
+
+      <!-- Preview del email -->
+      <div>
+        <div class="ics-section-title">✉️ Tu digest por email</div>
+        <div class="digest-email-preview" id="digest-email-preview">
+          Configura tu email en el perfil para recibir el digest automáticamente cada lunes a las 8 AM.
+        </div>
+      </div>
+
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-top:16px;font-size:11px;color:var(--text3);line-height:1.6">
+        🗓 El digest automático se envía cada <strong>lunes a las 8:00 AM</strong> (hora local).<br>
+        También puedes enviarlo manualmente con el botón de abajo.
+      </div>
+
+    </div>
+    <div class="mf" style="justify-content:space-between;align-items:center">
+      <div id="digest-send-status" style="font-size:12px;color:var(--text3)"></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-s btn-sm" onclick="digest_sendNow()" id="digest-send-btn">
+          📨 Enviar ahora
+        </button>
+        <button class="btn btn-p btn-sm" onclick="closeModal('digestModal')">Cerrar</button>
+      </div>
+    </div>
   </div>
 </div>
 

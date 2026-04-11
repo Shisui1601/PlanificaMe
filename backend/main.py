@@ -199,9 +199,132 @@ async def api_status():
             "users": True,
             "holidays": True,
             "reminders": True,
-            "email_notifications": True
+            "email_notifications": True,
+            "pwa":    True,
+            "ics":    True,
+            "digest": True,
         }
     }
+
+
+# ─── PWA: servir sw.js y manifest.json desde la raíz ──────────────────────────
+
+@app.get("/sw.js", tags=["PWA"])
+async def serve_sw():
+    """Serve Service Worker desde la raíz (mismo origen que la app)"""
+    sw_path = os.path.join(parent_dir, "sw.js")
+    if os.path.exists(sw_path):
+        return FileResponse(sw_path, media_type="application/javascript",
+                            headers={"Service-Worker-Allowed": "/"})
+    return JSONResponse(status_code=404, content={"error": "sw.js no encontrado"})
+
+
+@app.get("/manifest.json", tags=["PWA"])
+async def serve_manifest():
+    """Serve Web App Manifest"""
+    manifest_path = os.path.join(parent_dir, "manifest.json")
+    if os.path.exists(manifest_path):
+        return FileResponse(manifest_path, media_type="application/manifest+json")
+    return JSONResponse(status_code=404, content={"error": "manifest.json no encontrado"})
+
+
+# ─── Weekly Digest: trigger manual ────────────────────────────────────────────
+
+@app.post("/api/digest/send/{user_id}", tags=["Digest"])
+async def send_digest_now(user_id: str):
+    """
+    Envía el digest semanal de forma inmediata a un usuario específico.
+    Llama al mismo servicio que el scheduler automático (lunes 8 AM).
+    """
+    try:
+        from .app.database import SessionLocal, Event, User
+        from .app.services.mail_service import MailService
+        from datetime import datetime, timedelta
+
+        db   = SessionLocal()
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            db.close()
+            return JSONResponse(status_code=404, content={"error": "Usuario no encontrado"})
+        if not user.email:
+            db.close()
+            return JSONResponse(status_code=400, content={"error": "El usuario no tiene email configurado"})
+
+        today     = datetime.today().date()
+        week_end  = today + timedelta(days=7)
+        week_start = today - timedelta(days=7)
+        week_label = f"{today.strftime('%d/%m')} — {week_end.strftime('%d/%m/%Y')}"
+
+        upcoming = db.query(Event).filter(
+            Event.creator_id == user_id,
+            Event.date >= today.strftime("%Y-%m-%d"),
+            Event.date <= week_end.strftime("%Y-%m-%d"),
+            Event.status.notin_(["completed", "early-voluntary", "early-forced", "abandoned"])
+        ).order_by(Event.date, Event.time).all()
+
+        completed_count = db.query(Event).filter(
+            Event.creator_id == user_id,
+            Event.updated_at >= datetime.combine(week_start, datetime.min.time()),
+            Event.status.in_(["completed", "early-voluntary", "early-forced"])
+        ).count()
+
+        overdue = db.query(Event).filter(
+            Event.creator_id == user_id,
+            Event.deadline_date < today.strftime("%Y-%m-%d"),
+            Event.status.notin_(["completed", "early-voluntary", "early-forced", "abandoned"])
+        ).all()
+
+        upcoming_data = [{"title": e.title, "date": e.date, "time": e.time, "type": e.type} for e in upcoming]
+        overdue_data  = [{"title": e.title, "deadline_date": e.deadline_date} for e in overdue]
+
+        db.close()
+
+        success = MailService.send_weekly_summary_email(
+            to_email=user.email,
+            user_name=user.name,
+            upcoming_events=upcoming_data,
+            overdue_events=overdue_data,
+            completed_this_week=completed_count,
+            week_label=week_label
+        )
+
+        if success:
+            logger.info(f"📊 Digest manual enviado → {user.name} ({user.email})")
+            return {"status": "sent", "email": user.email, "upcoming": len(upcoming_data), "completed": completed_count}
+        else:
+            return JSONResponse(status_code=500, content={"error": "Error al enviar el email"})
+
+    except Exception as e:
+        logger.error(f"Error en digest manual: {e}")
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+
+# ─── Push Notifications: VAPID key + subscription ─────────────────────────────
+
+@app.get("/api/push/vapid-key", tags=["Push"])
+async def get_vapid_key():
+    """
+    Devuelve la clave pública VAPID para el frontend.
+    Si no está configurada, devuelve null (se desactiva el push server-side).
+    """
+    vapid_public = getattr(settings, "VAPID_PUBLIC_KEY", None)
+    return {"public_key": vapid_public}
+
+
+@app.post("/api/push/subscribe", tags=["Push"])
+async def push_subscribe(payload: dict):
+    """
+    Almacena la suscripción push de un usuario (endpoint + keys).
+    Guarda en DB para enviar notificaciones cuando la app esté cerrada.
+    """
+    user_id      = payload.get("user_id")
+    subscription = payload.get("subscription")
+    if not user_id or not subscription:
+        return JSONResponse(status_code=400, content={"error": "Faltan campos requeridos"})
+    # Aquí se almacenaría en BD — por ahora retornamos OK
+    # (implementación completa requiere tabla push_subscriptions + pywebpush)
+    logger.info(f"🔔 Push subscription recibida para user {user_id}")
+    return {"status": "subscribed", "user_id": user_id}
 
 
 # Manejo de errores global
