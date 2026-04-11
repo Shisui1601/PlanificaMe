@@ -2598,6 +2598,1016 @@ html.light-mode .agenda-item:hover{
   .ws-diff-tabs{display:none;}
   .ws-score-area{max-width:100%;}
 }
+
+/* ╔══════════════════════════════════════════════════════════╗
+   ║  PREMIUM SAAS LAYER  ·  Linear / Stripe aesthetic       ║
+   ╚══════════════════════════════════════════════════════════╝ */
+
+/* ── 1. REFINED COLOR PALETTE ─────────────────────────────── */
+:root {
+  --bg:            #07070e;
+  --surface:       #0b0b17;
+  --surface-solid: #0f0f1e;
+  --surface2:      #0f0f1c;
+  --surface3:      #141428;
+  --surface3-solid:#17172d;
+  --surface4:      #1a1a32;
+  --border:        #16162a;
+  --border2:       #1e1e38;
+  --header-bg:     rgba(7,7,14,.96);
+
+  /* Text — softer whites, more readable */
+  --text:          #ededfc;
+  --text2:         #5e5e8a;
+  --text3:         #32325a;
+
+  /* Accent — Linear signature indigo */
+  --accent:        #5e6ad2;
+  --accent-bright: #8b93e6;
+  --accent-soft:   rgba(94,106,210,.14);
+  --glow-purple:   rgba(94,106,210,.2);
+  --glow-green:    rgba(52,211,153,.1);
+
+  /* Semantic — more refined */
+  --success:       #00c48c;
+  --success-bg:    rgba(0,196,140,.1);
+  --warning:       #f5a623;
+  --warning-bg:    rgba(245,166,35,.1);
+  --danger:        #e5484d;
+  --danger-glow:   rgba(229,72,77,.18);
+
+  /* Events */
+  --personal:      #7c6af7;
+  --personal-bg:   rgba(124,106,247,.14);
+  --team:          #1abf8a;
+  --team-bg:       rgba(26,191,138,.11);
+  --project:       #f5a623;
+  --project-bg:    rgba(245,166,35,.11);
+
+  /* Shadow system */
+  --shadow-xs:     0 1px 2px rgba(0,0,0,.4);
+  --shadow-sm:     0 2px 8px rgba(0,0,0,.5), 0 1px 2px rgba(0,0,0,.3);
+  --shadow-md:     0 4px 20px rgba(0,0,0,.55), 0 2px 6px rgba(0,0,0,.3);
+  --shadow-lg:     0 16px 48px rgba(0,0,0,.65), 0 4px 12px rgba(0,0,0,.35);
+  --shadow-xl:     0 32px 80px rgba(0,0,0,.75);
+  --shadow-accent: 0 4px 20px rgba(94,106,210,.4);
+
+  /* Focus */
+  --focus-ring:    0 0 0 2px rgba(94,106,210,.5);
+}
+
+/* Light mode refinements */
+html.light-mode {
+  --bg:            #f5f5fa;
+  --surface:       #ffffff;
+  --surface-solid: #ffffff;
+  --surface2:      #f0f0f8;
+  --surface3:      #e8e8f5;
+  --surface3-solid:#e5e5f2;
+  --surface4:      #dcdcf0;
+  --border:        #e0e0ee;
+  --border2:       #d0d0e4;
+  --header-bg:     rgba(255,255,255,.96);
+  --text:          #0e0e24;
+  --text2:         #50507a;
+  --text3:         #9090b8;
+  --accent:        #5e6ad2;
+  --accent-bright: #3d4ab8;
+  --accent-soft:   rgba(94,106,210,.1);
+  --glow-purple:   rgba(94,106,210,.06);
+  --glow-green:    rgba(52,211,153,.05);
+  --personal:      #6254d4;
+  --team:          #0a9e72;
+  --project:       #cc8800;
+}
+
+/* ── 2. BODY / APP BACKGROUND ─────────────────────────────── */
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 60% 40% at 0% 0%,   rgba(94,106,210,.07) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 35% at 100% 100%, rgba(26,191,138,.05) 0%, transparent 55%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "cv02","cv03","cv04","cv11";
+}
+
+/* ── 3. SIDEBAR — Linear aesthetic ───────────────────────── */
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  width: 256px;
+}
+
+.logo {
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.logo h1, .logo-text {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  letter-spacing: -.4px !important;
+  background: linear-gradient(135deg, #a78bfa, #34d399) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+.logo p {
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* User info — clean card feel */
+.user-info {
+  padding: 10px 14px;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+  background: none;
+  cursor: pointer;
+  transition: background .15s;
+}
+.user-info:hover { background: var(--surface3); }
+
+.avatar {
+  width: 28px; height: 28px;
+  border-radius: 7px !important;  /* Square avatar — Linear style */
+  font-size: 11px; font-weight: 700;
+  box-shadow: none !important;
+  border: 1px solid rgba(255,255,255,.08);
+}
+.user-name {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -.2px;
+  color: var(--text);
+}
+.user-role {
+  font-size: 10px;
+  color: var(--text3);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+
+/* Crear button — clean pill */
+.crear-wrap { margin: 10px 14px 6px; }
+.crear-btn {
+  height: 36px;
+  background: var(--surface3) !important;
+  border: 1px solid var(--border2) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  transition: background .15s, border-color .15s !important;
+}
+.crear-btn:hover {
+  background: var(--surface4) !important;
+  border-color: rgba(94,106,210,.4) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+.crear-plus {
+  width: 36px; height: 36px;
+  font-size: 18px;
+  color: var(--accent-bright);
+}
+.crear-btn:hover .crear-plus { transform: none; }
+.crear-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text2);
+}
+.crear-btn:hover .crear-label { color: var(--text); }
+.crear-arrow {
+  border-left: 1px solid var(--border);
+  color: var(--text3);
+}
+
+/* Sidebar sections */
+.sb-sec { padding: 14px 14px 6px; }
+.sb-title {
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: .5px !important;
+  color: var(--text3) !important;
+  text-transform: uppercase;
+  margin-bottom: 8px !important;
+}
+
+/* Project items — Linear-style rows */
+.proj-item {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: none !important;
+  gap: 8px;
+}
+.proj-item:hover { background: var(--surface3); border: none !important; }
+.proj-item.other-calendar { background: none; border: none !important; }
+.pname { font-size: 12px; font-weight: 500; color: var(--text2); }
+.proj-item:hover .pname { color: var(--text); }
+.pdot { width: 7px; height: 7px; box-shadow: none !important; }
+.pcnt {
+  font-size: 10px; font-weight: 600;
+  background: var(--surface4); color: var(--text3);
+  border: none; border-radius: 4px; padding: 1px 6px;
+}
+
+/* Team members */
+.tmname { font-size: 12px; color: var(--text2); }
+.tmember .avatar {
+  width: 24px !important; height: 24px !important;
+  border-radius: 6px !important; font-size: 9px !important;
+}
+
+/* Mini calendar */
+.mini-head span { font-size: 11px; font-weight: 600; color: var(--text2); }
+.mnav {
+  color: var(--text3);
+  border-radius: 5px;
+  font-size: 12px;
+}
+.mday { font-size: 10px; color: var(--text3); }
+.mday:hover { background: var(--surface3); color: var(--text2); }
+.mday.today {
+  background: var(--accent) !important;
+  box-shadow: 0 0 12px rgba(94,106,210,.45) !important;
+  color: white !important;
+}
+
+/* ── 4. HEADER — Stripe/Linear precision ─────────────────── */
+.header {
+  background: var(--header-bg) !important;
+  border-bottom: 1px solid var(--border) !important;
+  backdrop-filter: blur(20px);
+}
+.header-row1 { height: 48px; padding: 0 16px; gap: 6px; }
+.header-row2 { padding: 0 16px 8px; gap: 6px; }
+
+/* View tabs — refined pill */
+.vtabs {
+  background: var(--surface3) !important;
+  border: 1px solid var(--border2) !important;
+  border-radius: 8px !important;
+  padding: 3px !important;
+  gap: 1px !important;
+}
+.vtab {
+  padding: 4px 12px !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: -.1px !important;
+  color: var(--text3) !important;
+}
+.vtab.active {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  box-shadow: var(--shadow-xs), inset 0 0 0 1px var(--border2) !important;
+  font-weight: 600 !important;
+}
+.vtab:hover:not(.active) {
+  color: var(--text2) !important;
+  background: rgba(255,255,255,.04) !important;
+}
+
+/* Period / date display */
+.period {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: -.3px !important;
+  color: var(--text) !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* Nav buttons */
+.nbtn {
+  background: transparent !important;
+  border: 1px solid var(--border2) !important;
+  color: var(--text3) !important;
+  border-radius: 7px !important;
+  font-size: 12px !important;
+  transition: all .12s !important;
+}
+.nbtn:hover {
+  background: var(--surface3) !important;
+  border-color: var(--border2) !important;
+  color: var(--text) !important;
+  box-shadow: none !important;
+}
+.today-btn {
+  background: var(--surface3) !important;
+  border: 1px solid var(--border2) !important;
+  color: var(--text2) !important;
+  border-radius: 7px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+.today-btn:hover {
+  background: var(--surface4) !important;
+  border-color: rgba(94,106,210,.4) !important;
+  color: var(--text) !important;
+  box-shadow: none !important;
+}
+
+/* Search input */
+.sinp {
+  background: var(--surface3) !important;
+  border: 1px solid var(--border2) !important;
+  border-radius: 7px !important;
+  padding: 6px 12px 6px 30px !important;
+  font-size: 12px !important;
+  color: var(--text) !important;
+  width: 180px !important;
+}
+.sinp:focus {
+  background: var(--surface4) !important;
+  border-color: rgba(94,106,210,.5) !important;
+  box-shadow: var(--focus-ring) !important;
+  width: 230px !important;
+}
+.sinp::placeholder { color: var(--text3) !important; }
+
+/* Filter badges */
+.fbadge {
+  padding: 4px 10px !important;
+  border-radius: 6px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: .2px !important;
+  text-transform: none !important;
+  transition: all .12s !important;
+}
+.fbadge.personal { border-color: rgba(124,106,247,.3) !important; color: var(--personal) !important; background: rgba(124,106,247,.06) !important; }
+.fbadge.team { border-color: rgba(26,191,138,.28) !important; color: var(--team) !important; background: rgba(26,191,138,.05) !important; }
+.fbadge.project-f { border-color: rgba(245,166,35,.3) !important; color: var(--project) !important; background: rgba(245,166,35,.06) !important; }
+.fbadge.holiday-f { border-color: rgba(229,72,77,.28) !important; color: var(--danger) !important; background: rgba(229,72,77,.06) !important; }
+.fbadge.on.personal { background: rgba(124,106,247,.12) !important; }
+.fbadge.on.team { background: rgba(26,191,138,.1) !important; }
+.fbadge.on.project-f { background: rgba(245,166,35,.1) !important; }
+.fbadge.on.holiday-f { background: rgba(229,72,77,.1) !important; }
+.fbadge:hover { filter: brightness(1.1); }
+
+/* Guest banner */
+.guest-banner {
+  background: linear-gradient(90deg, rgba(94,106,210,.08), rgba(26,191,138,.06)) !important;
+  border-bottom: 1px solid rgba(94,106,210,.15) !important;
+  font-size: 12px !important;
+}
+
+/* ── 5. CALENDAR — Precision grid ────────────────────────── */
+.tlbl {
+  font-size: 10px !important;
+  color: var(--text3) !important;
+  letter-spacing: .3px !important;
+  font-family: 'Inter', monospace !important;
+  font-variant-numeric: tabular-nums !important;
+}
+.hour-block { border-bottom: 1px solid var(--border) !important; }
+.qslot:hover { background: rgba(94,106,210,.06) !important; }
+
+/* Event blocks — refined */
+.evb {
+  border-radius: 6px !important;
+  padding: 5px 8px !important;
+  border-left: 2px solid !important;
+  border-top: none; border-right: none; border-bottom: none;
+  transition: filter .12s, transform .12s, box-shadow .12s !important;
+}
+.evb:hover {
+  filter: brightness(1.08) !important;
+  transform: translateX(1px) !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,.3) !important;
+}
+.evb.personal {
+  background: rgba(124,106,247,.13) !important;
+  border-color: rgba(124,106,247,.7) !important;
+  color: #c4b5fd !important;
+}
+.evb.team {
+  background: rgba(26,191,138,.11) !important;
+  border-color: rgba(26,191,138,.7) !important;
+  color: #6ee7b7 !important;
+}
+.evb.project {
+  background: rgba(245,166,35,.1) !important;
+  border-color: rgba(245,166,35,.7) !important;
+  color: #fde68a !important;
+}
+.evb-title {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: -.1px !important;
+}
+.evb-time {
+  font-size: 9px !important;
+  opacity: .55 !important;
+  font-family: 'Inter', sans-serif !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* Week view header */
+.wk-dh {
+  padding: 10px 4px !important;
+  border-right: 1px solid var(--border) !important;
+  transition: background .12s !important;
+}
+.wk-dh:hover { background: var(--surface3) !important; }
+.wk-dname {
+  font-size: 9px !important;
+  font-weight: 600 !important;
+  letter-spacing: 1.5px !important;
+  color: var(--text3) !important;
+}
+.wk-dnum {
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  color: var(--text2) !important;
+  font-variant-numeric: tabular-nums !important;
+  font-family: 'Inter', sans-serif !important;
+}
+.wk-dh.today .wk-dnum {
+  background: var(--accent) !important;
+  box-shadow: 0 0 16px rgba(94,106,210,.45) !important;
+  font-size: 13px !important;
+}
+
+/* Month view */
+.month-dlbl {
+  font-size: 9px !important;
+  letter-spacing: 1.2px !important;
+  font-weight: 600 !important;
+  color: var(--text3) !important;
+  padding: 8px 6px !important;
+}
+.mcell {
+  padding: 5px !important;
+  transition: background .1s !important;
+}
+.mcell:hover { background: rgba(94,106,210,.04) !important; }
+.mcell.today { background: rgba(94,106,210,.07) !important; }
+.mcell.today .mcday {
+  background: var(--accent) !important;
+  box-shadow: 0 0 12px rgba(94,106,210,.4) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+}
+.mcday { font-size: 11px !important; font-weight: 600 !important; }
+.mc-ev {
+  font-size: 10px !important;
+  padding: 2px 5px !important;
+  border-radius: 3px !important;
+  font-weight: 600 !important;
+  letter-spacing: -.1px !important;
+}
+.mc-ev.personal { background: rgba(124,106,247,.18) !important; color: #c4b5fd !important; }
+.mc-ev.team { background: rgba(26,191,138,.14) !important; color: #6ee7b7 !important; }
+.mc-ev.project { background: rgba(245,166,35,.14) !important; color: #fde68a !important; }
+
+/* Now indicator */
+.now-dot {
+  width: 8px !important; height: 8px !important;
+  background: var(--danger) !important;
+  box-shadow: 0 0 8px var(--danger) !important;
+}
+.now-bar {
+  background: linear-gradient(90deg, var(--danger), transparent) !important;
+  box-shadow: none !important;
+}
+
+/* ── 6. AGENDA VIEW ──────────────────────────────────────── */
+.agenda-item {
+  border-radius: 8px !important;
+  border: 1px solid var(--border) !important;
+  background: var(--surface) !important;
+  padding: 9px 12px !important;
+  transition: background .12s, border-color .12s, transform .12s !important;
+  gap: 10px !important;
+}
+.agenda-item:hover {
+  background: var(--surface3) !important;
+  border-color: var(--border2) !important;
+  transform: translateX(2px) !important;
+}
+.agenda-item::before {
+  width: 2px !important;
+  border-radius: 2px 0 0 2px !important;
+}
+.agenda-item-title {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: -.1px !important;
+}
+.agenda-item-time {
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: var(--text3) !important;
+  font-variant-numeric: tabular-nums !important;
+}
+.agenda-day-label { font-size: 12px !important; font-weight: 700 !important; letter-spacing: -.1px !important; }
+.agenda-day-sub { font-size: 10px !important; }
+
+/* ── 7. MODALS — Stripe precision ────────────────────────── */
+.overlay {
+  background: rgba(0,0,0,.65) !important;
+  backdrop-filter: blur(12px) !important;
+}
+.modal {
+  background: var(--surface) !important;
+  border: 1px solid var(--border2) !important;
+  border-radius: 14px !important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.04),
+    0 24px 60px rgba(0,0,0,.75),
+    0 8px 20px rgba(0,0,0,.4) !important;
+  transform: translateY(16px) scale(.97) !important;
+}
+.overlay.open .modal {
+  transform: translateY(0) scale(1) !important;
+}
+
+/* Modal header */
+.mh {
+  padding: 18px 22px 14px !important;
+  border-bottom: 1px solid var(--border) !important;
+  background: none !important;
+}
+.mtitle {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  letter-spacing: -.3px !important;
+  color: var(--text) !important;
+}
+.mclose {
+  width: 28px !important; height: 28px !important;
+  border-radius: 7px !important;
+  background: transparent !important;
+  border: 1px solid var(--border2) !important;
+  color: var(--text3) !important;
+  font-size: 16px !important;
+  transition: all .12s !important;
+}
+.mclose:hover {
+  background: var(--danger-glow, rgba(229,72,77,.1)) !important;
+  border-color: rgba(229,72,77,.3) !important;
+  color: var(--danger) !important;
+  transform: none !important;
+}
+
+/* Form elements in modals */
+.mb { padding: 18px 22px !important; }
+.mf { padding: 0 22px 18px !important; gap: 8px !important; }
+.flbl {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--text3) !important;
+  letter-spacing: .3px !important;
+  text-transform: uppercase !important;
+  margin-bottom: 5px !important;
+}
+
+.finp, .fsel, .ftarea {
+  background: var(--surface2) !important;
+  border: 1px solid var(--border2) !important;
+  border-radius: 8px !important;
+  padding: 9px 12px !important;
+  font-size: 13px !important;
+  color: var(--text) !important;
+  transition: border-color .15s, box-shadow .15s !important;
+}
+.finp:focus, .fsel:focus, .ftarea:focus {
+  border-color: rgba(94,106,210,.55) !important;
+  box-shadow: var(--focus-ring) !important;
+  background: var(--surface3) !important;
+  outline: none !important;
+}
+.finp::placeholder, .ftarea::placeholder { color: var(--text3) !important; }
+
+/* Buttons — refined */
+.btn {
+  border-radius: 8px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: -.1px !important;
+  padding: 8px 16px !important;
+  transition: all .12s !important;
+}
+.btn-p {
+  background: var(--accent) !important;
+  background-image: none !important;
+  color: white !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+.btn-p:hover:not(:disabled) {
+  background: #6b78e5 !important;
+  box-shadow: 0 2px 8px rgba(94,106,210,.45), inset 0 1px 0 rgba(255,255,255,.12) !important;
+  transform: translateY(-1px) !important;
+  filter: none !important;
+}
+.btn-p:active { transform: none !important; box-shadow: none !important; }
+.btn-s {
+  background: var(--surface3) !important;
+  border: 1px solid var(--border2) !important;
+  color: var(--text2) !important;
+}
+.btn-s:hover:not(:disabled) {
+  background: var(--surface4) !important;
+  border-color: var(--border2) !important;
+  color: var(--text) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+.btn-d {
+  background: transparent !important;
+  border: 1px solid rgba(229,72,77,.35) !important;
+  color: var(--danger) !important;
+}
+.btn-d:hover:not(:disabled) {
+  background: rgba(229,72,77,.1) !important;
+  box-shadow: none !important;
+}
+
+/* Type buttons in task modal */
+.tbtn {
+  padding: 8px 5px !important;
+  border-radius: 7px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  border: 1px solid var(--border2) !important;
+  background: var(--surface2) !important;
+  color: var(--text3) !important;
+  transition: all .12s !important;
+}
+.tbtn:hover { color: var(--text2) !important; background: var(--surface3) !important; }
+.tbtn.personal.on { background: rgba(124,106,247,.15) !important; border-color: rgba(124,106,247,.4) !important; color: #c4b5fd !important; }
+.tbtn.team.on { background: rgba(26,191,138,.12) !important; border-color: rgba(26,191,138,.38) !important; color: #6ee7b7 !important; }
+.tbtn.project.on { background: rgba(245,166,35,.12) !important; border-color: rgba(245,166,35,.38) !important; color: #fde68a !important; }
+
+/* ── 8. RIGHT PANEL ─────────────────────────────────────── */
+.right-panel {
+  border-left: 1px solid var(--border) !important;
+  background: var(--surface) !important;
+}
+
+/* ── 9. TYPOGRAPHY REFINEMENTS ───────────────────────────── */
+h1, h2, h3 { letter-spacing: -.3px; }
+.det-title {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  letter-spacing: -.3px !important;
+}
+.det-meta { font-size: 12px !important; color: var(--text2) !important; }
+.dlbl { font-size: 10px !important; color: var(--text3) !important; letter-spacing: .3px !important; }
+.dval { font-size: 12px !important; color: var(--text2) !important; }
+
+/* ── 10. COMPACT SIDEBAR ICON RAIL ──────────────────────── */
+.sidebar.compact { width: 56px !important; min-width: 56px !important; }
+.cnav-item {
+  width: 38px !important; height: 38px !important;
+  border-radius: 9px !important;
+}
+.cnav-item:hover {
+  background: var(--surface3) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+.cnav-item.active {
+  background: var(--accent-soft) !important;
+}
+.cnav-item.active::after {
+  width: 2px !important; height: 14px !important;
+  left: 2px !important;
+  background: var(--accent) !important;
+}
+
+/* ── 11. SEARCH MODAL ───────────────────────────────────── */
+.search-modal {
+  border-radius: 12px !important;
+  border: 1px solid var(--border2) !important;
+  background: var(--surface) !important;
+  box-shadow: 0 24px 80px rgba(0,0,0,.75), 0 0 0 1px rgba(255,255,255,.04) !important;
+}
+.search-modal-input {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  color: var(--text) !important;
+}
+.sitem:hover { background: var(--surface3) !important; }
+.sitem-title { font-size: 13px !important; font-weight: 600 !important; letter-spacing: -.1px !important; }
+
+/* ── 12. USER MENU MODAL ────────────────────────────────── */
+.umenu-header {
+  background: linear-gradient(135deg, rgba(94,106,210,.07), transparent) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+.umenu-avatar {
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+.umenu-name { font-weight: 700 !important; letter-spacing: -.2px !important; }
+.umenu-item {
+  transition: background .1s !important;
+  border-radius: 0 !important;
+}
+.umenu-item:hover { background: var(--surface3) !important; }
+.umenu-item-icon {
+  width: 28px !important; height: 28px !important;
+  border-radius: 7px !important;
+}
+.umenu-stat-num { font-size: 18px !important; font-weight: 800 !important; }
+.umenu-section {
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  color: var(--text3) !important;
+  letter-spacing: .5px !important;
+  text-transform: uppercase !important;
+}
+
+/* ── 13. STATUS BADGES ─────────────────────────────────── */
+.tbadge {
+  border-radius: 5px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: .2px !important;
+  padding: 3px 8px !important;
+}
+.tbadge.personal { background: rgba(124,106,247,.14) !important; color: #c4b5fd !important; border: 1px solid rgba(124,106,247,.25) !important; }
+.tbadge.team { background: rgba(26,191,138,.1) !important; color: #6ee7b7 !important; border: 1px solid rgba(26,191,138,.2) !important; }
+.tbadge.project { background: rgba(245,166,35,.1) !important; color: #fde68a !important; border: 1px solid rgba(245,166,35,.2) !important; }
+
+/* ── 14. TOASTS ────────────────────────────────────────── */
+.toast {
+  border-radius: 8px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.06) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+/* ── 15. SCROLLBAR REFINEMENTS ─────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+/* ── 16. FOCUS STATES ───────────────────────────────────── */
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid rgba(94,106,210,.7) !important;
+  outline-offset: 2px !important;
+}
+
+/* ── 17. ANIMATION POLISH ───────────────────────────────── */
+@keyframes pm-enter {
+  from { opacity:0; transform:translateY(6px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.overlay.open .modal { animation: pm-enter .22s cubic-bezier(.4,0,.2,1) both; }
+
+/* Sidebar sections animate in */
+.sb-sec { animation: pm-enter .3s ease both; }
+
+/* ── 18. ICON COLOR FIX FOR NEW ACCENT ─────────────────── */
+.icon-accent { color: var(--accent-bright) !important; }
+.mday.today { background: var(--accent) !important; }
+.vtab.active { background: var(--surface) !important; }
+
+/* ── 19. LIGHT MODE OVERRIDES ───────────────────────────── */
+html.light-mode .evb.personal { background: rgba(124,106,247,.1) !important; border-color: rgba(124,106,247,.6) !important; color: #5b21b6 !important; }
+html.light-mode .evb.team { background: rgba(26,191,138,.09) !important; border-color: rgba(26,191,138,.6) !important; color: #065f46 !important; }
+html.light-mode .evb.project { background: rgba(245,166,35,.09) !important; border-color: rgba(245,166,35,.7) !important; color: #78350f !important; }
+html.light-mode .mcell:hover { background: rgba(94,106,210,.04) !important; }
+html.light-mode .mcell.today { background: rgba(94,106,210,.07) !important; }
+html.light-mode .mc-ev.personal { background: rgba(124,106,247,.15) !important; color: #5b21b6 !important; }
+html.light-mode .mc-ev.team { background: rgba(26,191,138,.12) !important; color: #065f46 !important; }
+html.light-mode .mc-ev.project { background: rgba(245,166,35,.12) !important; color: #78350f !important; }
+html.light-mode .sidebar { background: #ffffff !important; box-shadow: 1px 0 0 #e8e8f0 !important; }
+html.light-mode .user-info:hover { background: #f5f5fc !important; }
+html.light-mode .modal {
+  box-shadow: 0 8px 40px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.08), 0 0 0 1px rgba(0,0,0,.06) !important;
+  border-color: #e0e0ee !important;
+}
+html.light-mode body {
+  background-image:
+    radial-gradient(ellipse 60% 40% at 0% 0%, rgba(94,106,210,.04) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 35% at 100% 100%, rgba(26,191,138,.03) 0%, transparent 55%);
+}
+html.light-mode .overlay { background: rgba(0,0,0,.3) !important; }
+html.light-mode .btn-p { box-shadow: 0 1px 2px rgba(94,106,210,.3), inset 0 1px 0 rgba(255,255,255,.3) !important; }
+html.light-mode .nbtn { background: white !important; border-color: #d0d0e4 !important; color: #5e5e8a !important; }
+html.light-mode .nbtn:hover { background: #f0f0f8 !important; }
+
+/* END PREMIUM SAAS LAYER */
+
+/* ══════════════════════════════════════════════════════════
+   TRASH SYSTEM — Premium SaaS (Linear / Stripe aesthetic)
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Trash badge on nav icon ── */
+.trash-nav-wrap{position:relative;display:inline-flex;}
+.trash-nav-badge{position:absolute;top:-4px;right:-5px;min-width:16px;height:16px;padding:0 4px;background:#ef4444;color:#fff;font-size:9px;font-weight:800;border-radius:8px;display:none;align-items:center;justify-content:center;line-height:1;border:2px solid var(--bg);letter-spacing:0;}
+.trash-nav-badge.visible{display:flex;}
+
+/* ── Trash Modal shell ── */
+#trashModal .modal{
+  max-width:780px;
+  width:calc(100vw - 32px);
+  max-height:90vh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  background:var(--surface) !important;
+}
+
+/* ── Trash modal header ── */
+.trash-header{
+  display:flex;align-items:center;gap:12px;
+  padding:20px 24px 0;
+  flex-shrink:0;
+}
+.trash-icon-wrap{
+  width:40px;height:40px;border-radius:10px;
+  background:rgba(239,68,68,.12);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.trash-icon-wrap svg{color:#ef4444;}
+.trash-title-group{flex:1;min-width:0;}
+.trash-title{font-size:15px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;}
+.trash-sub{font-size:11px;color:var(--text3);margin-top:1px;}
+.trash-close-btn{
+  width:32px;height:32px;border-radius:8px;
+  background:transparent;border:1px solid transparent;
+  cursor:pointer;color:var(--text3);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;flex-shrink:0;
+}
+.trash-close-btn:hover{background:var(--surface3);border-color:var(--border2);color:var(--text);}
+
+/* ── Toolbar: filters + bulk actions ── */
+.trash-toolbar{
+  display:flex;align-items:center;gap:8px;
+  padding:14px 24px 0;
+  flex-shrink:0;
+  flex-wrap:wrap;
+}
+.trash-filter-tabs{display:flex;gap:2px;background:var(--surface2);border-radius:8px;padding:3px;border:1px solid var(--border);}
+.trash-filter-tab{
+  padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;
+  border:none;background:transparent;color:var(--text3);cursor:pointer;
+  transition:all .15s;white-space:nowrap;
+}
+.trash-filter-tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.22);}
+.trash-bulk-actions{display:flex;gap:6px;margin-left:auto;}
+.trash-bulk-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 11px;border-radius:7px;font-size:11px;font-weight:600;
+  border:1px solid var(--border2);background:var(--surface2);
+  color:var(--text2);cursor:pointer;transition:all .15s;
+}
+.trash-bulk-btn:hover{background:var(--surface3);color:var(--text);}
+.trash-bulk-btn.danger{border-color:rgba(239,68,68,.3);color:#ef4444;}
+.trash-bulk-btn.danger:hover{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.5);}
+
+/* ── Item count indicator ── */
+.trash-count-bar{
+  padding:8px 24px 0;flex-shrink:0;
+  font-size:11px;color:var(--text3);
+  display:flex;align-items:center;gap:6px;
+}
+.trash-count-bar strong{color:var(--text2);font-weight:600;}
+
+/* ── Scrollable list ── */
+.trash-list{
+  flex:1;overflow-y:auto;
+  padding:10px 16px 16px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.trash-list::-webkit-scrollbar{width:4px;}
+.trash-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+/* ── Individual trash item ── */
+.trash-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--surface2);
+  transition:all .18s;
+  cursor:default;
+  position:relative;
+  overflow:hidden;
+}
+.trash-item::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:3px;border-radius:3px 0 0 3px;
+  background:var(--item-accent,var(--border2));
+}
+.trash-item:hover{
+  border-color:var(--border2);
+  background:var(--surface3);
+  transform:translateX(1px);
+}
+.trash-item.personal{--item-accent:#7c6af7;}
+.trash-item.team{--item-accent:#3b82f6;}
+.trash-item.project{--item-accent:#10b981;}
+
+/* ── Item icon ── */
+.trash-item-icon{
+  width:34px;height:34px;border-radius:8px;
+  background:var(--item-icon-bg,rgba(124,90,255,.1));
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:15px;
+}
+.trash-item.personal .trash-item-icon{background:rgba(124,90,255,.1);}
+.trash-item.team .trash-item-icon{background:rgba(59,130,246,.1);}
+.trash-item.project .trash-item-icon{background:rgba(16,185,129,.1);}
+
+/* ── Item content ── */
+.trash-item-body{flex:1;min-width:0;}
+.trash-item-title{
+  font-size:13px;font-weight:600;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-family:'Inter',sans-serif;
+}
+.trash-item-meta{
+  display:flex;align-items:center;gap:8px;margin-top:3px;flex-wrap:wrap;
+}
+.trash-item-date{font-size:11px;color:var(--text3);}
+.trash-item-type{
+  font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+  padding:1px 6px;border-radius:4px;
+}
+.trash-item.personal .trash-item-type{background:rgba(124,90,255,.15);color:#a78bfa;}
+.trash-item.team .trash-item-type{background:rgba(59,130,246,.15);color:#60a5fa;}
+.trash-item.project .trash-item-type{background:rgba(16,185,129,.15);color:#34d399;}
+
+.trash-item-ago{
+  font-size:10px;color:var(--text3);
+  display:flex;align-items:center;gap:3px;
+}
+.trash-item-ago.urgent{color:#f59e0b;font-weight:600;}
+.trash-item-ago.critical{color:#ef4444;font-weight:700;}
+
+/* ── Item actions ── */
+.trash-item-actions{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.trash-act-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:30px;height:30px;border-radius:7px;
+  border:1px solid transparent;background:transparent;
+  cursor:pointer;color:var(--text3);transition:all .15s;
+}
+.trash-act-btn:hover{background:var(--surface);border-color:var(--border2);color:var(--text);}
+.trash-act-btn.restore:hover{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:#10b981;}
+.trash-act-btn.del-perm:hover{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:#ef4444;}
+
+/* ── Empty state ── */
+.trash-empty{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:12px;padding:48px 24px;
+  text-align:center;
+}
+.trash-empty-icon{
+  width:64px;height:64px;border-radius:18px;
+  background:var(--surface2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text3);opacity:.7;
+}
+.trash-empty-title{font-size:14px;font-weight:600;color:var(--text2);font-family:'Inter',sans-serif;}
+.trash-empty-sub{font-size:12px;color:var(--text3);max-width:260px;line-height:1.5;}
+
+/* ── Footer ── */
+.trash-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 24px;
+  border-top:1px solid var(--border);
+  flex-shrink:0;background:var(--surface2);
+  border-radius:0 0 14px 14px;
+}
+.trash-footer-note{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:5px;}
+.trash-footer-note svg{flex-shrink:0;opacity:.6;}
+
+/* ── Restore toast animation ── */
+@keyframes trash-restore-flash{
+  0%{box-shadow:0 0 0 0 rgba(16,185,129,.5);}
+  70%{box-shadow:0 0 0 8px rgba(16,185,129,0);}
+  100%{box-shadow:0 0 0 0 rgba(16,185,129,0);}
+}
+.trash-item.restoring{animation:trash-restore-flash .5s ease;}
+
+/* ── Light mode overrides ── */
+html.light-mode .trash-filter-tabs{background:var(--surface3);border-color:var(--border);}
+html.light-mode .trash-filter-tab.active{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.1);}
+html.light-mode .trash-item{background:#fff;border-color:var(--border);}
+html.light-mode .trash-item:hover{background:#f8f8fd;}
+html.light-mode .trash-footer{background:#f5f5fa;}
+html.light-mode .trash-bulk-btn{background:#fff;}
+html.light-mode .trash-icon-wrap{background:rgba(239,68,68,.08);}
+
+/* END TRASH SYSTEM */
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -2676,6 +3686,11 @@ html.light-mode .agenda-item:hover{
       onclick="ws_openGame()" title="Modo Juego">
       <i data-lucide="gamepad-2" class="icon"></i>
     </button>
+    <div class="cnav-item trash-nav-wrap" style="position:relative;cursor:pointer" data-tip="Papelera"
+      onclick="openTrashModal()" title="Papelera">
+      <i data-lucide="trash-2" class="icon"></i>
+      <div class="trash-nav-badge" id="trashNavBadgeCnav">0</div>
+    </div>
     <div class="cnav-divider"></div>
     <button class="cnav-item" data-tip="Expandir sidebar"
       onclick="toggleSidebarCompact()" title="Expandir sidebar"
@@ -2765,6 +3780,10 @@ html.light-mode .agenda-item:hover{
         <button class="btn btn-p guest-login-btn btn-sm" id="guestLoginBtn" onclick="openModal('authModal')" title="Iniciar sesión" style="display:none;gap:5px"><i data-lucide="log-in" class="icon icon-sm"></i> Iniciar sesión</button>
         <button class="nbtn icon-btn icon-btn-v2" onclick="ws_openGame()" title="Modo Juego"><i data-lucide="gamepad-2" class="icon"></i></button>
         <button class="nbtn icon-btn icon-btn-v2" onclick="openStatsModal()" title="Estadísticas"><i data-lucide="bar-chart-3" class="icon"></i></button>
+        <div class="trash-nav-wrap">
+          <button class="nbtn icon-btn icon-btn-v2" onclick="openTrashModal()" title="Papelera"><i data-lucide="trash-2" class="icon"></i></button>
+          <div class="trash-nav-badge" id="trashNavBadge">0</div>
+        </div>
         <button class="nbtn icon-btn icon-btn-v2" id="themeToggleBtn" onclick="toggleTheme()" title="Cambiar tema"><i data-lucide="moon" class="icon" id="themeIcon"></i></button>
         <button class="nbtn icon-btn icon-btn-v2 rp-toggle-mobile" id="rpMobileBtn" onclick="toggleRightPanelMobile()" title="Historial"><i data-lucide="layout-list" class="icon"></i></button>
       </div>
@@ -3700,7 +4719,7 @@ function fmt12(t){const[h,m]=t.split(':').map(Number);const ap=h<12?'AM':'PM';co
 function fmtDate(s){const[y,mo,d]=s.split('-').map(Number);const dt=new Date(y,mo-1,d);const r=dt.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});return r.charAt(0).toUpperCase()+r.slice(1);}
 function uid(){return'id'+Date.now()+Math.random().toString(36).slice(2,5);}
 function filtered(){
-  let filtered = S.events.filter(e=>(e.type==='personal'&&S.filters.personal)||(e.type==='team'&&S.filters.team)||(e.type==='project'&&S.filters.project));
+  let filtered = S.events.filter(e=>!e.deleted&&((e.type==='personal'&&S.filters.personal)||(e.type==='team'&&S.filters.team)||(e.type==='project'&&S.filters.project)));
   // Si hay un calendario seleccionado, filtrar también por calendar_id
   if(S.currentCalendarId){
     filtered = filtered.filter(e => e.calendar_id === S.currentCalendarId || !e.calendar_id);
@@ -4228,6 +5247,7 @@ function updateRightPanelStats(){
   // Filter events by calendar if one is selected
   const baseEvs = S.events.filter(e => {
     if(e.isDeadline) return false;
+    if(e.deleted) return false; // exclude soft-deleted
     if(calId) return e.calendar_id === calId;
     return true;
   });
@@ -4810,6 +5830,7 @@ function runAdvancedSearch(){
   const countEl = document.getElementById('searchCount');
 
   let matches = S.events.filter(e => {
+    if(e.deleted) return false; // exclude trashed items from search
     if(q){
       const inTitle = (e.title||'').toLowerCase().includes(q);
       const inDesc = (e.desc||'').toLowerCase().includes(q);
@@ -5389,23 +6410,19 @@ function saveTask(){
 function deleteTask(){
   if(!S.editId) return;
   const ev = S.events.find(e=>e.id===S.editId);
-  const title = ev?.title || 'esta actividad';
-  showConfirmDelete(
-    '🗑️ Eliminar actividad',
-    `¿Eliminar "<b>${title}</b>"?`,
-    'Esta acción eliminará la actividad permanentemente.',
-    async () => {
-      // Delete from API
-      try {
-        await fetch(`${API_URL}/events/${S.editId}?user_id=${ME.id}`, {method:'DELETE'});
-      } catch(e){}
-      S.events = S.events.filter(e=>e.id!==S.editId);
-      S.editId = null;
-      closeModal('taskModal');
-      render();
-      toast('🗑 Actividad eliminada');
-    }
-  );
+  if(!ev) return;
+  // SOFT DELETE — send to trash, not permanent delete
+  trash_softDelete(ev);
+  S.editId = null;
+  closeModal('taskModal');
+  render();
+  trash_updateBadge();
+  // Toast with undo action
+  toast_withUndo(`Actividad enviada a la papelera`, () => {
+    trash_restore(ev.id);
+    render();
+    trash_updateBadge();
+  });
 }
 function editEvent(ev){
   if(!requireAuth('Inicia sesión para editar actividades.')) return;
@@ -5558,12 +6575,23 @@ function showEventDetail(ev){
     const eb=document.createElement('button');eb.className='btn btn-s';eb.textContent='Editar';eb.onclick=()=>{closeModal('detModal');editEvent(ev);};foot.appendChild(eb);
     const sb=document.createElement('button');sb.className='btn btn-s';sb.style.borderColor='var(--accent2)';sb.style.color='var(--accent2)';
     sb.textContent='📊 Estado';sb.onclick=()=>{closeModal('detModal');openStatusModal(ev);};foot.appendChild(sb);
-    // Botón eliminar especial para recurrentes
+    // Botón eliminar — recurrentes tienen flujo especial, el resto usa soft delete
     if(ev.isRecurring && ev.recurGroupId){
       const db2=document.createElement('button');db2.className='btn btn-d';
       db2.textContent='🗑 Eliminar';
       db2.onclick=()=>deleteRecurringEvent(ev);
       foot.appendChild(db2);
+    } else {
+      const db3=document.createElement('button');db3.className='btn btn-d';
+      db3.textContent='🗑 Eliminar';
+      db3.onclick=()=>{
+        closeModal('detModal');
+        trash_softDelete(ev);
+        render();
+        trash_updateBadge();
+        toast_withUndo('Actividad enviada a la papelera',()=>{ trash_restore(ev.id); render(); trash_updateBadge(); });
+      };
+      foot.appendChild(db3);
     }
   }
   const cb=document.createElement('button');cb.className='btn btn-p';cb.textContent='Cerrar';cb.onclick=()=>closeModal('detModal');foot.appendChild(cb);
@@ -6177,7 +7205,11 @@ async function loadDataFromAPI(){
       } catch(e){}
     }
     console.log('✓ Total eventos:', S.events.length);
-    
+    // Apply trash state (mark deleted events) + auto-expire old ones
+    trash_autoExpire();
+    trash_applyToEvents();
+    trash_updateBadge();
+
     render();
     notify('✓ Datos sincronizados','Conectado con API');
     console.log('✅ Sincronización completa');
@@ -6726,10 +7758,11 @@ function renderHistorialModal(){
   _histFilteredEvents = events; // guardar para exportación
 
   // Stats
-  const total = S.events.length;
-  const completed = S.events.filter(e => ['completed','early-voluntary','early-forced'].includes(e.status)).length;
-  const active = S.events.filter(e => !e.status || e.status === 'pending').length;
-  const abandoned = S.events.filter(e => e.status === 'abandoned').length;
+  const activeEvents = S.events.filter(e => !e.deleted);
+  const total = activeEvents.length;
+  const completed = activeEvents.filter(e => ['completed','early-voluntary','early-forced'].includes(e.status)).length;
+  const active = activeEvents.filter(e => !e.status || e.status === 'pending').length;
+  const abandoned = activeEvents.filter(e => e.status === 'abandoned').length;
   const pct = total ? Math.round((completed/total)*100) : 0;
 
   document.getElementById('histModalStats').innerHTML = `
@@ -9407,6 +10440,318 @@ async function init(){
   if(typeof lucide !== 'undefined') lucide.createIcons();
 }
 init();
+
+// ═══════════════════════════════════════════════════════════
+// TRASH SYSTEM — Papelera de reciclaje con Soft Delete
+// ═══════════════════════════════════════════════════════════
+
+const TRASH_DAYS = 30; // days before auto-expire
+let _trashFilter = 'all';
+
+// ── Helpers: localStorage persistence ──
+function trash_key(){ return `planificame_trash_${ME&&ME.id?ME.id:'guest'}`; }
+
+function trash_load(){
+  try{ return JSON.parse(localStorage.getItem(trash_key())) || []; }
+  catch(e){ return []; }
+}
+
+function trash_save(items){
+  try{ localStorage.setItem(trash_key(), JSON.stringify(items)); }
+  catch(e){}
+}
+
+// ── Soft delete an event ──
+function trash_softDelete(ev){
+  // Mark in S.events so render hides it immediately
+  const idx = S.events.findIndex(e=>e.id===ev.id);
+  if(idx !== -1){
+    S.events[idx].deleted = true;
+    S.events[idx].deletedAt = new Date().toISOString();
+  }
+  // Persist in localStorage trash
+  const items = trash_load();
+  if(!items.find(i=>i.id===ev.id)){
+    items.unshift({
+      id: ev.id,
+      title: ev.title,
+      type: ev.type,
+      date: ev.date,
+      time: ev.time,
+      desc: ev.desc || '',
+      color: ev.color,
+      projId: ev.projId || null,
+      deletedAt: new Date().toISOString()
+    });
+    trash_save(items);
+  }
+}
+
+// ── Restore an event from trash ──
+function trash_restore(id){
+  // Remove from localStorage trash
+  let items = trash_load();
+  items = items.filter(i=>i.id!==id);
+  trash_save(items);
+  // Unmark in S.events
+  const ev = S.events.find(e=>e.id===id);
+  if(ev){ delete ev.deleted; delete ev.deletedAt; }
+  trash_updateBadge();
+  toast('✅ Actividad restaurada');
+}
+
+// ── Hard delete (permanent) ──
+async function trash_hardDelete(id){
+  // Remove from localStorage
+  let items = trash_load();
+  items = items.filter(i=>i.id!==id);
+  trash_save(items);
+  // Remove from S.events
+  S.events = S.events.filter(e=>e.id!==id);
+  // Call API DELETE
+  try{ await fetch(`${API_URL}/events/${id}?user_id=${ME&&ME.id?ME.id:''}`, {method:'DELETE'}); }catch(e){}
+  trash_updateBadge();
+  render();
+}
+
+// ── Auto-expire items older than 30 days ──
+function trash_autoExpire(){
+  let items = trash_load();
+  const cutoff = Date.now() - TRASH_DAYS * 24 * 60 * 60 * 1000;
+  const expired = items.filter(i => new Date(i.deletedAt).getTime() < cutoff);
+  if(expired.length === 0) return;
+  // Hard-delete expired items (fire-and-forget)
+  expired.forEach(i => {
+    try{ fetch(`${API_URL}/events/${i.id}?user_id=${ME&&ME.id?ME.id:''}`, {method:'DELETE'}); }catch(e){}
+  });
+  items = items.filter(i => new Date(i.deletedAt).getTime() >= cutoff);
+  trash_save(items);
+  console.log(`🗑 Auto-expired ${expired.length} trash item(s) older than ${TRASH_DAYS} days`);
+}
+
+// ── Apply trash state to loaded S.events ──
+function trash_applyToEvents(){
+  const items = trash_load();
+  const trashMap = {};
+  items.forEach(i=>{ trashMap[i.id] = i.deletedAt; });
+  S.events.forEach(ev=>{
+    if(trashMap[ev.id]){
+      ev.deleted = true;
+      ev.deletedAt = trashMap[ev.id];
+    }
+  });
+}
+
+// ── Update badge count (header + compact nav) ──
+function trash_updateBadge(){
+  const items = trash_load();
+  const count = items.length;
+  const label = count > 99 ? '99+' : count;
+  ['trashNavBadge','trashNavBadgeCnav'].forEach(id=>{
+    const badge = document.getElementById(id);
+    if(!badge) return;
+    if(count > 0){
+      badge.textContent = label;
+      badge.classList.add('visible');
+    } else {
+      badge.classList.remove('visible');
+    }
+  });
+}
+
+// ── Toast with undo ──
+function toast_withUndo(msg, undoFn){
+  // Remove existing undo toast
+  document.querySelectorAll('.toast-undo').forEach(t=>t.remove());
+  const el = document.createElement('div');
+  el.className = 'toast toast-undo';
+  el.style.cssText = `
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+    background:var(--surface);border:1px solid var(--border2);
+    border-radius:12px;padding:10px 16px;
+    display:flex;align-items:center;gap:12px;
+    box-shadow:0 8px 32px rgba(0,0,0,.45);
+    z-index:99999;font-size:13px;color:var(--text);
+    animation:toastIn .25s cubic-bezier(.34,1.56,.64,1);
+    min-width:260px;font-family:'Inter',sans-serif;
+  `;
+  let timer;
+  el.innerHTML = `
+    <i data-lucide="trash-2" style="width:15px;height:15px;flex-shrink:0;color:#ef4444"></i>
+    <span style="flex:1">${msg}</span>
+    <button style="background:var(--accent);color:#fff;border:none;border-radius:7px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif" id="undoTrashBtn">Deshacer</button>
+  `;
+  document.body.appendChild(el);
+  if(typeof lucide !== 'undefined') lucide.createIcons({el});
+  const doUndo = () => {
+    clearTimeout(timer);
+    undoFn();
+    el.remove();
+  };
+  el.querySelector('#undoTrashBtn').addEventListener('click', doUndo);
+  timer = setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),300); }, 5000);
+}
+
+// ── Open trash modal ──
+function openTrashModal(){
+  _trashFilter = 'all';
+  // Reset active filter tab
+  document.querySelectorAll('.trash-filter-tab').forEach(t=>{
+    t.classList.toggle('active', t.dataset.tf === 'all');
+  });
+  trash_renderList();
+  openModal('trashModal');
+}
+
+// ── Set filter ──
+function trash_setFilter(f, btn){
+  _trashFilter = f;
+  document.querySelectorAll('.trash-filter-tab').forEach(t=>t.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  trash_renderList();
+}
+
+// ── Render the trash list ──
+function trash_renderList(){
+  const all = trash_load();
+  const filtered = _trashFilter === 'all' ? all : all.filter(i=>i.type===_trashFilter);
+  const listEl = document.getElementById('trashList');
+  const countEl = document.getElementById('trashCountNum');
+  const restoreAllBtn = document.getElementById('trashRestoreAllBtn');
+  const emptyBtn = document.getElementById('trashEmptyBtn');
+  if(!listEl) return;
+
+  // Update count
+  if(countEl) countEl.textContent = filtered.length;
+
+  // Show/hide bulk action buttons
+  const hasItems = filtered.length > 0;
+  if(restoreAllBtn) restoreAllBtn.style.display = hasItems ? '' : 'none';
+  if(emptyBtn) emptyBtn.style.display = hasItems ? '' : 'none';
+
+  if(filtered.length === 0){
+    listEl.innerHTML = `
+      <div class="trash-empty">
+        <div class="trash-empty-icon">
+          <i data-lucide="trash-2" class="icon" style="width:28px;height:28px;opacity:.5"></i>
+        </div>
+        <div class="trash-empty-title">La papelera está vacía</div>
+        <div class="trash-empty-sub">${_trashFilter === 'all' ? 'Los elementos eliminados aparecerán aquí durante 30 días' : 'No hay elementos de este tipo en la papelera'}</div>
+      </div>`;
+    if(typeof lucide !== 'undefined') lucide.createIcons({el:listEl});
+    return;
+  }
+
+  const typeIcon = {personal:'lock', team:'users', project:'target'};
+  const typeLabel = {personal:'Personal', team:'Equipo', project:'Meta'};
+  const now = Date.now();
+
+  listEl.innerHTML = filtered.map(item => {
+    const deletedMs = new Date(item.deletedAt).getTime();
+    const daysPassed = Math.floor((now - deletedMs) / 86400000);
+    const daysLeft = TRASH_DAYS - daysPassed;
+    const hoursLeft = Math.floor((now - deletedMs) / 3600000);
+
+    let agoText, agoClass = '';
+    if(hoursLeft < 1) agoText = 'Hace menos de 1 hora';
+    else if(daysPassed === 0) agoText = `Hace ${hoursLeft}h`;
+    else if(daysPassed === 1) agoText = 'Ayer';
+    else agoText = `Hace ${daysPassed} días`;
+
+    let expiresText, expiresClass = '';
+    if(daysLeft <= 1){ expiresClass='critical'; expiresText = daysLeft <= 0 ? 'Expira pronto' : `Expira en ${daysLeft}d`; }
+    else if(daysLeft <= 5){ expiresClass='urgent'; expiresText = `Expira en ${daysLeft}d`; }
+    else expiresText = `${daysLeft}d restantes`;
+
+    const dateFmt = item.date ? item.date.split('-').reverse().join('/') : '–';
+
+    return `
+    <div class="trash-item ${item.type||'personal'}" id="trash-item-${item.id}">
+      <div class="trash-item-icon">
+        <i data-lucide="${typeIcon[item.type]||'circle'}" class="icon" style="width:16px;height:16px"></i>
+      </div>
+      <div class="trash-item-body">
+        <div class="trash-item-title">${escapeHtml(item.title||'Sin título')}</div>
+        <div class="trash-item-meta">
+          <span class="trash-item-date">📅 ${dateFmt}</span>
+          <span class="trash-item-type">${typeLabel[item.type]||item.type}</span>
+          <span class="trash-item-ago ${expiresClass}" title="${expiresText}">${agoText} · ${expiresText}</span>
+        </div>
+      </div>
+      <div class="trash-item-actions">
+        <button class="trash-act-btn restore" onclick="trash_restoreItem('${item.id}')" title="Restaurar actividad">
+          <i data-lucide="rotate-ccw" class="icon" style="width:14px;height:14px"></i>
+        </button>
+        <button class="trash-act-btn del-perm" onclick="trash_confirmHardDelete('${item.id}','${escapeHtml(item.title||'')}')" title="Eliminar permanentemente">
+          <i data-lucide="trash-2" class="icon" style="width:14px;height:14px"></i>
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+
+  if(typeof lucide !== 'undefined') lucide.createIcons({el:listEl});
+}
+
+// ── Restore from modal (with animation) ──
+function trash_restoreItem(id){
+  const itemEl = document.getElementById(`trash-item-${id}`);
+  if(itemEl){
+    itemEl.classList.add('restoring');
+    setTimeout(()=>{
+      trash_restore(id);
+      render();
+      trash_renderList();
+    }, 350);
+  } else {
+    trash_restore(id);
+    render();
+    trash_renderList();
+  }
+}
+
+// ── Confirm hard delete ──
+function trash_confirmHardDelete(id, title){
+  showConfirmDelete(
+    'Eliminar permanentemente',
+    `¿Eliminar "<b>${title}</b>" para siempre?`,
+    'Esta acción no se puede deshacer.',
+    async () => {
+      await trash_hardDelete(id);
+      trash_renderList();
+      trash_updateBadge();
+      toast('🗑 Eliminado permanentemente');
+    }
+  );
+}
+
+// ── Restore ALL ──
+function trash_restoreAll(){
+  const items = _trashFilter === 'all' ? trash_load() : trash_load().filter(i=>i.type===_trashFilter);
+  items.forEach(i => trash_restore(i.id));
+  render();
+  trash_renderList();
+  trash_updateBadge();
+  toast(`✅ ${items.length} actividad(es) restaurada(s)`);
+}
+
+// ── Empty trash (all visible) ──
+function trash_emptyAll(){
+  const items = _trashFilter === 'all' ? trash_load() : trash_load().filter(i=>i.type===_trashFilter);
+  if(items.length === 0) return;
+  showConfirmDelete(
+    'Vaciar papelera',
+    `¿Eliminar permanentemente <b>${items.length} elemento(s)</b>?`,
+    'Esta acción no se puede deshacer.',
+    async () => {
+      for(const i of items) await trash_hardDelete(i.id);
+      trash_renderList();
+      trash_updateBadge();
+      toast(`🗑 ${items.length} elemento(s) eliminado(s) permanentemente`);
+    }
+  );
+}
+
+// END TRASH SYSTEM
 </script>
 
 <!-- CONFIRM DELETE MODAL -->
@@ -9652,6 +10997,66 @@ init();
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     TRASH MODAL — Papelera de reciclaje
+     ══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="trashModal">
+  <div class="modal" style="max-width:780px;padding:0;overflow:hidden;">
+
+    <!-- Header -->
+    <div class="trash-header">
+      <div class="trash-icon-wrap">
+        <i data-lucide="trash-2" class="icon icon-md" style="color:#ef4444"></i>
+      </div>
+      <div class="trash-title-group">
+        <div class="trash-title">Papelera</div>
+        <div class="trash-sub">Los elementos se eliminan permanentemente después de 30 días</div>
+      </div>
+      <button class="trash-close-btn" onclick="closeModal('trashModal')" title="Cerrar">
+        <i data-lucide="x" class="icon icon-sm"></i>
+      </button>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="trash-toolbar">
+      <div class="trash-filter-tabs" id="trashFilterTabs">
+        <button class="trash-filter-tab active" data-tf="all" onclick="trash_setFilter('all',this)">Todos</button>
+        <button class="trash-filter-tab" data-tf="personal" onclick="trash_setFilter('personal',this)">Personal</button>
+        <button class="trash-filter-tab" data-tf="team" onclick="trash_setFilter('team',this)">Equipo</button>
+        <button class="trash-filter-tab" data-tf="project" onclick="trash_setFilter('project',this)">Meta</button>
+      </div>
+      <div class="trash-bulk-actions">
+        <button class="trash-bulk-btn" onclick="trash_restoreAll()" id="trashRestoreAllBtn" title="Restaurar todo">
+          <i data-lucide="rotate-ccw" class="icon" style="width:12px;height:12px"></i> Restaurar todo
+        </button>
+        <button class="trash-bulk-btn danger" onclick="trash_emptyAll()" id="trashEmptyBtn" title="Vaciar papelera">
+          <i data-lucide="trash-2" class="icon" style="width:12px;height:12px"></i> Vaciar
+        </button>
+      </div>
+    </div>
+
+    <!-- Count -->
+    <div class="trash-count-bar" id="trashCountBar">
+      <strong id="trashCountNum">0</strong> elementos en la papelera
+    </div>
+
+    <!-- List -->
+    <div class="trash-list" id="trashList">
+      <!-- items rendered by JS -->
+    </div>
+
+    <!-- Footer -->
+    <div class="trash-footer">
+      <div class="trash-footer-note">
+        <i data-lucide="info" class="icon" style="width:13px;height:13px;color:var(--text3)"></i>
+        Los elementos eliminados se borran automáticamente al cumplir 30 días
+      </div>
+      <button class="btn btn-s" style="font-size:11px;padding:5px 12px" onclick="closeModal('trashModal')">Cerrar</button>
+    </div>
+
   </div>
 </div>
 
