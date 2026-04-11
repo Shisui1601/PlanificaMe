@@ -4322,6 +4322,153 @@ mark{background:rgba(94,106,210,.25);color:var(--text);border-radius:2px;padding
   #detFoot .btn svg { width: 15px !important; height: 15px !important; opacity: .85; }
 }
 
+/* ── Month DnD ──────────────────────────────────────────── */
+.mc-ev[draggable]{ cursor: grab; }
+.mc-ev[draggable]:active{ cursor: grabbing; }
+.mc-ev.mc-dragging{ opacity: .35; }
+.mcell.dnd-over{
+  background: rgba(124,90,255,.13) !important;
+  outline: 2px dashed var(--accent);
+  outline-offset: -2px;
+}
+
+/* ── Home / Dashboard View ───────────────────────────────── */
+#cal.home-view {
+  overflow-y: auto;
+  padding: 0;
+  display: block !important;
+}
+.hw-wrap {
+  max-width: 900px; margin: 0 auto;
+  padding: 28px 28px 40px;
+  display: flex; flex-direction: column; gap: 28px;
+}
+/* Greeting */
+.hw-greeting-row {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
+}
+.hw-greeting { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -.4px; }
+.hw-greeting-sub { font-size: 13px; color: var(--text3); margin-top: 3px; }
+.hw-new-btn {
+  background: linear-gradient(135deg,#7c5aff,#5b3acc);
+  color: white; border: none; border-radius: 10px;
+  padding: 10px 20px; font-size: 13px; font-weight: 600;
+  cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(124,90,255,.35);
+  transition: filter .15s;
+}
+.hw-new-btn:hover { filter: brightness(1.1); }
+/* Stats */
+.hw-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.hw-stat {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px 14px;
+  display: flex; flex-direction: column; gap: 4px;
+  transition: border-color .15s;
+}
+.hw-stat:hover { border-color: rgba(124,90,255,.35); }
+.hw-stat-val { font-size: 28px; font-weight: 700; line-height: 1; }
+.hw-stat-lbl { font-size: 11px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+.hw-stat-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+/* Section title */
+.hw-sec { display: flex; flex-direction: column; gap: 12px; }
+.hw-sec-hdr {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.hw-sec-title {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .6px; color: var(--text3);
+}
+.hw-sec-link {
+  font-size: 12px; color: var(--accent); cursor: pointer;
+  background: none; border: none; padding: 0; font-weight: 500;
+}
+.hw-sec-link:hover { text-decoration: underline; }
+/* Today events */
+.hw-today-empty {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px; text-align: center;
+  color: var(--text3); font-size: 13px;
+}
+.hw-ev-item {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 14px;
+  transition: border-color .15s, background .15s; cursor: pointer;
+}
+.hw-ev-item:hover { border-color: rgba(124,90,255,.3); background: var(--surface2); }
+.hw-ev-time { font-size: 11px; font-weight: 700; color: var(--text3); white-space: nowrap; min-width: 44px; }
+.hw-ev-dot  { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.hw-ev-title { font-weight: 600; font-size: 13px; color: var(--text); flex: 1; }
+.hw-ev-type  { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+/* Projects */
+.hw-proj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.hw-proj-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px;
+  transition: border-color .15s; cursor: pointer;
+}
+.hw-proj-card:hover { border-color: rgba(124,90,255,.35); }
+.hw-proj-name { font-weight: 700; font-size: 13px; color: var(--text); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hw-proj-sub  { font-size: 11px; color: var(--text3); margin-bottom: 10px; }
+.hw-proj-bar  { height: 5px; background: var(--surface3); border-radius: 3px; overflow: hidden; }
+.hw-proj-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg,#7c5aff,#5b3acc); transition: width .4s; }
+/* Quick actions */
+.hw-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.hw-action-btn {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 9px 16px; font-size: 12px;
+  font-weight: 500; color: var(--text2); cursor: pointer;
+  transition: all .15s;
+}
+.hw-action-btn:hover { border-color: rgba(124,90,255,.4); color: var(--text); background: var(--surface2); }
+
+/* ── Heatmap ─────────────────────────────────────────────── */
+.hm-outer { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; }
+.hm-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.hm-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--text3); }
+.hm-summary { font-size: 12px; color: var(--text3); }
+.hm-summary strong { color: var(--accent); }
+.hm-scroll { overflow-x: auto; padding-bottom: 4px; }
+.hm-layout { display: flex; gap: 4px; }
+.hm-day-lbls { display: flex; flex-direction: column; padding-top: 18px; gap: 0; }
+.hm-day-lbl { font-size: 9px; color: var(--text3); height: 14px; line-height: 14px; padding-right: 4px; font-weight: 600; }
+.hm-months-and-cols { display: flex; flex-direction: column; gap: 4px; }
+.hm-month-lbls { display: flex; min-height: 14px; }
+.hm-month-lbl { font-size: 9px; color: var(--text3); font-weight: 600; }
+.hm-cols { display: flex; gap: 3px; }
+.hm-col  { display: flex; flex-direction: column; gap: 3px; }
+.hm-cell {
+  width: 13px; height: 13px; border-radius: 2px; cursor: pointer;
+  transition: transform .1s;
+  background: var(--surface2);
+  position: relative;
+}
+.hm-cell:hover { transform: scale(1.3); z-index: 2; }
+.hm-cell[data-count="0"]{ background: var(--surface2); }
+.hm-cell[data-count="1"]{ background: rgba(124,90,255,.25); }
+.hm-cell[data-count="2"]{ background: rgba(124,90,255,.45); }
+.hm-cell[data-count="3"]{ background: rgba(124,90,255,.65); }
+.hm-cell[data-count="4"]{ background: rgba(124,90,255,.82); }
+.hm-cell[data-count="5"]{ background: var(--accent); }
+.hm-legend { display: flex; align-items: center; gap: 5px; margin-top: 10px; justify-content: flex-end; }
+.hm-legend-lbl { font-size: 10px; color: var(--text3); }
+.hm-legend-cell { width: 12px; height: 12px; border-radius: 2px; }
+
+/* Responsive Home */
+@media (max-width: 900px) {
+  .hw-stats { grid-template-columns: repeat(2,1fr); }
+  .hw-proj-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .hw-wrap { padding: 16px 14px 32px; gap: 20px; }
+  .hw-stats { grid-template-columns: repeat(2,1fr); gap: 8px; }
+  .hw-stat { padding: 12px 10px; }
+  .hw-stat-val { font-size: 22px; }
+  .hw-greeting { font-size: 18px; }
+}
+
 /* ── Year View ───────────────────────────────────────────── */
 #cal.year-view {
   display: grid !important;
@@ -5112,6 +5259,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
           <span class="hamburger-icon"></span>
         </button>
         <div class="vtabs">
+          <button class="vtab" id="tab-home"  onclick="setView('home')">🏠 Inicio</button>
           <button class="vtab active" id="tab-day" onclick="setView('day')">Día</button>
           <button class="vtab" id="tab-week" onclick="setView('week')">Semana</button>
           <button class="vtab" id="tab-month" onclick="setView('month')">Mes</button>
@@ -7174,15 +7322,39 @@ function renderMonth(container){
     const ds=dk(dt);const hol=getHoliday(ds);
     const cell=document.createElement('div');
     cell.className=`mcell${other?' other':''}${isToday(dt)?' today':''}${hol&&S.filters.holiday?' hol-cell':''}`;
+    cell.dataset.date=ds;
+
+    // Day number
+    const dayDiv=document.createElement('div');dayDiv.className='mcday';dayDiv.textContent=dt.getDate();
+    cell.appendChild(dayDiv);
+    if(hol&&S.filters.holiday){const hDiv=document.createElement('div');hDiv.className='mc-hol';hDiv.textContent=`🇩🇴 ${hol}`;cell.appendChild(hDiv);}
+
+    // Events
+    const evsDiv=document.createElement('div');evsDiv.className='mc-evs';
     const evs=filtered().filter(e=>e.date===ds);
-    let html=`<div class="mcday">${dt.getDate()}</div>`;
-    if(hol&&S.filters.holiday)html+=`<div class="mc-hol">🇩🇴 ${hol}</div>`;
-    html+=`<div class="mc-evs">`;
-    evs.slice(0,3).forEach(ev=>{html+=`<div class="mc-ev ${ev.type}${ev.isDeadline?' deadline-ev':''}" style="${ev.isDeadline?'border-style:dashed;':''}" onclick="event.stopPropagation();showEventDetail(getEv('${ev.id}'))">${ev.isDeadline?'🏁':''} ${fmt12(ev.time)} ${ev.title}</div>`;});
-    if(evs.length>3)html+=`<div class="mc-more">+${evs.length-3} más</div>`;
-    html+=`</div>`;
-    cell.innerHTML=html;
-    cell.onclick=()=>{S.cur=new Date(dt);setView('day');};
+    evs.slice(0,3).forEach(ev=>{
+      const evEl=document.createElement('div');
+      evEl.className=`mc-ev ${ev.type}${ev.isDeadline?' deadline-ev':''}`;
+      if(ev.isDeadline) evEl.style.borderStyle='dashed';
+      evEl.textContent=`${ev.isDeadline?'🏁':''} ${fmt12(ev.time)} ${ev.title}`.trim();
+      evEl.title=ev.title;
+      evEl.onclick=e=>{e.stopPropagation();showEventDetail(getEv(ev.id));};
+      // DnD
+      evEl.draggable=true;
+      evEl.addEventListener('dragstart',e=>month_dragStart(e,ev.id,ds,evEl));
+      evEl.addEventListener('dragend',  e=>month_dragEnd(e,evEl));
+      evsDiv.appendChild(evEl);
+    });
+    if(evs.length>3){const m=document.createElement('div');m.className='mc-more';m.textContent=`+${evs.length-3} más`;evsDiv.appendChild(m);}
+    cell.appendChild(evsDiv);
+
+    // Cell click → day view (only if not dragging)
+    cell.onclick=()=>{ if(_monthDrag.id) return; S.cur=new Date(dt);setView('day'); };
+
+    // Cell drop target
+    cell.addEventListener('dragover', e=>month_cellDragOver(e,cell,ds));
+    cell.addEventListener('dragleave',e=>month_cellDragLeave(e,cell));
+    cell.addEventListener('drop',     e=>month_drop(e,cell,ds));
     grid.appendChild(cell);
   });
   container.appendChild(grid);
@@ -13048,7 +13220,7 @@ runAdvancedSearch = function(){
 // Extend setView to include 'gantt' tab
 setView = function(v){
   S.view = v;
-  ['day','week','month','year','agenda','kanban','gantt'].forEach(x => {
+  ['home','day','week','month','year','agenda','kanban','gantt'].forEach(x => {
     const el = document.getElementById('tab-' + x);
     if(el) el.classList.toggle('active', x === v);
   });
@@ -13066,7 +13238,8 @@ renderCal = function(){
     c.innerHTML = '';
     // ⚠️ Always reset to base class first — removes kanban-view / gantt-view pollution
     c.className = 'cal';
-    if(S.view === 'day')         renderDay(c);
+    if(S.view === 'home')        renderHome(c);
+    else if(S.view === 'day')    renderDay(c);
     else if(S.view === 'week')   renderWeek(c);
     else if(S.view === 'agenda') renderAgenda(c);
     else if(S.view === 'kanban') renderKanban(c);
@@ -13077,9 +13250,13 @@ renderCal = function(){
   }, 100);
 };
 
-// Patch updatePeriod to handle gantt + year
+// Patch updatePeriod to handle home + gantt + year
 const _origUpdatePeriod = updatePeriod;
 updatePeriod = function(){
+  if(S.view === 'home'){
+    document.getElementById('period').textContent = '';
+    return;
+  }
   if(S.view === 'gantt'){
     document.getElementById('period').textContent = 'Vista Gantt';
     return;
@@ -13106,6 +13283,370 @@ document.addEventListener('keydown', e => {
     openNotesModal();
   }
 });
+
+// ══════════════════════════════════════════════════════════
+// MONTH VIEW — Drag & Drop between days
+// ══════════════════════════════════════════════════════════
+let _monthDrag = { id: null, sourceDate: null };
+
+function month_dragStart(e, id, sourceDate, el) {
+  _monthDrag = { id, sourceDate };
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', id);
+  requestAnimationFrame(() => el.classList.add('mc-dragging'));
+}
+
+function month_dragEnd(e, el) {
+  el.classList.remove('mc-dragging');
+  document.querySelectorAll('.mcell.dnd-over').forEach(c => c.classList.remove('dnd-over'));
+  _monthDrag = { id: null, sourceDate: null };
+}
+
+function month_cellDragOver(e, cell, date) {
+  if(!_monthDrag.id) return;
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  cell.classList.add('dnd-over');
+}
+
+function month_cellDragLeave(e, cell) {
+  if(e.relatedTarget && cell.contains(e.relatedTarget)) return;
+  cell.classList.remove('dnd-over');
+}
+
+async function month_drop(e, cell, targetDate) {
+  e.preventDefault();
+  cell.classList.remove('dnd-over');
+  const { id, sourceDate } = _monthDrag;
+  _monthDrag = { id: null, sourceDate: null };
+  if(!id || targetDate === sourceDate) return;
+
+  const ev = getEv(id);
+  if(!ev) return;
+  const oldDate = ev.date;
+
+  // Optimistic
+  ev.date = targetDate;
+  render();
+  toast(`📅 ${ev.title.substring(0,26)} → ${fmtDate(targetDate)}`);
+
+  try {
+    const res = await fetch(`${API_URL}/events/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date: targetDate, user_id: ME.id })
+    });
+    if(!res.ok) throw new Error();
+  } catch {
+    ev.date = oldDate;
+    render();
+    toast('❌ Error al mover — cambio revertido');
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// HOME / DASHBOARD VIEW
+// ══════════════════════════════════════════════════════════
+function renderHome(container) {
+  container.classList.add('home-view');
+
+  const now      = new Date();
+  const todayStr = dk(now);
+  const h        = now.getHours();
+  const greeting = h < 12 ? 'Buenos días' : h < 19 ? 'Buenas tardes' : 'Buenas noches';
+  const evs      = S.events || [];
+
+  // ── Stats calculation ──────────────────────────────────
+  // This week bounds (Mon–Sun)
+  const wday     = now.getDay() || 7; // 1=Mon…7=Sun
+  const mon      = new Date(now); mon.setDate(now.getDate() - wday + 1);
+  const sun      = new Date(mon); sun.setDate(mon.getDate() + 6);
+  const monStr   = dk(mon); const sunStr = dk(sun);
+
+  const thisWeek = evs.filter(e => e.date >= monStr && e.date <= sunStr && !e.isDeadline);
+  const completed = thisWeek.filter(e => ['completed','early-voluntary','early-forced'].includes(e.status)).length;
+  const total     = thisWeek.length;
+  const pct       = total ? Math.round(completed / total * 100) : 0;
+
+  // Streak: consecutive days (going backwards from today) with ≥1 completed event
+  let streak = 0;
+  const check = new Date(now);
+  while(true) {
+    const ds = dk(check);
+    const hasCompl = evs.some(e => e.date === ds && ['completed','early-voluntary','early-forced'].includes(e.status));
+    if(!hasCompl) break;
+    streak++;
+    check.setDate(check.getDate() - 1);
+    if(streak > 365) break;
+  }
+
+  // Today's events
+  const todayEvs = evs
+    .filter(e => e.date === todayStr && !e.isDeadline)
+    .sort((a,b) => (a.time||'') > (b.time||'') ? 1 : -1);
+
+  // Active projects
+  const projs = (S.projects || []).filter(p => !['completed','cancelled'].includes(p.status));
+
+  // ── Build DOM ─────────────────────────────────────────
+  const wrap = document.createElement('div');
+  wrap.className = 'hw-wrap';
+
+  // Greeting
+  const greetRow = document.createElement('div');
+  greetRow.className = 'hw-greeting-row';
+  greetRow.innerHTML = `
+    <div>
+      <div class="hw-greeting">${greeting}, ${ME.name?.split(' ')[0] || 'Usuario'} ${streak >= 3 ? '🔥' : '👋'}</div>
+      <div class="hw-greeting-sub">${now.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).replace(/^\w/,c=>c.toUpperCase())}</div>
+    </div>
+    <button class="hw-new-btn" onclick="openTaskModal('${todayStr}')">+ Nueva actividad</button>
+  `;
+  wrap.appendChild(greetRow);
+
+  // Stats
+  const statsDiv = document.createElement('div');
+  statsDiv.className = 'hw-stats';
+  const typeColor = {personal:'var(--accent)',team:'var(--accent3)',project:'var(--accent2)'};
+  const stats = [
+    { val: completed, lbl: 'Completadas', sub: 'esta semana', color: 'var(--accent3)' },
+    { val: `${pct}%`, lbl: 'Completado', sub: `${completed}/${total} actividades`, color: 'var(--accent)' },
+    { val: `${streak}d`, lbl: 'Racha', sub: streak >= 3 ? '¡Sigue así! 🔥' : 'Completa algo hoy', color: streak >= 3 ? '#f59e0b' : 'var(--text3)' },
+    { val: todayEvs.length, lbl: 'Hoy', sub: todayEvs.length === 0 ? 'Día libre 🎉' : `${todayEvs.filter(e=>!['completed','early-voluntary','early-forced'].includes(e.status)).length} pendientes`, color: 'var(--accent2)' },
+  ];
+  stats.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'hw-stat';
+    card.innerHTML = `<div class="hw-stat-val" style="color:${s.color}">${s.val}</div><div class="hw-stat-lbl">${s.lbl}</div><div class="hw-stat-sub">${s.sub}</div>`;
+    statsDiv.appendChild(card);
+  });
+  wrap.appendChild(statsDiv);
+
+  // Today's events
+  const todaySec = document.createElement('div');
+  todaySec.className = 'hw-sec';
+  todaySec.innerHTML = `<div class="hw-sec-hdr"><div class="hw-sec-title">📅 Actividades de hoy</div><button class="hw-sec-link" onclick="setView('day')">Ver día completo →</button></div>`;
+  if(todayEvs.length === 0) {
+    todaySec.innerHTML += `<div class="hw-today-empty">Sin actividades hoy — ¿empezamos algo? 💪</div>`;
+  } else {
+    todayEvs.slice(0, 6).forEach(ev => {
+      const isDone = ['completed','early-voluntary','early-forced'].includes(ev.status);
+      const item = document.createElement('div');
+      item.className = 'hw-ev-item';
+      item.style.opacity = isDone ? '.55' : '1';
+      const tColor = ev.color || typeColor[ev.type] || 'var(--accent)';
+      const typeLbl = {personal:'Personal',team:'Equipo',project:'Proyecto'}[ev.type]||ev.type;
+      item.innerHTML = `
+        <div class="hw-ev-time">${fmt12(ev.time)}</div>
+        <div class="hw-ev-dot" style="background:${tColor}"></div>
+        <div class="hw-ev-title" style="${isDone?'text-decoration:line-through;color:var(--text3);':''}">${ev.title}</div>
+        <div class="hw-ev-type" style="background:${tColor}18;color:${tColor}">${typeLbl}</div>
+      `;
+      item.onclick = () => showEventDetail(getEv(ev.id));
+      todaySec.appendChild(item);
+    });
+    if(todayEvs.length > 6) {
+      const more = document.createElement('div');
+      more.style.cssText = 'font-size:12px;color:var(--text3);text-align:center;padding:4px';
+      more.textContent = `+${todayEvs.length - 6} más`;
+      todaySec.appendChild(more);
+    }
+  }
+  wrap.appendChild(todaySec);
+
+  // Active projects
+  if(projs.length > 0) {
+    const projSec = document.createElement('div');
+    projSec.className = 'hw-sec';
+    projSec.innerHTML = `<div class="hw-sec-hdr"><div class="hw-sec-title">🎯 Proyectos activos</div><button class="hw-sec-link" onclick="setView('agenda')">Ver agenda →</button></div>`;
+    const projGrid = document.createElement('div');
+    projGrid.className = 'hw-proj-grid';
+    projs.slice(0, 4).forEach(p => {
+      const projEvs  = evs.filter(e => e.projId === p.id && !e.isDeadline);
+      const doneEvs  = projEvs.filter(e => ['completed','early-voluntary','early-forced'].includes(e.status));
+      const pct      = projEvs.length ? Math.round(doneEvs.length / projEvs.length * 100) : 0;
+      const card     = document.createElement('div');
+      card.className = 'hw-proj-card';
+      const calColor = p.calendarColor || 'var(--accent)';
+      card.innerHTML = `
+        <div class="hw-proj-name">${p.name}</div>
+        <div class="hw-proj-sub" style="color:${calColor}">${doneEvs.length}/${projEvs.length} tareas · ${pct}%</div>
+        <div class="hw-proj-bar"><div class="hw-proj-fill" style="width:${pct}%;background:linear-gradient(90deg,${calColor},${calColor}aa)"></div></div>
+      `;
+      projGrid.appendChild(card);
+    });
+    projSec.appendChild(projGrid);
+    wrap.appendChild(projSec);
+  }
+
+  // Heatmap
+  const hmSec = document.createElement('div');
+  hmSec.className = 'hw-sec';
+  const hmTitle = document.createElement('div');
+  hmTitle.className = 'hw-sec-hdr';
+  hmTitle.innerHTML = `<div class="hw-sec-title">📊 Actividad del año</div>`;
+  hmSec.appendChild(hmTitle);
+  renderHeatmap(hmSec, evs);
+  wrap.appendChild(hmSec);
+
+  // Quick actions
+  const actSec = document.createElement('div');
+  actSec.className = 'hw-sec';
+  actSec.innerHTML = `<div class="hw-sec-hdr"><div class="hw-sec-title">⚡ Acciones rápidas</div></div>`;
+  const actRow = document.createElement('div');
+  actRow.className = 'hw-actions';
+  const actions = [
+    { icon:'📅', label:'Vista Mes',     fn:`setView('month')` },
+    { icon:'📊', label:'Digest Semanal',fn:`openDigestModal()` },
+    { icon:'📂', label:'Importar .ics', fn:`openModal('icsModal');ics_init()` },
+    { icon:'🔍', label:'Buscar',        fn:`openSearchModal()` },
+    { icon:'📋', label:'Mi Historial',  fn:`openHistorialModal()` },
+  ];
+  actions.forEach(a => {
+    const btn = document.createElement('button');
+    btn.className = 'hw-action-btn';
+    btn.innerHTML = `<span>${a.icon}</span><span>${a.label}</span>`;
+    btn.onclick = new Function(a.fn);
+    actRow.appendChild(btn);
+  });
+  actSec.appendChild(actRow);
+  wrap.appendChild(actSec);
+
+  container.appendChild(wrap);
+}
+
+// ══════════════════════════════════════════════════════════
+// HEATMAP — GitHub-style contributions
+// ══════════════════════════════════════════════════════════
+function renderHeatmap(parentEl, evs) {
+  evs = evs || S.events || [];
+
+  // Build completed-per-day map for the last 365 days
+  const today   = new Date();
+  const end     = new Date(today); end.setHours(23,59,59,999);
+  const start   = new Date(today); start.setFullYear(start.getFullYear() - 1); start.setDate(start.getDate() + 1);
+
+  const countMap = {};
+  evs.forEach(ev => {
+    if(!ev.date) return;
+    if(!['completed','early-voluntary','early-forced'].includes(ev.status)) return;
+    countMap[ev.date] = (countMap[ev.date] || 0) + 1;
+  });
+
+  let totalCompleted = 0;
+  Object.values(countMap).forEach(v => totalCompleted += v);
+
+  // Build weeks array: each week is [Sun…Sat] starting from `start`
+  // Align to start of week (Sunday)
+  const startSunday = new Date(start);
+  startSunday.setDate(startSunday.getDate() - startSunday.getDay());
+
+  const weeks = [];
+  const cur   = new Date(startSunday);
+  while(cur <= end) {
+    const week = [];
+    for(let d = 0; d < 7; d++) {
+      week.push(new Date(cur));
+      cur.setDate(cur.getDate() + 1);
+    }
+    weeks.push(week);
+  }
+
+  // Month labels positioning
+  const MONTHS_ES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const DAY_LBLS  = ['','L','','X','','V',''];
+
+  const outer = document.createElement('div');
+  outer.className = 'hm-outer';
+
+  const top = document.createElement('div');
+  top.className = 'hm-top';
+  top.innerHTML = `
+    <div class="hm-title">Mapa de actividad</div>
+    <div class="hm-summary">
+      <strong>${totalCompleted}</strong> actividades completadas en el último año
+    </div>
+  `;
+  outer.appendChild(top);
+
+  const scroll = document.createElement('div');
+  scroll.className = 'hm-scroll';
+  const layout = document.createElement('div');
+  layout.className = 'hm-layout';
+
+  // Day labels (left column)
+  const dayLblCol = document.createElement('div');
+  dayLblCol.className = 'hm-day-lbls';
+  DAY_LBLS.forEach(l => {
+    const d = document.createElement('div');
+    d.className = 'hm-day-lbl';
+    d.textContent = l;
+    dayLblCol.appendChild(d);
+  });
+  layout.appendChild(dayLblCol);
+
+  // Months + columns
+  const rightSide = document.createElement('div');
+  rightSide.className = 'hm-months-and-cols';
+
+  // Month label row
+  const monthRow = document.createElement('div');
+  monthRow.className = 'hm-month-lbls';
+  let lastMonth = -1;
+  weeks.forEach((week, wi) => {
+    const m = week[0].getMonth();
+    const lbl = document.createElement('div');
+    lbl.className = 'hm-month-lbl';
+    lbl.style.width = '16px';
+    lbl.textContent = (m !== lastMonth) ? MONTHS_ES[m] : '';
+    if(m !== lastMonth) lastMonth = m;
+    monthRow.appendChild(lbl);
+  });
+  rightSide.appendChild(monthRow);
+
+  // Cell grid
+  const colsDiv = document.createElement('div');
+  colsDiv.className = 'hm-cols';
+
+  weeks.forEach(week => {
+    const col = document.createElement('div');
+    col.className = 'hm-col';
+    week.forEach(dt => {
+      const ds    = dk(dt);
+      const count = countMap[ds] || 0;
+      const cell  = document.createElement('div');
+      cell.className = 'hm-cell';
+      cell.dataset.count = Math.min(count, 5);
+      const inRange = dt >= start && dt <= end;
+      if(!inRange) { cell.style.opacity = '0'; cell.style.pointerEvents = 'none'; }
+      else {
+        const label = count
+          ? `${count} completada${count>1?'s':''} — ${dt.toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'})}`
+          : `Sin actividades — ${dt.toLocaleDateString('es-ES',{day:'numeric',month:'short'})}`;
+        cell.title = label;
+        if(ds === dk(today)) cell.style.outline = '1px solid var(--accent)';
+        cell.onclick = () => { S.cur = new Date(dt); setView('day'); };
+      }
+      col.appendChild(cell);
+    });
+    colsDiv.appendChild(col);
+  });
+  rightSide.appendChild(colsDiv);
+  layout.appendChild(rightSide);
+  scroll.appendChild(layout);
+  outer.appendChild(scroll);
+
+  // Legend
+  const legend = document.createElement('div');
+  legend.className = 'hm-legend';
+  legend.innerHTML = `
+    <span class="hm-legend-lbl">Menos</span>
+    ${[0,1,2,3,4,5].map(n=>`<div class="hm-legend-cell hm-cell" data-count="${n}" style="width:12px;height:12px"></div>`).join('')}
+    <span class="hm-legend-lbl">Más</span>
+  `;
+  outer.appendChild(legend);
+  parentEl.appendChild(outer);
+}
 
 // ──────────────────────────────────────────────────────────
 // YEAR VIEW
