@@ -151,6 +151,14 @@ html.light-mode {
 /* Lucide SVG inside .icon */
 .icon svg{width:100%;height:100%;}
 
+/* ── ico-n custom element ──────────────────────────────── */
+ico-n{
+  display:inline-flex;align-items:center;justify-content:center;
+  flex-shrink:0;vertical-align:middle;line-height:1;
+  /* inherits color from parent — no fill/stroke override needed */
+}
+ico-n svg{display:block;}
+
 /* Icon buttons — unified */
 .icon-btn-v2{
   display:inline-flex;align-items:center;justify-content:center;
@@ -170,8 +178,8 @@ html.light-mode {
 }
 .icon-btn-v2:active{transform:scale(.93);}
 .icon-btn-v2.active{
-  background:var(--accent-soft);
-  border-color:rgba(124,90,255,.4);
+  background:rgba(124,90,255,.12);
+  border-color:transparent;
   color:var(--accent-bright);
 }
 
@@ -632,12 +640,13 @@ body{
   padding:5px 15px;border-radius:8px;border:none;
   background:none;color:var(--text3);
   font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;
-  transition:all .18s cubic-bezier(.4,0,.2,1);font-weight:600;letter-spacing:-.1px;
+  transition:background .12s ease,color .12s ease,box-shadow .12s ease;font-weight:600;letter-spacing:-.1px;
 }
 .vtab.active{
-  background:linear-gradient(135deg,var(--accent),#5b3acc);
-  color:#fff;
-  box-shadow:0 2px 14px rgba(124,90,255,.38);
+  /* Notion-style: surface card lifted from track, no gradient */
+  background:var(--surface);
+  color:var(--text);
+  box-shadow:0 1px 4px rgba(0,0,0,.22),0 0 0 1px rgba(255,255,255,.06);
 }
 .vtab:hover:not(.active){color:var(--text2);background:rgba(124,90,255,.07);}
 
@@ -693,7 +702,7 @@ body{
   background:transparent;color:var(--text2);font-size:11px;cursor:pointer;
   transition:all .15s;font-family:'Inter',sans-serif;
 }
-.sf-btn.active{background:var(--accent);border-color:var(--accent);color:white;}
+.sf-btn.active{background:rgba(124,90,255,.13);border-color:rgba(124,90,255,.4);color:var(--accent-bright);}
 .sf-input{
   padding:4px 10px;border-radius:20px;border:1px solid var(--border2);
   background:var(--surface2);color:var(--text);font-size:11px;
@@ -981,7 +990,7 @@ body{
   text-decoration-thickness:2px;
   color:rgba(255,255,255,.6);
 }
-.evb.status-completed::after{content:'✅';position:absolute;top:3px;right:5px;font-size:9px;}
+.evb.status-completed::after{content:'';position:absolute;top:3px;right:5px;width:5px;height:5px;border-radius:50%;background:var(--accent3);box-shadow:0 0 4px rgba(16,185,129,.6);}
 
 /* ── Adelantadas: tachado + amarillo ── */
 .evb.status-early-voluntary,
@@ -996,8 +1005,8 @@ body{
   text-decoration-color:rgba(251,191,36,.8);
   text-decoration-thickness:2px;
 }
-.evb.status-early-voluntary::after{content:'⚡';position:absolute;top:3px;right:5px;font-size:9px;}
-.evb.status-early-forced::after{content:'🔀';position:absolute;top:3px;right:5px;font-size:9px;}
+.evb.status-early-voluntary::after{content:'';position:absolute;top:3px;right:5px;width:5px;height:5px;border-radius:50%;background:#f7e26a;box-shadow:0 0 4px rgba(247,226,106,.6);}
+.evb.status-early-forced::after{content:'';position:absolute;top:3px;right:5px;width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 4px rgba(124,90,255,.6);}
 
 /* ── Extendida: borde punteado azul ── */
 .evb.status-extended{
@@ -1005,7 +1014,7 @@ body{
   border-style:dashed !important;
   opacity:.85;
 }
-.evb.status-extended::after{content:'📅';position:absolute;top:3px;right:5px;font-size:9px;}
+.evb.status-extended::after{content:'';position:absolute;top:3px;right:5px;width:5px;height:5px;border-radius:50%;background:#6ab4f7;}
 
 /* ── Abandonada: rojo, tachado, gris ── */
 .evb.status-abandoned{
@@ -1021,7 +1030,7 @@ body{
   color:rgba(248,113,113,.9) !important;
 }
 .evb.status-abandoned .evb-time{color:rgba(248,113,113,.6) !important;}
-.evb.status-abandoned::after{content:'🚫';position:absolute;top:3px;right:5px;font-size:9px;}
+.evb.status-abandoned::after{content:'';position:absolute;top:3px;right:5px;width:5px;height:5px;border-radius:50%;background:var(--danger);opacity:.7;}
 
 /* ── Vista mes ── */
 .mc-ev.status-completed{
@@ -1166,7 +1175,7 @@ html.light-mode .crear-btn:hover{box-shadow:0 4px 16px rgba(124,90,255,.2);}
 html.light-mode .crear-menu{box-shadow:0 12px 40px rgba(0,0,0,.15),0 0 20px rgba(124,90,255,.08);}
 html.light-mode .vtabs{background:var(--surface3);border-color:var(--border);}
 html.light-mode .vtab{color:var(--text2);}
-html.light-mode .vtab.active{background:var(--accent);color:#fff;box-shadow:0 2px 12px rgba(124,90,255,.25);}
+html.light-mode .vtab.active{background:#fff;color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.1),0 0 0 1px rgba(0,0,0,.06);}
 html.light-mode .nbtn{background:var(--surface2);border-color:var(--border2);color:var(--text2);}
 html.light-mode .nbtn:hover{color:var(--accent);border-color:var(--accent);}
 html.light-mode .today-btn{background:var(--surface2);border-color:var(--border2);color:var(--text2);}
@@ -1213,7 +1222,7 @@ html.light-mode .stats-chart-wrap{background:var(--surface);border-color:var(--b
 html.light-mode .stats-chart-title{color:var(--text2);}
 html.light-mode .stats-tabs{background:var(--surface3);border-color:var(--border);}
 html.light-mode .stats-tab{color:var(--text2);}
-html.light-mode .stats-tab.active{background:var(--accent);color:#fff;}
+html.light-mode .stats-tab.active{background:#fff;color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.1),0 0 0 1px rgba(0,0,0,.06);}
 html.light-mode .stats-range label{color:var(--text2);}
 html.light-mode .stats-range input{background:var(--surface);border-color:var(--border2);color:var(--text);}
 
@@ -1471,18 +1480,21 @@ html.light-mode .stats-range input{background:var(--surface);border-color:var(--
 .cnav-item:active{ transform:scale(.92); }
 .cnav-item .icon{ color:inherit; }
 .cnav-item.active{
-  background:var(--accent-soft);
-  box-shadow:0 0 0 1px rgba(124,90,255,.3),0 2px 10px rgba(124,90,255,.2);
+  /* Notion-style: muted tint, no ring or glow */
+  background:rgba(124,90,255,.12);
+  color:var(--accent-bright);
+  box-shadow:none;
 }
-/* Animated indicator dot for active state */
+/* Left accent bar — thinner, more Notion-like */
 .cnav-item.active::after{
   content:'';
   position:absolute;
-  left:3px; top:50%;
+  left:2px; top:50%;
   transform:translateY(-50%);
-  width:3px; height:18px;
-  border-radius:2px;
-  background:var(--accent);
+  width:3px; height:20px;
+  border-radius:99px;
+  background:var(--accent-bright);
+  opacity:.9;
 }
 
 .cnav-divider{
@@ -1757,8 +1769,8 @@ html.light-mode .sidebar.compact .avatar{
 .stats-kpi-lbl{font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-top:5px;}
 .stats-kpi-trend{font-size:10px;margin-top:3px;}
 .stats-tabs{display:flex;gap:2px;background:var(--surface3);padding:3px;border-radius:8px;margin-bottom:16px;border:1px solid var(--border);}
-.stats-tab{flex:1;padding:7px 10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:none;color:var(--text3);transition:all .15s;text-align:center;}
-.stats-tab.active{background:var(--accent);color:white;}
+.stats-tab{flex:1;padding:7px 10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:none;color:var(--text3);transition:background .12s ease,color .12s ease,box-shadow .12s ease;text-align:center;}
+.stats-tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.2),0 0 0 1px rgba(255,255,255,.05);}
 .stats-panel{display:none;}
 .stats-panel.active{display:block;}
 .stats-chart-wrap{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;position:relative;}
@@ -3292,12 +3304,16 @@ h1, h2, h3 { letter-spacing: -.3px; }
   box-shadow: none !important;
 }
 .cnav-item.active {
-  background: var(--accent-soft) !important;
+  background: rgba(124,90,255,.12) !important;
+  color: var(--accent-bright) !important;
+  box-shadow: none !important;
 }
 .cnav-item.active::after {
-  width: 2px !important; height: 14px !important;
+  width: 3px !important; height: 18px !important;
   left: 2px !important;
-  background: var(--accent) !important;
+  background: var(--accent-bright) !important;
+  border-radius: 99px !important;
+  opacity: .9 !important;
 }
 
 /* ── 11. SEARCH MODAL ───────────────────────────────────── */
@@ -3389,7 +3405,6 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 /* ── 18. ICON COLOR FIX FOR NEW ACCENT ─────────────────── */
 .icon-accent { color: var(--accent-bright) !important; }
 .mday.today { background: var(--accent) !important; }
-.vtab.active { background: var(--surface) !important; }
 
 /* ── 19. LIGHT MODE OVERRIDES ───────────────────────────── */
 html.light-mode .evb.personal { background: rgba(124,106,247,.1) !important; border-color: rgba(124,106,247,.6) !important; color: #5b21b6 !important; }
@@ -4063,9 +4078,9 @@ html.light-mode .exp-formats{background:transparent;}
 .notes-list-add{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
 .notes-list-add:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
 .notes-list-body{flex:1;overflow-y:auto;padding:6px;}
-.note-list-item{padding:8px 9px;border-radius:8px;cursor:pointer;transition:background .15s;border:1px solid transparent;}
-.note-list-item:hover{background:var(--surface2);}
-.note-list-item.active{background:var(--surface2);border-color:var(--border2);}
+.note-list-item{padding:8px 9px 8px 11px;border-radius:8px;cursor:pointer;transition:background .1s ease;border:1px solid transparent;border-left:2px solid transparent;}
+.note-list-item:hover{background:rgba(124,90,255,.06);}
+.note-list-item.active{background:rgba(124,90,255,.1);border-color:transparent;border-left-color:var(--accent-bright);}
 .note-list-item-title{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .note-list-item-preview{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
 .note-list-item-date{font-size:9px;color:var(--text3);margin-top:3px;opacity:.7;}
@@ -5206,7 +5221,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
       <div id="calendarMembers" style="font-size:11px;color:var(--text2);max-height:100px;overflow-y:auto;margin-bottom:8px"></div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
         <button class="nbtn" style="flex:1;padding:6px;font-size:11px" onclick="openInviteMemberModal()">+ Invitar</button>
-        <button id="deleteCalendarBtn" class="nbtn" style="flex:1;padding:6px;font-size:11px;border-color:var(--danger);color:var(--danger);display:none" onclick="deleteCalendar()">🗑 Eliminar</button>
+        <button id="deleteCalendarBtn" class="nbtn" style="flex:1;padding:6px;font-size:11px;border-color:var(--danger);color:var(--danger);display:none" onclick="deleteCalendar()">Eliminar</button>
       </div>
     </div>
   </div>
@@ -5259,7 +5274,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
           <span class="hamburger-icon"></span>
         </button>
         <div class="vtabs">
-          <button class="vtab" id="tab-home"  onclick="setView('home')">🏠 Inicio</button>
+          <button class="vtab" id="tab-home"  onclick="setView('home')">Inicio</button>
           <button class="vtab active" id="tab-day" onclick="setView('day')">Día</button>
           <button class="vtab" id="tab-week" onclick="setView('week')">Semana</button>
           <button class="vtab" id="tab-month" onclick="setView('month')">Mes</button>
@@ -5343,7 +5358,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
       <button class="nbtn" style="padding:2px 7px;font-size:10px" onclick="clearHistFilters()" title="Limpiar filtros">↺</button>
     </div>
     <select class="hist-cal-select" id="histCalFilter" onchange="renderHistorial()">
-      <option value="">🗂 Todos los calendarios</option>
+      <option value="">Todos los calendarios</option>
     </select>
     <div class="hist-filters" id="histTypeFilters">
       <button class="hf-btn f-personal active" onclick="toggleHistFilter('type','personal',this)">Personal</button>
@@ -5386,10 +5401,10 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
       </div>
       <div class="search-filters" style="padding-top:0">
         <select class="sf-input" id="sfCalendar" onchange="runAdvancedSearch()">
-          <option value="">📅 Cualquier calendario</option>
+          <option value="">Cualquier calendario</option>
         </select>
         <select class="sf-input" id="sfCreator" onchange="runAdvancedSearch()">
-          <option value="">👤 Cualquier creador</option>
+          <option value="">Cualquier creador</option>
         </select>
         <input class="sf-input" type="date" id="sfDateFrom" onchange="runAdvancedSearch()" title="Desde">
         <span style="color:var(--text3);font-size:11px;align-self:center">→</span>
@@ -5461,10 +5476,10 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
     </div>
     <div class="mf" style="gap:8px;flex-direction:column">
       <div style="display:flex;gap:8px">
-        <button class="btn btn-p" style="flex:1" onclick="showLoginForm()">🔑 Iniciar Sesión</button>
-        <button class="btn btn-s" style="flex:1" onclick="showRegisterForm()">📝 Registrarse</button>
+        <button class="btn btn-p" style="flex:1" onclick="showLoginForm()">Iniciar Sesión</button>
+        <button class="btn btn-s" style="flex:1" onclick="showRegisterForm()">Registrarse</button>
       </div>
-      <button class="btn" style="width:100%;background:transparent;border:1px solid var(--border2);color:var(--text2);font-size:12px" onclick="enterGuestMode()">👁 Explorar como visitante</button>
+      <button class="btn" style="width:100%;background:transparent;border:1px solid var(--border2);color:var(--text2);font-size:12px" onclick="enterGuestMode()">Explorar como visitante</button>
     </div>
   </div>
 </div>
@@ -5478,7 +5493,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
     </div>
     <div class="mb">
       <div class="fg">
-        <label class="flbl">📧 Email</label>
+        <label class="flbl">Email</label>
         <input class="finp" type="email" id="loginEmailInput" placeholder="tu@email.com"
           onkeydown="if(event.key==='Enter')document.getElementById('loginPasswordInput').focus()">
       </div>
@@ -5489,14 +5504,14 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
             style="padding-right:44px"
             onkeydown="if(event.key==='Enter')performLogin()">
           <button onclick="togglePasswordVisibility('loginPasswordInput',this)"
-            style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px">👁</button>
+            style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text3);display:flex;align-items:center"><ico-n name="eye" size="15"></ico-n></button>
         </div>
       </div>
       <div id="loginError" style="display:none;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;color:var(--danger);margin-top:4px"></div>
     </div>
     <div class="mf" style="gap:8px">
       <button class="btn btn-s" onclick="closeModal('loginModal');openModal('authModal')">Cancelar</button>
-      <button class="btn btn-p" onclick="performLogin()" style="min-width:100px">🔑 Entrar</button>
+      <button class="btn btn-p" onclick="performLogin()" style="min-width:100px">Entrar</button>
     </div>
   </div>
 </div>
@@ -5627,11 +5642,11 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
           <option value="extended">Extendidas</option>
           <option value="abandoned">Abandonadas</option>
         </select>
-        <input type="text" id="histModalSearch" class="finp" style="flex:2;min-width:140px" placeholder="🔍 Buscar actividad..." oninput="renderHistorialModal()">
+        <input type="text" id="histModalSearch" class="finp" style="flex:2;min-width:140px" placeholder="Buscar actividad..." oninput="renderHistorialModal()">
       </div>
       <!-- Rango de fechas -->
       <div style="display:flex;gap:6px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
-        <span style="font-size:11px;color:var(--text3);white-space:nowrap">📅 Período:</span>
+        <span style="font-size:11px;color:var(--text3);white-space:nowrap">Período:</span>
         <input type="date" id="histDateFrom" class="finp" style="flex:1;min-width:120px;font-size:12px" onchange="renderHistorialModal()">
         <span style="color:var(--text3);font-size:11px">→</span>
         <input type="date" id="histDateTo" class="finp" style="flex:1;min-width:120px;font-size:12px" onchange="renderHistorialModal()">
@@ -5645,9 +5660,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
         <button class="btn btn-s btn-sm" onclick="exportHistorialExcel()" style="gap:6px">
           <i data-lucide="table-2" class="icon icon-sm"></i> Excel
         </button>
-        <button class="btn btn-s" onclick="exportHistorialPDF()" style="font-size:12px;gap:6px">
-          📄 PDF
-        </button>
+        <button class="btn btn-s" onclick="exportHistorialPDF()" style="font-size:12px;gap:6px">PDF</button>
       </div>
     </div>
   </div>
@@ -5661,7 +5674,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
       <button class="mclose" onclick="closeModal('confirmLogoutModal')">×</button>
     </div>
     <div class="mb" style="text-align:center;padding:24px">
-      <div style="font-size:40px;margin-bottom:12px">🚪</div>
+      <div style="display:flex;justify-content:center;margin-bottom:12px;opacity:.6"><ico-n name="log-out" size="36"></ico-n></div>
       <div style="font-size:14px;color:var(--text2);line-height:1.6">
         Estás a punto de cerrar la sesión de<br>
         <strong id="confirmLogoutName" style="color:var(--text)">Usuario</strong>.<br>
@@ -5706,12 +5719,12 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
     </div>
     <div class="mb">
       <div class="fg">
-        <label class="flbl">👤 Nombre completo</label>
+        <label class="flbl">Nombre completo</label>
         <input class="finp" type="text" id="registerNameInput" placeholder="Juan Pérez"
           onkeydown="if(event.key==='Enter')document.getElementById('registerEmailInput').focus()">
       </div>
       <div class="fg">
-        <label class="flbl">📧 Email</label>
+        <label class="flbl">Email</label>
         <input class="finp" type="email" id="registerEmailInput" placeholder="juan@ejemplo.com"
           onkeydown="if(event.key==='Enter')document.getElementById('registerPasswordInput').focus()">
       </div>
@@ -5723,7 +5736,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
             oninput="checkPasswordStrength(this.value)"
             onkeydown="if(event.key==='Enter')document.getElementById('registerConfirmInput').focus()">
           <button onclick="togglePasswordVisibility('registerPasswordInput',this)"
-            style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px">👁</button>
+            style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text3);display:flex;align-items:center"><ico-n name="eye" size="15"></ico-n></button>
         </div>
         <!-- Barra de fortaleza -->
         <div id="pwStrengthBar" style="height:3px;border-radius:2px;margin-top:6px;transition:all .3s;background:var(--border2)">
@@ -5738,14 +5751,14 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
             style="padding-right:44px"
             onkeydown="if(event.key==='Enter')performRegister()">
           <button onclick="togglePasswordVisibility('registerConfirmInput',this)"
-            style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px">👁</button>
+            style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text3);display:flex;align-items:center"><ico-n name="eye" size="15"></ico-n></button>
         </div>
       </div>
       <div id="registerError" style="display:none;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;color:var(--danger)"></div>
     </div>
     <div class="mf" style="gap:8px">
       <button class="btn btn-s" onclick="closeModal('registerModal');openModal('authModal')">Cancelar</button>
-      <button class="btn btn-p" onclick="performRegister()" style="min-width:120px">✨ Crear cuenta</button>
+      <button class="btn btn-p" onclick="performRegister()" style="min-width:120px">Crear cuenta</button>
     </div>
   </div>
 </div>
@@ -5779,7 +5792,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
       </div>
       <!-- ETIQUETAS -->
       <div class="fg" id="tagsSection" style="display:none">
-        <label class="flbl">🏷️ Etiquetas</label>
+        <label class="flbl">Etiquetas</label>
         <div id="tagsList" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:28px">
           <button class="tag-add-btn" onclick="toggleTagPicker()">+ Agregar etiqueta</button>
         </div>
@@ -5796,7 +5809,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
       </div>
       <!-- SUBTAREAS -->
       <div class="fg" id="subtasksSection" style="display:none">
-        <label class="flbl">☑️ Subtareas</label>
+        <label class="flbl">Subtareas</label>
         <div class="subtask-progress"><div class="subtask-progress-fill" id="subtaskProgressFill" style="width:0%"></div></div>
         <div class="subtask-list" id="subtaskList"></div>
         <div class="subtask-add-row">
@@ -5806,7 +5819,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
         </div>
       </div>
       <div class="fg">
-        <label class="flbl">📅 Calendario</label>
+        <label class="flbl">Calendario</label>
         <select class="fsel" id="tCalendar"><option value="">— Selecciona un calendario —</option></select>
       </div>
       <div class="fg" id="tProjG">
@@ -5816,7 +5829,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
 
       <!-- INICIO -->
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:14px">
-        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:10px">📅 Fecha y hora de inicio</div>
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:10px">Fecha y hora de inicio</div>
         <div class="frow">
           <div class="fg" style="margin-bottom:0"><label class="flbl">Fecha inicio</label><input class="finp" id="tDate" type="date"></div>
           <div class="fg" style="margin-bottom:0"><label class="flbl">Hora inicio</label><input class="finp" id="tTime" type="time" step="900" value="09:00" style="font-size:14px"></div>
@@ -5825,12 +5838,12 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
 
       <!-- FECHA LÍMITE — para TODAS las actividades -->
       <div style="background:var(--surface2);border:1px solid rgba(247,162,106,.3);border-radius:8px;padding:14px;margin-bottom:14px">
-        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--accent2);margin-bottom:10px">⏳ Fecha y hora límite</div>
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--accent2);margin-bottom:10px">Fecha y hora límite</div>
         <div class="frow">
           <div class="fg" style="margin-bottom:0"><label class="flbl">Fecha límite</label><input class="finp" id="tDeadlineDate" type="date"></div>
           <div class="fg" style="margin-bottom:0"><label class="flbl">Hora límite</label><input class="finp" id="tDeadlineTime" type="time" step="900" value="17:00" style="font-size:14px"></div>
         </div>
-        <div style="font-size:11px;color:var(--text3);margin-top:8px">💡 Opcional. Si no se define, la actividad no tiene fecha de vencimiento.</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:8px">Opcional. Si no se define, la actividad no tiene fecha de vencimiento.</div>
       </div>
 
       <div class="frow">
@@ -5854,7 +5867,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
         </div>
       </div><br>
       <div class="fg" id="tEmailsGroup">
-        <label class="flbl">📧 Correos para notificaciones</label>
+        <label class="flbl">Correos para notificaciones</label>
         <div id="tEmailsList"></div>
         <button type="button" onclick="addEmailField()"
           style="margin-top:6px;background:none;border:1px dashed var(--border2);color:var(--text3);border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;width:100%;transition:all .15s;font-family:var(--font)"
@@ -5862,7 +5875,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
           onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text3)'">
           + Agregar otro correo
         </button>
-        <div style="font-size:10px;color:var(--text3);margin-top:5px">💡 El primer correo se usa también para recordatorios automáticos.</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:5px">El primer correo se usa también para recordatorios automáticos.</div>
       </div>
       <div class="fg" id="tColorG" style="display:none">
         <label class="flbl">Color del proyecto</label>
@@ -5877,7 +5890,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
           <div class="cp" data-c="#34d399" style="width:26px;height:26px;border-radius:50%;background:#34d399;cursor:pointer;transition:transform .15s" onclick="selColor('#34d399')"></div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;margin-top:6px">
-          <span style="font-size:11px;color:var(--text3);white-space:nowrap">🎨 Libre:</span>
+          <span style="font-size:11px;color:var(--text3);white-space:nowrap">Libre:</span>
           <input type="color" id="tColorFree" value="#f7a26a"
             style="width:34px;height:34px;border-radius:50%;border:2px solid var(--border2);cursor:pointer;background:none;padding:2px;flex-shrink:0"
             oninput="selColor(this.value)" onchange="selColor(this.value)">
@@ -5890,7 +5903,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
       <!-- RECURRENCIA SECTION -->
       <div id="recurSection" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:14px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3)">🔁 Repetición</div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3)">Repetición</div>
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--text2)">
             <input type="checkbox" id="tIsRecurring" onchange="toggleRecurrence(this.checked)"
               style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
@@ -5902,10 +5915,10 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
             <div class="fg" style="margin-bottom:0">
               <label class="flbl">Frecuencia</label>
               <select class="fsel" id="tRecurType" onchange="updateRecurPreview()">
-                <option value="daily">📅 Diaria</option>
-                <option value="weekdays">💼 Días laborales (Lun–Vie)</option>
-                <option value="weekly" selected>📆 Semanal</option>
-                <option value="monthly">🗓 Mensual</option>
+                <option value="daily">Diaria</option>
+                <option value="weekdays">Días laborales (Lun–Vie)</option>
+                <option value="weekly" selected>Semanal</option>
+                <option value="monthly">Mensual</option>
               </select>
             </div>
             <div class="fg" style="margin-bottom:0">
@@ -5919,15 +5932,11 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
 
       <!-- ARCHIVOS SECTION -->
       <div id="filesSection" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:14px">
-        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:10px">📎 Archivos y enlaces</div>
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:10px">Archivos y enlaces</div>
         <div style="display:flex;gap:6px;margin-bottom:10px">
           <input type="file" id="fileInput" style="display:none" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.webp,.mp4,.mpeg,.mov,.mp3,.wav,.txt,.csv" onchange="handleFileSelect()">
-          <button class="btn btn-s" style="flex:1;background:var(--accent);color:white;font-size:11px" onclick="document.getElementById('fileInput').click()">
-            📄 Subir archivo
-          </button>
-          <button class="btn btn-s" style="flex:1;font-size:11px" onclick="toggleUrlInput()">
-            🔗 Agregar enlace
-          </button>
+          <button class="btn btn-s" style="flex:1;background:var(--accent);color:white;font-size:11px" onclick="document.getElementById('fileInput').click()">Subir archivo</button>
+          <button class="btn btn-s" style="flex:1;font-size:11px" onclick="toggleUrlInput()">Agregar enlace</button>
         </div>
         <!-- URL input -->
         <div id="urlInputSection" style="display:none;margin-bottom:10px">
@@ -5982,7 +5991,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
         <button class="mclose" onclick="closeModal('createCalendarModal')">×</button>
       </div>
       <div style="display:flex;align-items:center;gap:14px">
-        <div id="calPreviewDot" style="width:44px;height:44px;border-radius:14px;background:#7c6af7;flex-shrink:0;box-shadow:0 0 24px rgba(124,90,255,.5);transition:all .3s;display:flex;align-items:center;justify-content:center;font-size:20px">📅</div>
+        <div id="calPreviewDot" style="width:44px;height:44px;border-radius:14px;background:#7c6af7;flex-shrink:0;box-shadow:0 0 24px rgba(124,90,255,.5);transition:all .3s;display:flex;align-items:center;justify-content:center"><ico-n name="calendar" size="22" color="rgba(255,255,255,.9)"></ico-n></div>
         <div>
           <div id="calPreviewName" style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text);letter-spacing:-.3px">Nuevo Calendario</div>
           <div id="calPreviewDesc" style="font-size:12px;color:var(--text3);margin-top:3px">Sin descripción</div>
@@ -5995,7 +6004,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
 
       <!-- Nombre -->
       <div class="fg">
-        <label class="flbl">📝 Nombre del calendario</label>
+        <label class="flbl">Nombre del calendario</label>
         <input class="finp" type="text" id="calendarName" placeholder="Ej: Equipo de Marketing, Proyecto X..."
           oninput="updateCalPreview()"
           style="font-size:14px;font-weight:500">
@@ -6003,14 +6012,14 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
 
       <!-- Descripción -->
       <div class="fg">
-        <label class="flbl">💬 Descripción (opcional)</label>
+        <label class="flbl">Descripción (opcional)</label>
         <textarea class="ftarea" id="calendarDesc" placeholder="¿Para qué es este calendario?"
           oninput="updateCalPreview()" style="min-height:72px;resize:none"></textarea>
       </div>
 
       <!-- Color -->
       <div class="fg">
-        <label class="flbl">🎨 Color del calendario</label>
+        <label class="flbl">Color del calendario</label>
         <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:8px;padding:14px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm)">
           <!-- Fila 1: colores principales -->
           <button class="cal-color-opt selected" data-color="#7c6af7" onclick="selectCalendarColor('#7c6af7')" style="background:#7c6af7" title="Púrpura"></button>
@@ -6039,7 +6048,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
     <div style="padding:14px 26px 22px;display:flex;gap:8px;justify-content:flex-end">
       <button class="btn btn-s" onclick="closeModal('createCalendarModal')">Cancelar</button>
       <button class="btn btn-p" onclick="createCalendar()" style="min-width:100px">
-        <span>✨ Crear Calendario</span>
+        <span>Crear Calendario</span>
       </button>
     </div>
   </div>
@@ -6122,7 +6131,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
 
       <!-- New deadline (shown when extended) -->
       <div id="extendSection" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:4px">
-        <div style="font-size:11px;color:var(--accent2);font-weight:600;margin-bottom:10px">📅 Nueva fecha límite</div>
+        <div style="font-size:11px;color:var(--accent2);font-weight:600;margin-bottom:10px">Nueva fecha límite</div>
         <div class="frow">
           <div class="fg" style="margin-bottom:0"><label class="flbl">Nueva fecha</label><input class="finp" id="extDate" type="date"></div>
           <div class="fg" style="margin-bottom:0"><label class="flbl">Nueva hora</label><input class="finp" id="extTime" type="time" step="900" value="17:00" style="font-size:14px"></div>
@@ -6131,13 +6140,13 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
 
       <!-- Notes -->
       <div class="fg" style="margin-top:14px">
-        <label class="flbl">📝 Notas / Comentario (opcional)</label>
+        <label class="flbl">Notas / Comentario (opcional)</label>
         <textarea class="ftarea" id="statusNote" placeholder="Ej: Se adelantó porque el cliente solicitó entrega urgente..."></textarea>
       </div>
 
       <!-- Actual completion date (for completed/early) -->
       <div class="fg" id="actualDateG">
-        <label class="flbl">📅 Fecha real de finalización</label>
+        <label class="flbl">Fecha real de finalización</label>
         <div class="frow">
           <div style="flex:1"><input class="finp" id="actualDate" type="date"></div>
           <div style="flex:1"><input class="finp" id="actualTime" type="time" step="900" value="09:00" style="font-size:14px"></div>
@@ -6273,6 +6282,83 @@ let S={
   theme:'dark',projFilter:'all',teamFilter:'all'
 };
 
+// ══════════════════════════════════════════════════════════
+// ICON SYSTEM — inline SVG helper for JS templates
+// Uses Lucide icon paths, stroke-based, 1.8 stroke-width
+// ══════════════════════════════════════════════════════════
+const _ICON_PATHS = {
+  calendar:      '<rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/>',
+  clock:         '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  user:          '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  bell:          '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  mail:          '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+  paperclip:     '<path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/>',
+  'file-text':   '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><line x1="10" x2="14" y1="13" y2="13"/><line x1="8" x2="16" y1="17" y2="17"/>',
+  'bar-chart-2': '<line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/>',
+  download:      '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>',
+  upload:        '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/>',
+  'folder-open': '<path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/>',
+  send:          '<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
+  target:        '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  zap:           '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+  trash:         '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>',
+  search:        '<circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/>',
+  tag:           '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>',
+  gauge:         '<path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/>',
+  flag:          '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/>',
+  repeat:        '<path d="m17 2 4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
+  history:       '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>',
+  'layout-dashboard': '<rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>',
+  'calendar-check': '<rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/>',
+  // ── Extended set ──────────────────────────────────────────────────────────
+  eye:             '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+  'eye-off':       '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>',
+  'log-out':       '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>',
+  lock:            '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  check:           '<polyline points="20 6 9 17 4 12"/>',
+  info:            '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
+  'alert-triangle':'<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  'volume-2':      '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>',
+  'message-square':'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  'calendar-days': '<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>',
+  filter:          '<line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/>',
+  users:           '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+};
+
+/**
+ * Returns an inline SVG string for use in JS template literals.
+ * @param {string} name  - icon name from _ICON_PATHS
+ * @param {number} size  - width/height in px (default 15)
+ * @param {string} color - CSS color (default 'currentColor')
+ */
+function _svgIco(name, size=15, color='currentColor') {
+  const paths = _ICON_PATHS[name];
+  if(!paths) return '';
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle">${paths}</svg>`;
+}
+
+// ════════════════════════════════════════════════════════
+// <ico-n> — Reusable icon custom element
+//   Usage in HTML : <ico-n name="calendar" size="15" color="var(--accent)"></ico-n>
+//   Usage in JS   : _svgIco('calendar', 15)  (backward-compat helper above)
+//   Attributes    : name (required), size (default 15), color (default currentColor)
+//   Reactive      : attribute changes auto-re-render the SVG
+// ════════════════════════════════════════════════════════
+class IcoN extends HTMLElement {
+  static get observedAttributes(){ return ['name','size','color']; }
+  connectedCallback(){ this._render(); }
+  attributeChangedCallback(){ if(this.isConnected) this._render(); }
+  _render(){
+    const name  = this.getAttribute('name')  || '';
+    const size  = parseInt(this.getAttribute('size'))  || 15;
+    const color = this.getAttribute('color') || 'currentColor';
+    const paths = _ICON_PATHS[name];
+    if(!paths){ this.innerHTML = ''; return; }
+    this.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
+  }
+}
+if(!customElements.get('ico-n')) customElements.define('ico-n', IcoN);
+
 // API_URL — usa localhost en desarrollo, ruta relativa en producción
 const API_URL = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
   ? 'http://localhost:8000/api'
@@ -6358,7 +6444,7 @@ function renderProjects(){
     
     // Marcar si es de otro calendario
     const isOtherCalendar = S.currentCalendarId && p.calendar_id !== S.currentCalendarId;
-    const otherMark = isOtherCalendar ? '📌 ' : '';
+    const otherMark = '';
     
     const item = document.createElement('div');
     item.className = 'proj-item' + (isOtherCalendar ? ' other-calendar' : '');
@@ -6469,7 +6555,7 @@ function switchCalendar(calendarId){
 
   // Badge de rol del usuario actual
   const roleColors = {owner:'var(--accent)',editor:'var(--accent3)',viewer:'var(--text3)',member:'var(--text3)'};
-  const roleLabels = {owner:'👑 Propietario',editor:'✏️ Editor',viewer:'👁 Viewer',member:'👤 Miembro'};
+  const roleLabels = {owner:'Propietario',editor:'Editor',viewer:'Viewer',member:'Miembro'};
   const roleEl = document.getElementById('calendarRoleBadge');
   if(roleEl){
     roleEl.textContent = roleLabels[S.currentCalendarRole] || S.currentCalendarRole;
@@ -6484,7 +6570,7 @@ function switchCalendar(calendarId){
       // Owner puede eliminar a cualquiera excepto a sí mismo siendo owner
       const canRemove = isOwner && !mIsOwner;
       const deleteBtn = canRemove ? `<button class="member-delete-btn" onclick="removeMember('${m.user_id || m.id}')" title="Eliminar miembro">×</button>` : '';
-      const roleLabel = {owner:'👑',editor:'✏️',viewer:'👁',member:'👤'}[m.role] || '';
+      const roleLabel = '';
       return `<div class="member-item">${roleLabel} ${m.user?.name || 'Usuario'} <span style="color:var(--text3);font-size:10px">(${m.role})</span>${deleteBtn}</div>`;
     }).join('');
   } else {
@@ -6684,7 +6770,7 @@ async function deleteCalendar(){
   }
   
   showConfirmDelete(
-    '🗑️ Eliminar calendario',
+    'Eliminar calendario',
     `¿Eliminar "<b>${cal?.name}</b>"?`,
     'Se eliminarán también todas sus actividades. Esta acción no se puede deshacer.',
     async () => {
@@ -7120,8 +7206,8 @@ function renderWeek(container){
       blk.style.right=`calc(${100-(c+1)*cw}% + 2px)`;
       const endT=m2t(t2m(ev.time)+ev.dur);
       const cal=ev.calendar_id?S.calendars.find(c=>c.id===ev.calendar_id):null;
-      const calLabel=cal?`<div style="font-size:8px;color:var(--text3);margin-top:1px">📅 ${cal.name}</div>`:'';
-      const recurIcon2=ev.isRecurring?'<span style="font-size:8px;opacity:.7"> 🔁</span>':'';
+      const calLabel=cal?`<div style="font-size:8px;color:var(--text3);margin-top:1px">${cal.name}</div>`:'';
+      const recurIcon2=ev.isRecurring?`<span style="opacity:.7;display:inline-flex;vertical-align:middle"> ${_svgIco('repeat',8)}</span>`:'';
       blk.innerHTML=`<div class="evb-title">${ev.title}${recurIcon2}</div><div class="evb-time">${fmt12(ev.time)}</div>${calLabel}`;
       makeDraggable(blk, ev, dk(dt));
       col.appendChild(blk);
@@ -7192,8 +7278,8 @@ function renderAgenda(container){
       const proj = ev.projId ? S.projects.find(p=>p.id===ev.projId) : null;
       const color = ev.color || typeColor[ev.type] || 'var(--accent)';
       const statusCls = ev.status ? 'status-'+ev.status : '';
-      const recurIcon = ev.isRecurring ? ' 🔁' : '';
-      const deadlineTag = ev.isDeadline ? '<span style="font-size:10px;color:var(--accent2)">⏳ Fecha límite</span>' : '';
+      const recurIcon = ev.isRecurring ? `<span style="display:inline-flex;vertical-align:middle;opacity:.7;margin-left:3px">${_svgIco('repeat',10)}</span>` : '';
+      const deadlineTag = ev.isDeadline ? `<span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;color:var(--accent2)">${_svgIco('flag',10,'var(--accent2)')} Fecha límite</span>` : '';
 
       const item = document.createElement('div');
       item.className = `agenda-item ${statusCls}`;
@@ -7222,7 +7308,7 @@ function renderAgenda(container){
   if(!hasAny){
     wrap.innerHTML = `
       <div class="agenda-empty">
-        <div class="agenda-empty-icon">📭</div>
+        <div class="agenda-empty-icon">${_svgIco('calendar',32,'var(--text3)')}</div>
         <div style="font-size:15px;font-weight:600;margin-bottom:8px">Sin actividades en este período</div>
         <div style="font-size:12px">No hay actividades en los próximos 14 días.</div>
         <button class="btn btn-p" style="margin-top:20px" onclick="openTaskModal(dk(S.cur))">+ Nueva actividad</button>
@@ -7270,18 +7356,8 @@ function addUrlLink(){
 }
 
 function _getLinkIcon(url){
-  if(url.includes('drive.google.com')) return '📁';
-  if(url.includes('docs.google.com')) return '📝';
-  if(url.includes('sheets.google.com')) return '📊';
-  if(url.includes('notion.so') || url.includes('notion.site')) return '📓';
-  if(url.includes('figma.com')) return '🎨';
-  if(url.includes('github.com')) return '💻';
-  if(url.includes('dropbox.com')) return '📦';
-  if(url.includes('onedrive.live.com') || url.includes('1drv.ms')) return '☁️';
-  if(url.includes('youtube.com') || url.includes('youtu.be')) return '▶️';
-  if(url.includes('loom.com')) return '🎥';
-  if(url.includes('miro.com')) return '🗺️';
-  return '🔗';
+  // Returns inline SVG icon for the link service
+  return _svgIco('send', 14, 'var(--accent)');
 }
 
 function _getLinkLabel(url){
@@ -7336,7 +7412,7 @@ function renderMonth(container){
       const evEl=document.createElement('div');
       evEl.className=`mc-ev ${ev.type}${ev.isDeadline?' deadline-ev':''}`;
       if(ev.isDeadline) evEl.style.borderStyle='dashed';
-      evEl.textContent=`${ev.isDeadline?'🏁':''} ${fmt12(ev.time)} ${ev.title}`.trim();
+      evEl.textContent=`${fmt12(ev.time)} ${ev.title}`.trim();
       evEl.title=ev.title;
       evEl.onclick=e=>{e.stopPropagation();showEventDetail(getEv(ev.id));};
       // DnD
@@ -7378,7 +7454,7 @@ function openSearchModal(){
   sfCreator.innerHTML = '<option value="">Cualquier creador</option>';
   S.users.forEach(u => {
     const o = document.createElement('option');
-    o.value = u.id; o.textContent = '👤 ' + u.name; sfCreator.appendChild(o);
+    o.value = u.id; o.textContent = u.name; sfCreator.appendChild(o);
   });
   setTimeout(() => document.getElementById('searchModalInput').focus(), 80);
   runAdvancedSearch();
@@ -7451,7 +7527,7 @@ function runAdvancedSearch(){
   countEl.textContent = matches.length === 0 ? 'Sin resultados' : `${matches.length} resultado${matches.length>1?'s':''}`;
 
   if(!matches.length){
-    resultsEl.innerHTML = `<div class="sempty"><div style="font-size:28px;margin-bottom:8px">😶</div><div>Sin resultados para los filtros actuales</div></div>`;
+    resultsEl.innerHTML = `<div class="sempty"><div style="margin-bottom:8px;opacity:.4">${_svgIco('search',28,'var(--text3)')}</div><div>Sin resultados para los filtros actuales</div></div>`;
     return;
   }
 
@@ -7541,7 +7617,7 @@ function updateRecurPreview(){
   else if(type === 'weekly') count = Math.floor(diffDays / 7) + 1;
   else if(type === 'monthly') count = Math.floor(diffDays / 30) + 1;
 
-  preview.textContent = `🔁 ${labels[type]} · ${count} instancia(s) · Hasta ${fmtDate(end)}`;
+  preview.textContent = `${labels[type]} · ${count} instancia(s) · Hasta ${fmtDate(end)}`;
 }
 
 async function deleteRecurringEvent(ev){
@@ -7561,7 +7637,7 @@ async function deleteRecurringEvent(ev){
   }
   closeModal('detModal');
   render();
-  toast('🗑 Evento(s) eliminado(s)');
+  toast('Evento(s) eliminado(s)');
 }
 
 let _recurScopeResolve = null;
@@ -7927,8 +8003,8 @@ function saveTask(){
         // update deadline event
         const dlIdx=S.events.findIndex(e=>e.projId===pe.projId&&e.isDeadline);
         if(deadlineDate){
-          if(dlIdx!==-1){S.events[dlIdx]={...S.events[dlIdx],date:deadlineDate,time:deadlineTime,title:'🏁 Fin: '+title};}
-          else{S.events.push({id:uid(),title:'🏁 Fin: '+title,type:'project',date:deadlineDate,time:deadlineTime,dur:60,remind:1440,desc:'Fecha límite: '+title,email,projId:pe.projId,creatorId:ME.id,color,isDeadline:true});}
+          if(dlIdx!==-1){S.events[dlIdx]={...S.events[dlIdx],date:deadlineDate,time:deadlineTime,title:'Fin: '+title};}
+          else{S.events.push({id:uid(),title:'Fin: '+title,type:'project',date:deadlineDate,time:deadlineTime,dur:60,remind:1440,desc:'Fecha límite: '+title,email,projId:pe.projId,creatorId:ME.id,color,isDeadline:true});}
         } else if(dlIdx!==-1){ S.events.splice(dlIdx,1); }
       }
     }
@@ -7954,14 +8030,14 @@ function saveTask(){
         S.projects.push({...projectData, id: realProjId, calendarName: calObj?.name||null});
 
         // Guardar el evento principal del proyecto en la API
-        const projEventData = {id,title:'🎯 '+title,type:'project',date,time,dur,remind,desc,email,projId:realProjId,creatorId:ME.id,deadlineDate,deadlineTime,calendar_id:calendarId,isDeadline:false,calendarName:calObj?.name||null,calendarColor:calObj?.color||null};
+        const projEventData = {id,title,type:'project',date,time,dur,remind,desc,email,projId:realProjId,creatorId:ME.id,deadlineDate,deadlineTime,calendar_id:calendarId,isDeadline:false,calendarName:calObj?.name||null,calendarColor:calObj?.color||null};
         const savedProjEv = await saveEventToAPI(projEventData);
         const realEventId = savedProjEv?.id || id;
         S.events.push({...projEventData, id: realEventId});
 
         // Guardar el evento de fecha límite en la API si aplica
         if(deadlineDate && deadlineDate !== date){
-          const dlEventData = {id:uid(),title:'🏁 Fin: '+title,type:'project',date:deadlineDate,time:deadlineTime,dur:60,remind:1440,desc:'Fecha límite del proyecto: '+title,email,projId:realProjId,creatorId:ME.id,deadlineDate,deadlineTime,calendar_id:calendarId,isDeadline:true,calendarName:calObj?.name||null,calendarColor:calObj?.color||null};
+          const dlEventData = {id:uid(),title:'Fin: '+title,type:'project',date:deadlineDate,time:deadlineTime,dur:60,remind:1440,desc:'Fecha límite del proyecto: '+title,email,projId:realProjId,creatorId:ME.id,deadlineDate,deadlineTime,calendar_id:calendarId,isDeadline:true,calendarName:calObj?.name||null,calendarColor:calObj?.color||null};
           const savedDlEv = await saveEventToAPI(dlEventData);
           S.events.push({...dlEventData, id: savedDlEv?.id || dlEventData.id});
         }
@@ -8028,7 +8104,7 @@ function editEvent(ev){
   document.getElementById('taskModalTitle').textContent='Editar Evento';
   document.getElementById('btnDel').style.display='inline-flex';
   document.getElementById('btnDuplicate').style.display='inline-flex';
-  document.getElementById('tTitle').value=ev.title.replace(/^🎯 /,'');
+  document.getElementById('tTitle').value=ev.title;
   document.getElementById('tDesc').value=ev.desc||'';
   document.getElementById('tDate').value=ev.date;
   renderEmailFields(ev.email ? ev.email.split(',').map(e=>e.trim()) : ['']);
@@ -8079,7 +8155,7 @@ function showEventDetail(ev){
   const badge=document.getElementById('detBadge');badge.textContent=lbl[ev.type];badge.className='tbadge '+cls[ev.type];
   document.getElementById('detTitle').textContent=ev.title;
   const end=m2t(t2m(ev.time)+ev.dur);
-  document.getElementById('detMeta').innerHTML=`<span>📅 ${fmtDate(ev.date)}</span><span>🕐 ${fmt12(ev.time)} – ${fmt12(end)}</span>`;
+  document.getElementById('detMeta').innerHTML=`<span>${_svgIco('calendar',13)} ${fmtDate(ev.date)}</span><span>${_svgIco('clock',13)} ${fmt12(ev.time)} – ${fmt12(end)}</span>`;
   const proj=ev.projId?S.projects.find(p=>p.id===ev.projId):null;
   const creator = {name: ev.creatorName || 'Desconocido'};
   let html='';
@@ -8108,7 +8184,7 @@ function showEventDetail(ev){
     const uc=diff<0?'var(--danger)':diff<=3?'var(--accent2)':'var(--accent3)';
     const ut=diff<0?`Venció hace ${Math.abs(diff)} día(s)`:diff===0?'¡Vence hoy!':diff===1?'Vence mañana':`${diff} día(s) restantes`;
     html+=`<div style="background:rgba(247,162,106,.08);border:1px solid ${uc};border-radius:8px;padding:9px 12px;margin-bottom:12px;display:flex;align-items:center;gap:8px">
-      <span>⏳</span>
+      ${_svgIco('clock',16,'var(--accent2)')}
       <div>
         <div style="font-size:11px;font-weight:600;color:${uc}">${ut}</div>
         <div style="font-size:11px;color:var(--text2)">Límite: ${fmtDate(ev.deadlineDate)} a las ${fmt12(ev.deadlineTime||'17:00')}</div>
@@ -8124,49 +8200,49 @@ function showEventDetail(ev){
     const uc=diff<0?'var(--danger)':diff<=7?'var(--accent2)':'var(--accent3)';
     const ut=diff<0?`Venció hace ${Math.abs(diff)} día(s)`:diff===0?'¡Vence hoy!':diff===1?'Vence mañana':`Faltan ${diff} día(s)`;
     html+=`<div style="background:rgba(247,162,106,.1);border:1px solid ${uc};border-radius:8px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px">
-      <span style="font-size:22px">🏁</span>
+      ${_svgIco('flag',20,uc)}
       <div><div style="font-size:12px;font-weight:600;color:${uc}">${ut}</div>
       <div style="font-size:11px;color:var(--text2);margin-top:2px">Fecha límite del proyecto <strong>${proj.title}</strong></div></div></div>`;
   }
 
-  if(ev.desc)html+=`<div class="drow"><div class="dico">📝</div><div><div class="dlbl">Descripción</div><div class="dval">${ev.desc}</div></div></div>`;
+  if(ev.desc)html+=`<div class="drow"><div class="dico">${_svgIco('file-text',14)}</div><div><div class="dlbl">Descripción</div><div class="dval">${ev.desc}</div></div></div>`;
   if(proj){
     html+=`<div class="drow"><div class="dico" style="color:${proj.color}">◈</div><div><div class="dlbl">Proyecto Meta</div><div class="dval" style="color:${proj.color}">${proj.title}</div></div></div>`;
-    if(proj.createdAt)html+=`<div class="drow"><div class="dico">📅</div><div><div class="dlbl">Inicio</div><div class="dval">${fmtDate(proj.createdAt)}</div></div></div>`;
-    if(proj.deadline)html+=`<div class="drow"><div class="dico">⏳</div><div><div class="dlbl">Fecha límite</div><div class="dval">${fmtDate(proj.deadline)}</div></div></div>`;
+    if(proj.createdAt)html+=`<div class="drow"><div class="dico">${_svgIco('calendar',14)}</div><div><div class="dlbl">Inicio</div><div class="dval">${fmtDate(proj.createdAt)}</div></div></div>`;
+    if(proj.deadline)html+=`<div class="drow"><div class="dico">${_svgIco('clock',14)}</div><div><div class="dlbl">Fecha límite</div><div class="dval">${fmtDate(proj.deadline)}</div></div></div>`;
   }
-  html+=`<div class="drow"><div class="dico">👤</div><div><div class="dlbl">Creado por</div><div class="dval">${creator.name}</div></div></div>`;
+  html+=`<div class="drow"><div class="dico">${_svgIco('user',14)}</div><div><div class="dlbl">Creado por</div><div class="dval">${creator.name}</div></div></div>`;
   
   // Mostrar calendario — siempre visible, con color y nombre
   const calName = ev.calendarName || (ev.calendar_id ? S.calendars.find(c => c.id === ev.calendar_id)?.name : null);
   const calColor = ev.calendarColor || (ev.calendar_id ? S.calendars.find(c => c.id === ev.calendar_id)?.color : null) || '#7c6af7';
   if(calName){
-    html+=`<div class="drow"><div class="dico">🗂️</div><div><div class="dlbl">Calendario</div><div class="dval" style="display:flex;align-items:center;gap:7px"><div style="width:10px;height:10px;border-radius:3px;background:${calColor};flex-shrink:0;box-shadow:0 0 6px ${calColor}55"></div><span style="font-weight:600">${calName}</span></div></div></div>`;
+    html+=`<div class="drow"><div class="dico">${_svgIco('calendar',14)}</div><div><div class="dlbl">Calendario</div><div class="dval" style="display:flex;align-items:center;gap:7px"><div style="width:10px;height:10px;border-radius:3px;background:${calColor};flex-shrink:0;box-shadow:0 0 6px ${calColor}55"></div><span style="font-weight:600">${calName}</span></div></div></div>`;
   } else {
-    html+=`<div class="drow"><div class="dico">🗂️</div><div><div class="dlbl">Calendario</div><div class="dval" style="color:var(--text3)">Sin calendario asignado</div></div></div>`;
+    html+=`<div class="drow"><div class="dico">${_svgIco('calendar',14)}</div><div><div class="dlbl">Calendario</div><div class="dval" style="color:var(--text3)">Sin calendario asignado</div></div></div>`;
   }
 
   // Recurrencia
   if(ev.isRecurring && ev.recurType){
     const recurLabels = {daily:'Diaria',weekdays:'Días laborales',weekly:'Semanal',monthly:'Mensual'};
     const recurLabel = recurLabels[ev.recurType] || ev.recurType;
-    html+=`<div class="drow"><div class="dico">🔁</div><div><div class="dlbl">Repetición</div><div class="dval" style="display:flex;align-items:center;gap:8px">
+    html+=`<div class="drow"><div class="dico">${_svgIco('repeat',14)}</div><div><div class="dlbl">Repetición</div><div class="dval" style="display:flex;align-items:center;gap:8px">
       <span style="background:rgba(124,90,255,.12);color:var(--accent-bright);padding:2px 10px;border-radius:10px;font-size:12px;font-weight:600">${recurLabel}</span>
       ${ev.recurEnd ? `<span style="font-size:11px;color:var(--text3)">hasta ${fmtDate(ev.recurEnd)}</span>` : ''}
     </div></div></div>`;
   }
 
-  if(!isDeadlineEv)html+=`<div class="drow"><div class="dico">🔔</div><div><div class="dlbl">Recordatorio</div><div class="dval">${ev.remind===0?'Al momento':ev.remind<60?`${ev.remind} min antes`:ev.remind===60?'1 hora antes':'1 día antes'}</div></div></div>`;
-  if(ev.email)html+=`<div class="drow"><div class="dico">✉️</div><div><div class="dlbl">Email</div><div class="dval">${ev.email}</div></div></div>`;
+  if(!isDeadlineEv)html+=`<div class="drow"><div class="dico">${_svgIco('bell',14)}</div><div><div class="dlbl">Recordatorio</div><div class="dval">${ev.remind===0?'Al momento':ev.remind<60?`${ev.remind} min antes`:ev.remind===60?'1 hora antes':'1 día antes'}</div></div></div>`;
+  if(ev.email)html+=`<div class="drow"><div class="dico">${_svgIco('mail',14)}</div><div><div class="dlbl">Email</div><div class="dval">${ev.email}</div></div></div>`;
   const isCalendarEditor=['owner','editor'].includes(S.currentCalendarRole);
   const canEdit=ev.creatorId===ME.id||ev.type==='team'||(ev.type==='project'&&isCalendarEditor);
-  if(ev.type==='personal'&&ev.creatorId!==ME.id)html+=`<div class="perm"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:.7"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Tarea personal — solo visualización</div>`;
-  else if(ev.type==='team')html+=`<div class="perm" style="border-color:rgba(106,247,196,.3)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:.7"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Tarea de equipo — todos pueden colaborar</div>`;
-  else if(ev.type==='project'&&ev.creatorId!==ME.id)html+=`<div class="perm" style="border-color:rgba(245,158,11,.3)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:.7"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="m12 16 .01 0"/></svg> Meta compartida — ${isCalendarEditor?'puedes editar como editor del calendario':'solo visualización'}</div>`;
+  if(ev.type==='personal'&&ev.creatorId!==ME.id)html+=`<div class="perm">${_svgIco('lock',13)} Tarea personal — solo visualización</div>`;
+  else if(ev.type==='team')html+=`<div class="perm" style="border-color:rgba(106,247,196,.3)">${_svgIco('users',13)} Tarea de equipo — todos pueden colaborar</div>`;
+  else if(ev.type==='project'&&ev.creatorId!==ME.id)html+=`<div class="perm" style="border-color:rgba(245,158,11,.3)">${_svgIco('info',13)} Meta compartida — ${isCalendarEditor?'puedes editar como editor del calendario':'solo visualización'}</div>`;
 
   // Sección de archivos adjuntos
   html+=`<div id="detFilesSection" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
-    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text3);margin-bottom:8px">📎 Archivos adjuntos</div>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text3);margin-bottom:8px;display:flex;align-items:center;gap:6px">${_svgIco('paperclip',12)} Archivos adjuntos</div>
     <div id="detFilesList" style="font-size:11px;color:var(--text3)">Cargando...</div>
   </div>`;
 
@@ -8252,7 +8328,7 @@ async function loadDetailFiles(eventId){
       const links = linksData.links || [];
       linksHTML = links.map(lnk => `
         <div class="url-link-item" style="margin-bottom:6px">
-          <span style="font-size:18px;flex-shrink:0">${lnk.icon||'🔗'}</span>
+          <span style="flex-shrink:0;display:flex">${_svgIco('send',15,'var(--accent)')}</span>
           <div style="flex:1;min-width:0">
             <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${lnk.label||lnk.url}</div>
             <div style="font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${lnk.url}</div>
@@ -8261,7 +8337,7 @@ async function loadDetailFiles(eventId){
           <div style="display:flex;gap:4px;flex-shrink:0">
             <a href="${lnk.url}" target="_blank" rel="noopener"
               style="display:flex;align-items:center;gap:4px;padding:5px 10px;background:var(--accent);color:white;border-radius:var(--r-sm);font-size:11px;font-weight:600;text-decoration:none">
-              🔗 Abrir
+              Abrir
             </a>
             <button onclick="deleteEventLink('${eventId}','${lnk.id}')"
               style="padding:5px 8px;background:none;border:1px solid var(--danger);color:var(--danger);border-radius:var(--r-sm);font-size:11px;cursor:pointer;line-height:1">
@@ -8278,20 +8354,17 @@ async function loadDetailFiles(eventId){
       const files = (filesData.files || []).filter(f => !(f.filename||'').startsWith('PLINK'));
       filesHTML = files.map(f => {
         const ext = (f.filename||'').split('.').pop().toLowerCase();
-        const icon = ['jpg','jpeg','png','gif','webp'].includes(ext)?'🖼️':
-          ['pdf'].includes(ext)?'📄':['mp4','mov','mpeg'].includes(ext)?'🎬':
-          ['mp3','wav'].includes(ext)?'🎵':['xls','xlsx'].includes(ext)?'📊':
-          ['doc','docx'].includes(ext)?'📝':['ppt','pptx'].includes(ext)?'📑':'📎';
+        const iconSvg = _svgIco('file-text', 18, 'var(--text3)');
         return `
           <div style="display:flex;align-items:center;gap:10px;padding:9px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:6px">
-            <span style="font-size:20px;flex-shrink:0">${icon}</span>
+            <span style="flex-shrink:0;display:flex">${iconSvg}</span>
             <div style="flex:1;min-width:0">
               <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${f.filename}</div>
               <div style="font-size:10px;color:var(--text3)">${formatFileSize(f.file_size||0)}</div>
             </div>
             <a href="${API_URL}/files/${f.id}/download" download="${f.filename}"
               style="display:flex;align-items:center;gap:4px;padding:5px 10px;background:var(--accent);color:white;border-radius:var(--r-sm);font-size:11px;font-weight:600;text-decoration:none;flex-shrink:0">
-              ⬇️ Descargar
+              Descargar
             </a>
           </div>`;
       }).join('');
@@ -8398,12 +8471,12 @@ function applyStatus(){
     await updateEventStatus(_statusEvId, statusData);
   })();
   
-  const statusMsg={completed:'✅ Actividad completada',
-    'early-voluntary':'⚡ Marcada como adelantada',
-    'early-forced':'🔀 Adelantada por obligación',
-    extended:'📅 Fecha límite extendida',
-    abandoned:'🚫 Actividad abandonada',
-    pending:'🕐 Restablecida a pendiente'};
+  const statusMsg={completed:'Actividad completada',
+    'early-voluntary':'Marcada como adelantada',
+    'early-forced':'Adelantada por obligación',
+    extended:'Fecha límite extendida',
+    abandoned:'Actividad abandonada',
+    pending:'Restablecida a pendiente'};
   closeModal('statusModal');
   render();
   toast(statusMsg[status]||'Estado actualizado');
@@ -8452,7 +8525,7 @@ function updateFileListUI(){
     item.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:8px;background:var(--surface3);border-radius:6px;margin-bottom:6px;font-size:12px;border:1px solid var(--border)';
     item.innerHTML = `
       <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
-        <span style="font-size:16px">📄</span>
+        <span style="display:flex;flex-shrink:0">${_svgIco('file-text',15,'var(--text3)')}</span>
         <div style="flex:1;min-width:0;overflow:hidden">
           <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500">${file.name}</div>
           <div style="color:var(--text3);font-size:10px;margin-top:1px">${formatFileSize(file.size)}</div>
@@ -8468,7 +8541,7 @@ function updateFileListUI(){
     const item = document.createElement('div');
     item.className = 'url-link-item';
     item.innerHTML = `
-      <span style="font-size:16px;flex-shrink:0">${link.icon}</span>
+      <span style="flex-shrink:0;display:flex">${_svgIco('send',14,'var(--accent)')}</span>
       <div style="flex:1;min-width:0;overflow:hidden">
         <div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${link.label}</div>
         <div style="color:var(--text3);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${link.url}</div>
@@ -8534,7 +8607,7 @@ async function uploadPendingFiles(eventId){
         body: JSON.stringify({
           url: link.url,
           label: link.label || null,
-          icon: link.icon || '🔗',
+          icon: '',
           added_by: ME.id
         })
       });
@@ -8584,14 +8657,14 @@ function displayEventFiles(files){
     item.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:8px;background:var(--surface3);border-radius:4px;margin-bottom:6px;font-size:12px';
     item.innerHTML = `
       <div style="display:flex;align-items:center;gap:8px;flex:1">
-        <span>📎</span>
+        ${_svgIco('paperclip',14)}
         <div style="flex:1">
           <div>${file.filename}</div>
           <div style="color:var(--text3);font-size:10px">${formatFileSize(file.file_size)} • por ${file.uploaded_by}</div>
         </div>
       </div>
       <div style="display:flex;gap:4px">
-        <a class="nbtn" style="padding:4px 8px;text-decoration:none;color:var(--accent)" href="${API_URL}/events/files/${file.id}/download" download="${file.filename}" title="Descargar">⬇️</a>
+        <a class="nbtn" style="padding:4px 8px;text-decoration:none;color:var(--accent);display:flex;align-items:center" href="${API_URL}/events/files/${file.id}/download" download="${file.filename}" title="Descargar">${_svgIco('download',13)}</a>
         <button class="nbtn" style="padding:4px 8px;font-size:12px" onclick="deleteEventFile('${file.id}')" title="Eliminar">×</button>
       </div>
     `;
@@ -8625,20 +8698,20 @@ function showProjDetail(proj){
   document.getElementById('detMeta').innerHTML=`<span style="color:${proj.color}">${totalTasks} tarea(s) · ${completedTasks} completada(s)</span>`;
 
   let html='';
-  if(proj.desc) html+=`<div class="drow"><div class="dico">📝</div><div><div class="dlbl">Descripción</div><div class="dval">${proj.desc}</div></div></div>`;
+  if(proj.desc) html+=`<div class="drow"><div class="dico">${_svgIco('file-text',14)}</div><div><div class="dlbl">Descripción</div><div class="dval">${proj.desc}</div></div></div>`;
 
-  if(proj.createdAt) html+=`<div class="drow"><div class="dico">📅</div><div><div class="dlbl">Fecha de creación</div><div class="dval">${fmtDate(proj.createdAt)}</div></div></div>`;
+  if(proj.createdAt) html+=`<div class="drow"><div class="dico">${_svgIco('calendar',14)}</div><div><div class="dlbl">Fecha de creación</div><div class="dval">${fmtDate(proj.createdAt)}</div></div></div>`;
   if(proj.deadline){
     const now=new Date();const[y,mo,d]=proj.deadline.split('-').map(Number);const dl=new Date(y,mo-1,d);
     const diff=Math.ceil((dl-now)/(1000*60*60*24));
     const urgency=diff<0?'color:var(--danger)':diff<=7?'color:var(--accent2)':'color:var(--accent3)';
     const label=diff<0?`Vencido hace ${Math.abs(diff)} día(s)`:diff===0?'Vence hoy':`${diff} día(s) restantes`;
-    html+=`<div class="drow"><div class="dico">⏳</div><div><div class="dlbl">Fecha límite</div><div class="dval">${fmtDate(proj.deadline)} <span style="font-size:11px;${urgency};margin-left:6px">(${label})</span></div></div></div>`;
+    html+=`<div class="drow"><div class="dico">${_svgIco('clock',14)}</div><div><div class="dlbl">Fecha límite</div><div class="dval">${fmtDate(proj.deadline)} <span style="font-size:11px;${urgency};margin-left:6px">(${label})</span></div></div></div>`;
   }
 
   // Barra de progreso con color dinámico
   const barColor = progress === 100 ? 'var(--accent3)' : progress >= 50 ? proj.color : proj.color;
-  html+=`<div class="drow"><div class="dico">📊</div><div style="width:100%"><div class="dlbl">Progreso</div>
+  html+=`<div class="drow"><div class="dico">${_svgIco('bar-chart-2',14)}</div><div style="width:100%"><div class="dlbl">Progreso</div>
     <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
       <div style="flex:1;height:8px;background:var(--surface3);border-radius:4px;overflow:hidden">
         <div id="projProgressBar_${proj.id}" style="height:100%;width:${progress}%;background:${barColor};border-radius:4px;transition:width .5s ease"></div>
@@ -8649,14 +8722,14 @@ function showProjDetail(proj){
   </div></div>`;
 
   if(tasks.length){
-    const statusIcon={'completed':'✅','early-voluntary':'⚡','early-forced':'🔀','extended':'📅','abandoned':'🚫','pending':'🕐'};
+    const statusIconSvg={'completed':_svgIco('calendar-check',14,'var(--accent3)'),'early-voluntary':_svgIco('zap',14,'#f7e26a'),'early-forced':_svgIco('repeat',14,'var(--accent)'),'extended':_svgIco('clock',14,'#6ab4f7'),'abandoned':_svgIco('trash',14,'var(--danger)'),'pending':_svgIco('clock',14,'var(--text3)')};
     html+=`<div style="margin-top:10px"><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px">Tareas vinculadas</div>`;
     tasks.forEach(t=>{
       const tc=t.type==='team'?'var(--team)':t.type==='project'?'var(--project)':'var(--personal)';
-      const icon=statusIcon[t.status||'pending']||'🕐';
+      const icon=statusIconSvg[t.status||'pending']||statusIconSvg['pending'];
       const isDone=['completed','early-voluntary','early-forced'].includes(t.status);
       html+=`<div style="display:flex;align-items:center;gap:7px;padding:8px 10px;border-radius:6px;background:var(--surface2);margin-bottom:4px;font-size:12px;border:1px solid var(--border);cursor:pointer;${isDone?'opacity:.65;':''}transition:all .15s" onclick="closeModal('detModal');showEventDetail(getEv('${t.id}'))">
-        <span style="font-size:14px;flex-shrink:0">${icon}</span>
+        <span style="flex-shrink:0;display:flex">${icon}</span>
         <div style="width:6px;height:6px;border-radius:50%;background:${tc};flex-shrink:0"></div>
         <div style="flex:1;${isDone?'text-decoration:line-through;color:var(--text3);':''}">
           <div style="font-weight:600">${t.title}</div>
@@ -8681,12 +8754,12 @@ function scheduleRemind(ev){
   const[y,mo,d]=ev.date.split('-').map(Number);const[h,m]=ev.time.split(':').map(Number);
   const evT=new Date(y,mo-1,d,h,m,0);
   const delta=evT-ev.remind*60000-new Date();
-  if(delta>0&&delta<86400000)setTimeout(()=>notify(`🔔 ${ev.title}`,`Empieza en ${ev.remind||0} min`),delta);
+  if(delta>0&&delta<86400000)setTimeout(()=>notify(ev.title,`Empieza en ${ev.remind||0} min`),delta);
 }
 function notify(title,msg){
   const stack=document.getElementById('nstack');
   const n=document.createElement('div');n.className='notif';
-  n.innerHTML=`<div class="nicon">🔔</div><div><div class="ntitle">${title}</div><div class="nmsg">${msg}</div></div><button class="ncls" onclick="this.parentElement.remove()">×</button>`;
+  n.innerHTML=`<div class="nicon">${_svgIco('bell',16,'var(--accent)')}</div><div><div class="ntitle">${title}</div><div class="nmsg">${msg}</div></div><button class="ncls" onclick="this.parentElement.remove()">×</button>`;
   stack.appendChild(n);setTimeout(()=>n.remove(),8000);
 }
 function toast(msg){
@@ -8939,8 +9012,8 @@ function showRegisterForm(){
 // Mostrar/ocultar contraseña
 function togglePasswordVisibility(inputId, btn){
   const inp = document.getElementById(inputId);
-  if(inp.type === 'password'){ inp.type = 'text'; btn.textContent = '🙈'; }
-  else { inp.type = 'password'; btn.textContent = '👁'; }
+  if(inp.type === 'password'){ inp.type = 'text'; btn.innerHTML = _svgIco('eye-off',15); }
+  else { inp.type = 'password'; btn.innerHTML = _svgIco('eye',15); }
 }
 
 // Indicador de fortaleza de contraseña
@@ -9028,7 +9101,7 @@ async function performLogin(){
       const data = await res.json();
       if(btn){ btn.innerHTML = '✓ Entrando...'; }
       await onAuthSuccess(data.user, data.token);
-      notify('👋 Bienvenido', `¡Hola ${data.user.name}!`);
+      notify('Bienvenido', `¡Hola ${data.user.name}!`);
     } else {
       const err = await res.json().catch(()=>({detail:'Error al iniciar sesión'}));
       showAuthError('loginError', '❌ ' + (err.detail || 'Email o contraseña incorrectos'));
@@ -9166,7 +9239,7 @@ function toggleRightPanelMobile(){
   const isOpen = rp.classList.contains('mobile-open');
   rp.classList.toggle('mobile-open', !isOpen);
   ov.classList.toggle('open', !isOpen);
-  if(btn) btn.textContent = isOpen ? '📋' : '✕';
+  if(btn) btn.textContent = isOpen ? '≡' : '✕';
 }
 function closeRightPanelMobile(){
   const rp  = document.getElementById('rightPanel');
@@ -9174,7 +9247,7 @@ function closeRightPanelMobile(){
   const btn = document.getElementById('rpMobileBtn');
   if(rp) rp.classList.remove('mobile-open');
   if(ov) ov.classList.remove('open');
-  if(btn) btn.textContent = '📋';
+  if(btn) btn.textContent = '≡';
 }
 // Close sidebar when navigating on mobile
 function setView(v){
@@ -9207,7 +9280,7 @@ function toggleRightPanel(){
 let _deleteCallback = null;
 
 function showConfirmDelete(title, subtitle, sub2, callback){
-  document.getElementById('confirmDeleteIcon').textContent = '🗑️';
+  document.getElementById('confirmDeleteIcon').innerHTML = `<ico-n name="trash" size="32" color="var(--danger)"></ico-n>`;
   document.getElementById('confirmDeleteTitle').textContent = title;
   document.getElementById('confirmDeleteSub').innerHTML = `${subtitle}<br><span style="font-size:12px;color:var(--text3)">${sub2}</span>`;
   _deleteCallback = callback;
@@ -9289,7 +9362,7 @@ function _populateHistCalFilter(){
   const sel = document.getElementById('histCalFilter');
   if(!sel) return;
   const current = sel.value;
-  sel.innerHTML = '<option value="">🗂 Todos los calendarios</option>';
+  sel.innerHTML = '<option value="">Todos los calendarios</option>';
   S.calendars.forEach(c => {
     const opt = document.createElement('option');
     opt.value = c.id;
@@ -9354,8 +9427,8 @@ function renderHistorial(){
 
     // Date info row
     const dateInfo = [];
-    if(createdAt) dateInfo.push(`📝 ${fmtDate(createdAt)}`);
-    if(deadlineDate) dateInfo.push(`⏳ ${fmtDate(deadlineDate)}`);
+    if(createdAt) dateInfo.push(fmtDate(createdAt));
+    if(deadlineDate) dateInfo.push(`Límite: ${fmtDate(deadlineDate)}`);
 
     const cal = ev.calendar_id ? S.calendars.find(c=>c.id===ev.calendar_id) : null;
 
@@ -9368,7 +9441,7 @@ function renderHistorial(){
       ${overdueHtml ? `<div style="margin-top:4px">${overdueHtml}</div>` : ''}
       <div class="hist-meta" style="margin-top:4px">
         <span class="hist-badge ${typeCls[ev.type]||'hb-active'}">${ev.type==='personal'?'Personal':ev.type==='team'?'Equipo':'Meta'}</span>
-        ${cal ? `<span style="font-size:10px;color:var(--text3)">🗂 ${cal.name}</span>` : ''}
+        ${cal ? `<span style="font-size:10px;color:var(--text3)">${cal.name}</span>` : ''}
       </div>
       ${dateInfo.length ? `<div class="hist-date-row">${dateInfo.join('<span style="opacity:.4">·</span>')}</div>` : ''}
     </div>`;
@@ -9471,12 +9544,12 @@ function renderHistorialModal(){
       </div>
       <div class="hist-meta" style="margin-top:5px">
         <span class="hist-badge ${typeCls[ev.type]||'hb-active'}">${ev.type==='personal'?'Personal':ev.type==='team'?'Equipo':'Meta'}</span>
-        <span>📅 ${fmtDate(ev.date)}</span>
+        <span>${fmtDate(ev.date)}</span>
         ${proj?`<span style="color:var(--project)">◈ ${proj.title}</span>`:''}
-        ${cal?`<span>🗂 ${cal.name}</span>`:''}
-        ${creator&&creator.id!==ME.id?`<span>👤 ${creator.name}</span>`:''}
+        ${cal?`<span>${cal.name}</span>`:''}
+        ${creator&&creator.id!==ME.id?`<span>${creator.name}</span>`:''}
       </div>
-      ${ev.statusNote?`<div style="font-size:11px;color:var(--text3);margin-top:4px;padding-top:4px;border-top:1px solid var(--border)">💬 ${ev.statusNote}</div>`:''}
+      ${ev.statusNote?`<div style="font-size:11px;color:var(--text3);margin-top:4px;padding-top:4px;border-top:1px solid var(--border)">${ev.statusNote}</div>`:''}
     </div>`;
   }).join('');
 }
@@ -9614,17 +9687,17 @@ function exportHistorialPDF(){
         <span style="background:${tColor}18;color:${tColor};padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap">${typeLabel[ev.type]||ev.type}</span>
       </td>
       <td style="padding:10px 12px;border-bottom:1px solid #ebe9ff;font-size:12px;color:#444;white-space:nowrap">
-        <div>📅 ${ev.date}</div><div style="margin-top:2px">🕐 ${ev.time}</div>
+        <div>${ev.date}</div><div style="margin-top:2px">${ev.time}</div>
         ${ev.deadlineDate?`<div style="margin-top:2px;color:#d97706;font-size:11px">⏳ hasta ${ev.deadlineDate}</div>`:''}
       </td>
       <td style="padding:10px 12px;border-bottom:1px solid #ebe9ff;text-align:center">
         <span style="background:${sColor}18;color:${sColor};padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap">${statusLabel[ev.status||'pending']||'Activa'}</span>
       </td>
       <td style="padding:10px 12px;border-bottom:1px solid #ebe9ff;font-size:11px;color:#555">
-        <div style="font-weight:600;margin-bottom:2px">🗂 ${cal}</div>
-        <div>👤 ${creator}</div>
-        ${members!=='—'?`<div style="margin-top:2px;color:#888">👥 ${members}</div>`:''}
-        ${proj!=='—'?`<div style="margin-top:2px;color:#888">🎯 ${proj}</div>`:''}
+        <div style="font-weight:600;margin-bottom:2px">${cal}</div>
+        <div>${creator}</div>
+        ${members!=='—'?`<div style="margin-top:2px;color:#888">${members}</div>`:''}
+        ${proj!=='—'?`<div style="margin-top:2px;color:#888">${proj}</div>`:''}
       </td>
     </tr>`;
   }).join('');
@@ -9894,12 +9967,12 @@ function exportHistorialPDF(){
   </style></head><body>
   <div class="page">
     <div class="header">
-      <h1>📊 Historial de Actividades</h1>
+      <h1>Historial de Actividades</h1>
       <div class="sub">PlanificaMe · Reporte generado para ${ME.name}</div>
       <div class="meta">
-        <span>📧 ${ME.email||'—'}</span>
-        <span>📅 Exportado el ${dateStr}</span>
-        <span>📋 ${total} actividades</span>
+        <span>${ME.email||'—'}</span>
+        <span>Exportado el ${dateStr}</span>
+        <span>${total} actividades</span>
       </div>
     </div>
     <div class="stats">
@@ -10382,13 +10455,13 @@ let _onboardStep = 0;
 let _onboardCalColor = '#7c5aff';
 const _onboardSteps = [
   {
-    icon: '👋',
+    icon: '',
     title: '¡Bienvenido a PlanificaMe!',
     sub: 'Antes de empezar, déjanos ayudarte a configurar tu espacio. Solo tomará un momento.',
     content: ''
   },
   {
-    icon: '📅',
+    icon: '',
     title: 'Crea tu primer calendario',
     sub: 'Los calendarios organizan tus actividades. Puede ser personal, de trabajo, de un proyecto...',
     content: `
@@ -10406,15 +10479,15 @@ const _onboardSteps = [
       </div>`
   },
   {
-    icon: '🎉',
+    icon: '',
     title: '¡Todo listo!',
     sub: 'Tu calendario ha sido creado. Ahora puedes agregar actividades, invitar personas y mucho más.',
     content: `<div style="background:var(--surface2);border-radius:12px;padding:16px;margin-top:4px">
       <div style="font-size:12px;color:var(--text2);line-height:1.8">
-        ✅ Haz clic en cualquier hora para crear una actividad<br>
-        👥 Invita a tu equipo desde el panel lateral<br>
-        💬 Usa el chat para comunicarte con tu equipo<br>
-        📊 Exporta tu historial cuando quieras
+        Haz clic en cualquier hora para crear una actividad<br>
+        Invita a tu equipo desde el panel lateral<br>
+        Usa el chat para comunicarte con tu equipo<br>
+        Exporta tu historial cuando quieras
       </div>
     </div>`
   }
@@ -10439,7 +10512,7 @@ function renderOnboardStep(){
     d.classList.toggle('active', i===_onboardStep);
   });
   const nextBtn = document.getElementById('onboardNextBtn');
-  nextBtn.textContent = _onboardStep === total-1 ? '¡Comenzar! 🚀' : 'Siguiente →';
+  nextBtn.textContent = _onboardStep === total-1 ? '¡Comenzar!' : 'Siguiente →';
   if(_onboardStep === 1) setTimeout(()=>document.getElementById('obCalName')?.focus(), 100);
 }
 
@@ -10619,7 +10692,7 @@ function renderTemplatesList(){
         <div class="tpl-meta">${t.title} · ${t.duration}min · Recordatorio ${t.reminder}min</div>
       </div>
       <button class="tpl-use-btn" onclick="applyTemplate('${t.id}')">Usar</button>
-      <button class="tpl-del-btn" onclick="deleteTemplate('${t.id}')">🗑</button>
+      <button class="tpl-del-btn" onclick="deleteTemplate('${t.id}')">×</button>
     </div>`).join('');
 }
 
@@ -10636,7 +10709,7 @@ function applyTemplate(id){
     document.getElementById('tRemind').value = t.remind || t.reminder;
     selType(t.type || 'personal');
     if(t.color) selColor(t.color);
-    toast('📌 Plantilla aplicada');
+    toast('✓ Plantilla aplicada');
   }, 100);
 }
 
@@ -10667,7 +10740,7 @@ async function saveCurrentAsTemplate(){
 async function deleteTemplate(id){
   try {
     const r = await fetch(`${API_URL}/templates/${id}?owner_id=${ME.id}`, {method:'DELETE'});
-    if(r.ok){ _templates = _templates.filter(t=>t.id!==id); renderTemplatesList(); toast('🗑 Plantilla eliminada'); }
+    if(r.ok){ _templates = _templates.filter(t=>t.id!==id); renderTemplatesList(); toast('Plantilla eliminada'); }
   } catch(e){}
 }
 
@@ -11317,7 +11390,7 @@ function exportStatsPDF(){
   w.document.write(`<!DOCTYPE html><html><head><title>Dashboard PlanificaMe</title>
   <style>body{font-family:sans-serif;padding:32px;color:#1e1e2e;}h1{color:#7c5aff;}table{width:100%;border-collapse:collapse;margin-top:16px;}th,td{padding:8px 12px;border:1px solid #e2e8f0;text-align:left;}th{background:#f8f7ff;}</style>
   </head><body>
-  <h1>📊 Dashboard PlanificaMe</h1>
+  <h1>Dashboard PlanificaMe</h1>
   <p style="color:#666">Período: ${_statsRange.from} → ${_statsRange.to} ${cal?'· '+cal.name:'· Todos los calendarios'}</p>
   <table>
     <tr><th>Métrica</th><th>Valor</th></tr>
@@ -11434,7 +11507,7 @@ function ws_sfx_tick(){
 function ws_toggleSound(){
   WS.soundEnabled=!WS.soundEnabled;
   const btn=document.getElementById('ws-sound-btn');
-  if(btn) btn.textContent=WS.soundEnabled?'🔊':'🔇';
+  if(btn) btn.innerHTML=WS.soundEnabled?`<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`:`<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
   if(WS.soundEnabled) ws_sfx_found();
 }
 
@@ -11546,10 +11619,10 @@ function ws_renderRecords(){
   const el=document.getElementById('ws-records-body');if(!el)return;
   const p=ws_getProgress();
   el.innerHTML=`
-    <div class="ws-record-row"><span class="ws-record-icon">🏆</span><span class="ws-record-lbl">Mejor puntuación</span><span class="ws-record-val">${(p.highScore||0).toLocaleString()}</span></div>
-    <div class="ws-record-row"><span class="ws-record-icon">🎮</span><span class="ws-record-lbl">Partidas jugadas</span><span class="ws-record-val">${p.gamesPlayed||0}</span></div>
-    <div class="ws-record-row"><span class="ws-record-icon">🔍</span><span class="ws-record-lbl">Palabras encontradas</span><span class="ws-record-val">${p.wordsFound||0}</span></div>
-    <div class="ws-record-row"><span class="ws-record-icon">⚡</span><span class="ws-record-lbl">Mejor racha</span><span class="ws-record-val">${p.bestStreak||0}x</span></div>
+    <div class="ws-record-row"><span class="ws-record-icon">★</span><span class="ws-record-lbl">Mejor puntuación</span><span class="ws-record-val">${(p.highScore||0).toLocaleString()}</span></div>
+    <div class="ws-record-row"><span class="ws-record-icon">▶</span><span class="ws-record-lbl">Partidas jugadas</span><span class="ws-record-val">${p.gamesPlayed||0}</span></div>
+    <div class="ws-record-row"><span class="ws-record-icon">◈</span><span class="ws-record-lbl">Palabras encontradas</span><span class="ws-record-val">${p.wordsFound||0}</span></div>
+    <div class="ws-record-row"><span class="ws-record-icon">↑</span><span class="ws-record-lbl">Mejor racha</span><span class="ws-record-val">${p.bestStreak||0}x</span></div>
   `;
 }
 
@@ -11602,7 +11675,7 @@ function ws_getActivities(){
     const isOwn=item.creatorId===ME.id;
     const isShared=item.calendar_id&&sharedCalIds.has(item.calendar_id);
     if(!isOwn&&!isShared) continue;
-    const raw=(item.title||'').replace(/^🎯\s*/,'').trim();
+    const raw=(item.title||'').trim();
     const word=ws_cleanWord(raw);
     if(word.length<3||seen.has(word)) continue;
     seen.add(word);
@@ -11692,11 +11765,11 @@ function ws_renderWordList(){
         <div class="ws-word-meta">
           <span class="ws-badge ws-badge-${w.type}">${w.type==='personal'?'Personal':w.type==='team'?'Equipo':'Meta'}</span>
           <span class="ws-badge ws-badge-${w.status}">${ws_statusLabel(w.status)}</span>
-          ${w.calendarName?`<span class="ws-badge" style="background:rgba(120,120,168,.12);color:var(--text3)">📅 ${w.calendarName}</span>`:''}
+          ${w.calendarName?`<span class="ws-badge" style="background:rgba(120,120,168,.12);color:var(--text3)">${w.calendarName}</span>`:''}
         </div>
-        ${w.found&&w.creatorName?`<div style="font-size:10px;color:var(--text3);margin-top:3px">👤 ${w.creatorName}</div>`:''}
+        ${w.found&&w.creatorName?`<div style="font-size:10px;color:var(--text3);margin-top:3px">${w.creatorName}</div>`:''}
       </div>
-      <span class="ws-found-icon">${w.type==='project'?'🎯':w.type==='team'?'👥':'✅'}</span>
+      <span class="ws-found-icon" style="display:flex;align-items:center">${w.type==='project'?_svgIco('target',14,'var(--accent3)'):w.type==='team'?_svgIco('user',14,'var(--team)'):_svgIco('calendar-check',14,'var(--accent3)')}</span>
     </div>
   `).join('');
 }
@@ -11848,11 +11921,11 @@ function ws_win(){
     lastDifficulty:WS.difficulty,
   });
   const winTime=document.getElementById('ws-win-time');
-  if(winTime) winTime.textContent=`Completado en ${elapsed} · ${WS.score.toLocaleString()} pts${newHigh?' 🏆 ¡Nuevo récord!':''}`;
+  if(winTime) winTime.textContent=`Completado en ${elapsed} · ${WS.score.toLocaleString()} pts${newHigh?' ¡Nuevo récord!':''}`;
   const banner=document.getElementById('ws-win-banner');
   if(banner){
     banner.classList.add('show');
-    const emoji=banner.querySelector('.ws-win-emoji');if(emoji)emoji.textContent='🎉';
+    const emoji=banner.querySelector('.ws-win-emoji');if(emoji)emoji.innerHTML=`<ico-n name="check" size="40" color="var(--accent3)"></ico-n>`;
     const title=banner.querySelector('[data-win-title]');if(title)title.textContent='¡Lo lograste!';
   }
   document.getElementById('ws-grid-wrap').style.display='none';
@@ -12116,7 +12189,7 @@ function duplicateEvent(ev){
   document.getElementById('taskModalTitle').textContent = 'Duplicar actividad';
   document.getElementById('btnDel').style.display = 'none';
   document.getElementById('btnDuplicate').style.display = 'none';
-  document.getElementById('tTitle').value = ev.title.replace(/^🎯 /,'');
+  document.getElementById('tTitle').value = ev.title;
   document.getElementById('tDesc').value = ev.desc||'';
   renderEmailFields(ev.email ? ev.email.split(',').map(e=>e.trim()) : ['']);
   document.getElementById('tDur').value = ev.dur;
@@ -12967,7 +13040,7 @@ function habit_render(){
     const streakEl = document.createElement('div');
     streakEl.className = 'habit-streak' + (isHot ? ' hot' : '');
     streakEl.innerHTML = streak > 0
-      ? `<span class="habit-streak-fire">${isHot ? '🔥' : '●'}</span>${streak}`
+      ? `<span class="habit-streak-fire">${isHot ? '🔥' : '◉'}</span>${streak}`
       : `<span style="opacity:.4">—</span>`;
 
     item.appendChild(check);
@@ -13090,7 +13163,7 @@ function notes_delete(){
   notes_save(arr);
   notes_showEmpty();
   notes_renderList();
-  toast('🗑 Nota eliminada');
+  toast('Nota eliminada');
 }
 
 /* ──────────────────────────────────────────────────────────
@@ -13149,7 +13222,7 @@ function search_updateSuggestions(q){
   if(!q){
     // Show recent searches
     history.slice(0, 5).forEach(term => {
-      chips.push({ label: `🕐 ${term}`, term, cls: 'recent' });
+      chips.push({ label: term, term, cls: 'recent' });
     });
     // Show popular titles from events (up to 3)
     const titles = [...new Set(S.events.filter(e => !e.deleted).map(e => e.title))].slice(0, 3);
@@ -13328,7 +13401,7 @@ async function month_drop(e, cell, targetDate) {
   // Optimistic
   ev.date = targetDate;
   render();
-  toast(`📅 ${ev.title.substring(0,26)} → ${fmtDate(targetDate)}`);
+  toast(`${ev.title.substring(0,26)} → ${fmtDate(targetDate)}`);
 
   try {
     const res = await fetch(`${API_URL}/events/${id}`, {
@@ -13397,7 +13470,7 @@ function renderHome(container) {
   greetRow.className = 'hw-greeting-row';
   greetRow.innerHTML = `
     <div>
-      <div class="hw-greeting">${greeting}, ${ME.name?.split(' ')[0] || 'Usuario'} ${streak >= 3 ? '🔥' : '👋'}</div>
+      <div class="hw-greeting">${greeting}, ${ME.name?.split(' ')[0] || 'Usuario'} ${streak >= 3 ? '🔥' : ''}</div>
       <div class="hw-greeting-sub">${now.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).replace(/^\w/,c=>c.toUpperCase())}</div>
     </div>
     <button class="hw-new-btn" onclick="openTaskModal('${todayStr}')">+ Nueva actividad</button>
@@ -13425,7 +13498,7 @@ function renderHome(container) {
   // Today's events
   const todaySec = document.createElement('div');
   todaySec.className = 'hw-sec';
-  todaySec.innerHTML = `<div class="hw-sec-hdr"><div class="hw-sec-title">📅 Actividades de hoy</div><button class="hw-sec-link" onclick="setView('day')">Ver día completo →</button></div>`;
+  todaySec.innerHTML = `<div class="hw-sec-hdr"><div class="hw-sec-title" style="display:flex;align-items:center;gap:6px">${_svgIco('calendar',15)} Actividades de hoy</div><button class="hw-sec-link" onclick="setView('day')">Ver día completo →</button></div>`;
   if(todayEvs.length === 0) {
     todaySec.innerHTML += `<div class="hw-today-empty">Sin actividades hoy — ¿empezamos algo? 💪</div>`;
   } else {
@@ -13458,7 +13531,7 @@ function renderHome(container) {
   if(projs.length > 0) {
     const projSec = document.createElement('div');
     projSec.className = 'hw-sec';
-    projSec.innerHTML = `<div class="hw-sec-hdr"><div class="hw-sec-title">🎯 Proyectos activos</div><button class="hw-sec-link" onclick="setView('agenda')">Ver agenda →</button></div>`;
+    projSec.innerHTML = `<div class="hw-sec-hdr"><div class="hw-sec-title" style="display:flex;align-items:center;gap:6px">${_svgIco('target',15)} Proyectos activos</div><button class="hw-sec-link" onclick="setView('agenda')">Ver agenda →</button></div>`;
     const projGrid = document.createElement('div');
     projGrid.className = 'hw-proj-grid';
     projs.slice(0, 4).forEach(p => {
@@ -13484,7 +13557,7 @@ function renderHome(container) {
   hmSec.className = 'hw-sec';
   const hmTitle = document.createElement('div');
   hmTitle.className = 'hw-sec-hdr';
-  hmTitle.innerHTML = `<div class="hw-sec-title">📊 Actividad del año</div>`;
+  hmTitle.innerHTML = `<div class="hw-sec-title" style="display:flex;align-items:center;gap:6px">${_svgIco('bar-chart-2',15)} Actividad del año</div>`;
   hmSec.appendChild(hmTitle);
   renderHeatmap(hmSec, evs);
   wrap.appendChild(hmSec);
@@ -13492,20 +13565,20 @@ function renderHome(container) {
   // Quick actions
   const actSec = document.createElement('div');
   actSec.className = 'hw-sec';
-  actSec.innerHTML = `<div class="hw-sec-hdr"><div class="hw-sec-title">⚡ Acciones rápidas</div></div>`;
+  actSec.innerHTML = `<div class="hw-sec-hdr"><div class="hw-sec-title" style="display:flex;align-items:center;gap:6px">${_svgIco('zap',15)} Acciones rápidas</div></div>`;
   const actRow = document.createElement('div');
   actRow.className = 'hw-actions';
   const actions = [
-    { icon:'📅', label:'Vista Mes',     fn:`setView('month')` },
-    { icon:'📊', label:'Digest Semanal',fn:`openDigestModal()` },
-    { icon:'📂', label:'Importar .ics', fn:`openModal('icsModal');ics_init()` },
-    { icon:'🔍', label:'Buscar',        fn:`openSearchModal()` },
-    { icon:'📋', label:'Mi Historial',  fn:`openHistorialModal()` },
+    { icon:_svgIco('calendar',18),     label:'Vista Mes',     fn:`setView('month')` },
+    { icon:_svgIco('bar-chart-2',18),  label:'Digest Semanal',fn:`openDigestModal()` },
+    { icon:_svgIco('folder-open',18),  label:'Importar .ics', fn:`openModal('icsModal');ics_init()` },
+    { icon:_svgIco('search',18),       label:'Buscar',        fn:`openSearchModal()` },
+    { icon:_svgIco('history',18),      label:'Mi Historial',  fn:`openHistorialModal()` },
   ];
   actions.forEach(a => {
     const btn = document.createElement('button');
     btn.className = 'hw-action-btn';
-    btn.innerHTML = `<span>${a.icon}</span><span>${a.label}</span>`;
+    btn.innerHTML = `<span style="display:flex;justify-content:center">${a.icon}</span><span>${a.label}</span>`;
     btn.onclick = new Function(a.fn);
     actRow.appendChild(btn);
   });
@@ -14015,7 +14088,7 @@ function trash_renderList(){
       <div class="trash-item-body">
         <div class="trash-item-title">${escapeHtml(item.title||'Sin título')}</div>
         <div class="trash-item-meta">
-          <span class="trash-item-date">📅 ${dateFmt}</span>
+          <span class="trash-item-date">${dateFmt}</span>
           <span class="trash-item-type">${typeLabel[item.type]||item.type}</span>
           <span class="trash-item-ago ${expiresClass}" title="${expiresText}">${agoText} · ${expiresText}</span>
         </div>
@@ -14061,7 +14134,7 @@ function trash_confirmHardDelete(id, title){
       await trash_hardDelete(id);
       trash_renderList();
       trash_updateBadge();
-      toast('🗑 Eliminado permanentemente');
+      toast('Eliminado permanentemente');
     }
   );
 }
@@ -14291,15 +14364,15 @@ function pwa_testNotification() {
   if (Notification.permission !== 'granted') { pwa_showNotifBanner(); return; }
   if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
     navigator.serviceWorker.ready.then(reg => {
-      reg.showNotification('📅 PlanificaMe', {
+      reg.showNotification('PlanificaMe', {
         body: '¡Las notificaciones funcionan correctamente!',
         tag: 'test',
         vibrate: [100, 50, 100],
-        actions: [{ action: 'open', title: '📅 Abrir' }]
+        actions: [{ action: 'open', title: 'Abrir' }]
       });
     });
   } else {
-    new Notification('📅 PlanificaMe', {
+    new Notification('PlanificaMe', {
       body: '¡Las notificaciones funcionan correctamente!',
     });
   }
@@ -14522,8 +14595,8 @@ async function ics_importSelected() {
 
   render();
   btn.disabled = false;
-  statusEl.textContent = `✅ ${ok} importado${ok!==1?'s':''} ${fail?'· ❌ '+fail+' error'+( fail!==1?'s':''):''}`;
-  if (ok) toast(`✅ ${ok} actividad${ok!==1?'es':''} importada${ok!==1?'s':''} correctamente`);
+  statusEl.textContent = `${ok} importado${ok!==1?'s':''} ${fail?'· '+fail+' error'+(fail!==1?'s':''):''}`;
+  if (ok) toast(`✓ ${ok} actividad${ok!==1?'es':''} importada${ok!==1?'s':''} correctamente`);
 }
 
 // ── Exportar .ics ─────────────────────────────────────────────
@@ -14577,7 +14650,7 @@ function ics_exportAll() {
   const evs = (S.events||[]).filter(e=>!e.isDeadline);
   if (!evs.length) { toast('No hay actividades para exportar'); return; }
   ics_download(ics_buildVCalendar(evs), 'planificame-completo.ics');
-  toast(`📅 Exportadas ${evs.length} actividades`);
+  toast(`Exportadas ${evs.length} actividades`);
 }
 
 function ics_exportMonth() {
@@ -14587,14 +14660,14 @@ function ics_exportMonth() {
   const evs  = (S.events||[]).filter(e=>!e.isDeadline && e.date?.startsWith(pfx));
   if (!evs.length) { toast('No hay actividades este mes'); return; }
   ics_download(ics_buildVCalendar(evs), `planificame-${y}-${m}.ics`);
-  toast(`📆 Exportadas ${evs.length} actividades de ${y}-${m}`);
+  toast(`Exportadas ${evs.length} actividades de ${y}-${m}`);
 }
 
 function ics_exportSelected() {
   const evs = (S.events||[]).filter(e=>!e.isDeadline && !['completed','early-voluntary','early-forced','abandoned'].includes(e.status));
   if (!evs.length) { toast('No hay actividades activas para exportar'); return; }
   ics_download(ics_buildVCalendar(evs), 'planificame-activas.ics');
-  toast(`📋 Exportadas ${evs.length} actividades activas`);
+  toast(`Exportadas ${evs.length} actividades activas`);
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -14641,7 +14714,7 @@ function digest_loadData() {
   // Lista próximas
   const listEl = document.getElementById('digest-upcoming-list');
   if (upcoming.length === 0) {
-    listEl.innerHTML = `<div style="color:var(--text3);font-size:13px;padding:8px 0">🎉 Sin actividades pendientes esta semana</div>`;
+    listEl.innerHTML = `<div style="color:var(--text3);font-size:13px;padding:8px 0">Sin actividades pendientes esta semana</div>`;
   } else {
     const typeColor = { personal:'var(--accent)', team:'var(--accent3)', project:'var(--accent2)' };
     listEl.innerHTML = upcoming.slice(0,8).map(ev => `
@@ -14658,11 +14731,11 @@ function digest_loadData() {
   // Preview del email
   const emailEl = document.getElementById('digest-email-preview');
   const userEmail = ME?.email || '';
-  const streak = completed >= 5 ? '🔥' : completed >= 3 ? '⭐' : '📌';
+  const streak = '';
   emailEl.innerHTML = `
     <div style="margin-bottom:8px">
       <strong>Para:</strong> ${userEmail || '<em>Configura tu email en Editar Perfil</em>'}<br>
-      <strong>Asunto:</strong> 📊 Tu resumen semanal de PlanificaMe
+      <strong>Asunto:</strong> Tu resumen semanal de PlanificaMe
     </div>
     <div style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px">
       Hola <strong>${ME?.name||'Usuario'}</strong> ${streak}<br><br>
@@ -14695,7 +14768,7 @@ async function digest_sendNow() {
     if (res.ok) {
       const data = await res.json();
       statusEl.textContent = `✅ Enviado a ${ME.email}`;
-      toast(`📨 Digest enviado a ${ME.email}`);
+      toast(`✓ Digest enviado a ${ME.email}`);
     } else {
       throw new Error('API error');
     }
@@ -14704,7 +14777,7 @@ async function digest_sendNow() {
     toast('❌ Error al enviar el digest');
   } finally {
     btn.disabled = false;
-    btn.textContent = '📨 Enviar ahora';
+    btn.textContent = 'Enviar ahora';
   }
 }
 
@@ -14720,22 +14793,10 @@ async function digest_sendNow() {
     <!-- Header danger zone -->
     <div class="etm-header">
       <div class="etm-icon-wrap">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" stroke-width="1.8"
-          stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="3 6 5 6 21 6"/>
-          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-          <line x1="10" y1="11" x2="10" y2="17"/>
-          <line x1="14" y1="11" x2="14" y2="17"/>
-        </svg>
+        <ico-n name="trash" size="28"></ico-n>
       </div>
       <div class="etm-count-chip">
-        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
-          <line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
+        <ico-n name="info" size="11"></ico-n>
         <span id="etmCountLabel">0 elementos</span>
       </div>
       <div class="etm-title">Vaciar papelera</div>
@@ -14787,12 +14848,7 @@ async function digest_sendNow() {
     <div class="etm-footer">
       <button class="etm-btn-cancel" id="etmCancelBtn" onclick="etm_close()">Cancelar</button>
       <button class="etm-btn-empty" id="etmConfirmBtn" onclick="etm_execute()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="3 6 5 6 21 6"/>
-          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-        </svg>
+        <ico-n name="trash" size="14"></ico-n>
         Vaciar papelera
       </button>
     </div>
@@ -14804,13 +14860,13 @@ async function digest_sendNow() {
 <div class="overlay" id="confirmDeleteModal">
   <div class="modal" style="max-width:380px;text-align:center">
     <div class="mb" style="padding:28px 24px 20px">
-      <span class="confirm-modal-icon" id="confirmDeleteIcon">🗑️</span>
+      <span class="confirm-modal-icon" id="confirmDeleteIcon"><ico-n name="trash" size="32" color="var(--danger)"></ico-n></span>
       <div class="confirm-modal-title" id="confirmDeleteTitle">¿Eliminar actividad?</div>
       <div class="confirm-modal-sub" id="confirmDeleteSub">Esta acción no se puede deshacer.</div>
     </div>
     <div class="mf" style="gap:8px;padding:0 20px 20px">
       <button class="btn btn-s" style="flex:1" onclick="closeModal('confirmDeleteModal')">Cancelar</button>
-      <button class="btn btn-d" style="flex:1" id="confirmDeleteBtn" onclick="executeDelete()">🗑 Eliminar</button>
+      <button class="btn btn-d" style="flex:1" id="confirmDeleteBtn" onclick="executeDelete()">Eliminar</button>
     </div>
   </div>
 </div>
@@ -14819,20 +14875,20 @@ async function digest_sendNow() {
 <div class="overlay" id="recurScopeModal">
   <div class="modal" style="max-width:360px;text-align:center">
     <div class="mb" style="padding:24px 20px 16px">
-      <span style="font-size:40px;display:block;margin-bottom:10px">🔁</span>
+      <span style="display:flex;justify-content:center;margin-bottom:10px"><ico-n name="repeat" size="36" color="var(--accent)"></ico-n></span>
       <div style="font-size:16px;font-weight:700;margin-bottom:8px">Actividad recurrente</div>
       <div style="font-size:13px;color:var(--text2);margin-bottom:20px" id="recurScopeMsg">¿Qué deseas eliminar?</div>
       <div style="display:flex;flex-direction:column;gap:8px">
         <button class="btn btn-s" onclick="resolveRecurScope('this')" style="width:100%;justify-content:flex-start;gap:10px;padding:12px 16px">
-          <span style="font-size:18px">📌</span>
+          <span style="flex-shrink:0;display:flex"><ico-n name="filter" size="17"></ico-n></span>
           <div style="text-align:left"><div style="font-weight:600;font-size:13px">Solo esta</div><div style="font-size:11px;color:var(--text3)">Solo la instancia del día seleccionado</div></div>
         </button>
         <button class="btn btn-s" onclick="resolveRecurScope('this_and_future')" style="width:100%;justify-content:flex-start;gap:10px;padding:12px 16px">
-          <span style="font-size:18px">📅</span>
+          <span style="flex-shrink:0;display:flex"><ico-n name="calendar-days" size="17"></ico-n></span>
           <div style="text-align:left"><div style="font-weight:600;font-size:13px">Esta y las siguientes</div><div style="font-size:11px;color:var(--text3)">Desde este día en adelante</div></div>
         </button>
         <button class="btn btn-d" onclick="resolveRecurScope('all')" style="width:100%;justify-content:flex-start;gap:10px;padding:12px 16px">
-          <span style="font-size:18px">🗑️</span>
+          <span style="flex-shrink:0;display:flex"><ico-n name="trash" size="17"></ico-n></span>
           <div style="text-align:left"><div style="font-weight:600;font-size:13px">Todas las instancias</div><div style="font-size:11px;color:rgba(248,113,113,.8)">Eliminar la serie completa</div></div>
         </button>
         <button class="btn btn-s" onclick="resolveRecurScope(null)" style="width:100%;margin-top:4px">Cancelar</button>
@@ -14843,7 +14899,7 @@ async function digest_sendNow() {
 
 <!-- CHAT FAB -->
 <button class="chat-fab" id="chatFab" onclick="toggleChat()" style="display:none" title="Chat del calendario">
-  💬
+  <ico-n name="message-square" size="20"></ico-n>
 </button>
 
 <!-- CHAT PANEL -->
@@ -14894,7 +14950,7 @@ async function digest_sendNow() {
     <!-- Header -->
     <div style="padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
       <div style="display:flex;align-items:center;gap:12px">
-        <h2 class="mtitle" style="margin:0">📊 Dashboard</h2>
+        <h2 class="mtitle" style="margin:0">Dashboard</h2>
         <span id="statsCalLabel" style="font-size:11px;color:var(--text3)"></span>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
@@ -14911,7 +14967,7 @@ async function digest_sendNow() {
 <div class="overlay" id="templatesModal">
   <div class="modal" style="max-width:480px">
     <div class="mb" style="padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-      <h2 class="mtitle" style="margin:0">📌 Plantillas</h2>
+      <h2 class="mtitle" style="margin:0">Plantillas</h2>
       <button class="mclose" onclick="closeModal('templatesModal')">×</button>
     </div>
     <div style="padding:16px 24px">
@@ -14936,7 +14992,7 @@ async function digest_sendNow() {
     <!-- Header -->
     <div class="mh" style="padding:11px 16px 10px;background:linear-gradient(135deg,rgba(124,90,255,.18),rgba(52,211,153,.1));border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px">
       <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-size:20px">🎮</span>
+        <span style="display:flex;align-items:center;opacity:.7"><ico-n name="gauge" size="20"></ico-n></span>
         <div>
           <div class="mtitle" style="font-size:16px">Sopa de Letras</div>
           <div style="font-size:11px;color:var(--text2);margin-top:1px" id="ws-subtitle">Encuentra tus actividades</div>
@@ -14945,12 +15001,12 @@ async function digest_sendNow() {
       <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
         <!-- Difficulty tabs -->
         <div class="ws-diff-tabs">
-          <button class="ws-diff-tab easy"         data-diff="easy"   onclick="ws_setDifficulty('easy');ws_newGame()">🟢 Fácil</button>
-          <button class="ws-diff-tab normal active" data-diff="normal" onclick="ws_setDifficulty('normal');ws_newGame()">🟡 Normal</button>
-          <button class="ws-diff-tab hard"          data-diff="hard"   onclick="ws_setDifficulty('hard');ws_newGame()">🔴 Difícil</button>
+          <button class="ws-diff-tab easy"         data-diff="easy"   onclick="ws_setDifficulty('easy');ws_newGame()">Fácil</button>
+          <button class="ws-diff-tab normal active" data-diff="normal" onclick="ws_setDifficulty('normal');ws_newGame()">Normal</button>
+          <button class="ws-diff-tab hard"          data-diff="hard"   onclick="ws_setDifficulty('hard');ws_newGame()">Difícil</button>
         </div>
-        <button id="ws-sound-btn" class="ws-sound-btn" onclick="ws_toggleSound()" title="Sonido on/off">🔊</button>
-        <button onclick="ws_newGame()" class="btn btn-s" style="padding:5px 11px;font-size:12px;height:30px" title="Nueva partida">🔄</button>
+        <button id="ws-sound-btn" class="ws-sound-btn" onclick="ws_toggleSound()" title="Sonido on/off"><ico-n name="volume-2" size="14"></ico-n></button>
+        <button onclick="ws_newGame()" class="btn btn-s" style="padding:5px 11px;font-size:12px;height:30px" title="Nueva partida"><ico-n name="history" size="13"></ico-n></button>
         <button class="mclose" onclick="closeModal('wordSearchModal')">×</button>
       </div>
     </div>
@@ -14976,7 +15032,7 @@ async function digest_sendNow() {
           </div>
           <!-- Empty state -->
           <div class="ws-empty-state" id="ws-empty-state" style="display:none">
-            <div class="ws-empty-state-icon">🎯</div>
+            <div class="ws-empty-state-icon"><ico-n name="target" size="32" color="var(--text3)"></ico-n></div>
             <div style="font-size:14px;font-weight:600;color:var(--text2);margin-bottom:6px">Sin actividades disponibles</div>
             <div style="font-size:12px;color:var(--text3)">Inicia sesión y crea actividades para jugar</div>
           </div>
@@ -14993,14 +15049,14 @@ async function digest_sendNow() {
           </div>
           <!-- Timer -->
           <div class="ws-grid-timer" id="ws-timer" style="display:none">
-            <span id="ws-timer-ico">⏱</span> <span id="ws-timer-val">00:00</span>
+            <ico-n name="clock" size="13"></ico-n> <span id="ws-timer-val">00:00</span>
           </div>
           <!-- Win banner -->
           <div class="ws-win-banner" id="ws-win-banner">
-            <div class="ws-win-emoji">🎉</div>
+            <div class="ws-win-emoji"><ico-n name="check" size="40" color="var(--accent3)"></ico-n></div>
             <div style="font-size:18px;font-weight:800;color:var(--text);margin:10px 0 4px" data-win-title>¡Lo lograste!</div>
             <div style="font-size:13px;color:var(--text2);max-width:280px;margin:0 auto" id="ws-win-time"></div>
-            <button onclick="ws_newGame()" class="btn btn-p" style="margin-top:16px;padding:10px 24px">🔄 Jugar de nuevo</button>
+            <button onclick="ws_newGame()" class="btn btn-p" style="margin-top:16px;padding:10px 24px">Jugar de nuevo</button>
           </div>
         </div>
       </div>
@@ -15030,15 +15086,15 @@ async function digest_sendNow() {
         <!-- Filters -->
         <div class="ws-filters">
           <button class="ws-filter-btn active" onclick="ws_setFilter('all')" data-filter="all">Todas</button>
-          <button class="ws-filter-btn ws-f-personal" onclick="ws_setFilter('personal')" data-filter="personal">👤 Personal</button>
-          <button class="ws-filter-btn ws-f-team" onclick="ws_setFilter('team')" data-filter="team">👥 Equipo</button>
-          <button class="ws-filter-btn ws-f-project" onclick="ws_setFilter('project')" data-filter="project">🎯 Meta</button>
+          <button class="ws-filter-btn ws-f-personal" onclick="ws_setFilter('personal')" data-filter="personal">Personal</button>
+          <button class="ws-filter-btn ws-f-team" onclick="ws_setFilter('team')" data-filter="team">Equipo</button>
+          <button class="ws-filter-btn ws-f-project" onclick="ws_setFilter('project')" data-filter="project">Meta</button>
         </div>
         <!-- Word list -->
         <div class="ws-word-list" id="ws-word-list"></div>
         <!-- Records section -->
         <div class="ws-records">
-          <div class="ws-records-title">📊 Mis récords</div>
+          <div class="ws-records-title">Mis récords</div>
           <div id="ws-records-body"></div>
         </div>
       </div>
@@ -15221,14 +15277,14 @@ async function digest_sendNow() {
      PWA: Offline Bar
      ═══════════════════════════════════════════════════════════ -->
 <div id="pwa-offline-bar">
-  📡 Sin conexión — mostrando datos en caché
+  Sin conexión — mostrando datos en caché
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
      PWA: Install Banner (se muestra dinámicamente con JS)
      ═══════════════════════════════════════════════════════════ -->
 <div id="pwa-install-banner" style="display:none">
-  <div class="pwa-banner-icon">📅</div>
+  <div class="pwa-banner-icon"><ico-n name="calendar" size="24" color="white"></ico-n></div>
   <div class="pwa-banner-text">
     <div class="pwa-banner-title">Instalar PlanificaMe</div>
     <div class="pwa-banner-sub">Acceso rápido desde tu pantalla de inicio, sin navegador</div>
@@ -15243,7 +15299,7 @@ async function digest_sendNow() {
      PWA: Notification Permission Banner
      ═══════════════════════════════════════════════════════════ -->
 <div id="notif-perm-banner" style="display:none">
-  <div class="notif-perm-icon">🔔</div>
+  <div class="notif-perm-icon"><ico-n name="bell" size="24" color="white"></ico-n></div>
   <div class="notif-perm-text">
     <div class="notif-perm-title">Activar notificaciones</div>
     <div class="notif-perm-sub">Recibe recordatorios de tus actividades aunque tengas otra pestaña abierta.</div>
@@ -15261,27 +15317,21 @@ async function digest_sendNow() {
 <div class="overlay" id="icsModal">
   <div class="modal" style="width:520px;max-height:88vh">
     <div class="mtop">
-      <div class="mtitle">📂 Importar / Exportar Calendario</div>
+      <div class="mtitle" style="display:flex;align-items:center;gap:8px"><ico-n name="folder-open" size="16"></ico-n> Importar / Exportar Calendario</div>
       <button class="mclose" onclick="closeModal('icsModal')">×</button>
     </div>
     <div class="mb" style="overflow-y:auto;max-height:calc(88vh - 120px)">
 
       <!-- EXPORT -->
       <div class="ics-section">
-        <div class="ics-section-title">⬇️ Exportar</div>
+        <div class="ics-section-title" style="display:flex;align-items:center;gap:6px"><ico-n name="download" size="13"></ico-n> Exportar</div>
         <p style="font-size:12px;color:var(--text3);margin:0 0 12px">
           Descarga tus actividades como archivo .ics compatible con Google Calendar, Outlook y Apple Calendar.
         </p>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn btn-s btn-sm" onclick="ics_exportAll()">
-            📅 Exportar todo
-          </button>
-          <button class="btn btn-s btn-sm" onclick="ics_exportMonth()">
-            📆 Solo este mes
-          </button>
-          <button class="btn btn-s btn-sm" onclick="ics_exportSelected()">
-            📋 Solo activas
-          </button>
+          <button class="btn btn-s btn-sm" onclick="ics_exportAll()">Exportar todo</button>
+          <button class="btn btn-s btn-sm" onclick="ics_exportMonth()">Solo este mes</button>
+          <button class="btn btn-s btn-sm" onclick="ics_exportSelected()">Solo activas</button>
         </div>
       </div>
 
@@ -15289,13 +15339,13 @@ async function digest_sendNow() {
 
       <!-- IMPORT -->
       <div class="ics-section">
-        <div class="ics-section-title">⬆️ Importar</div>
+        <div class="ics-section-title" style="display:flex;align-items:center;gap:6px"><ico-n name="upload" size="13"></ico-n> Importar</div>
         <div id="ics-drop-zone" class="ics-drop-zone"
              onclick="document.getElementById('ics-file-input').click()"
              ondragover="ics_onDragOver(event)"
              ondragleave="ics_onDragLeave(event)"
              ondrop="ics_onDrop(event)">
-          <div class="ics-drop-icon">📁</div>
+          <div class="ics-drop-icon"><ico-n name="folder-open" size="28"></ico-n></div>
           <div style="font-weight:600;margin-bottom:2px">Arrastra un archivo .ics aquí</div>
           <div style="font-size:11px">o haz clic para seleccionar</div>
         </div>
@@ -15321,9 +15371,7 @@ async function digest_sendNow() {
     <div class="mf" id="ics-foot" style="justify-content:space-between">
       <div id="ics-import-status" style="font-size:12px;color:var(--text3)"></div>
       <div style="display:flex;gap:8px">
-        <button class="btn btn-p btn-sm" id="ics-import-btn" style="display:none" onclick="ics_importSelected()">
-          ⬆️ Importar seleccionados
-        </button>
+        <button class="btn btn-p btn-sm" id="ics-import-btn" style="display:none" onclick="ics_importSelected()">Importar seleccionados</button>
         <button class="btn btn-s btn-sm" onclick="closeModal('icsModal')">Cerrar</button>
       </div>
     </div>
@@ -15336,7 +15384,7 @@ async function digest_sendNow() {
 <div class="overlay" id="digestModal">
   <div class="modal" style="width:500px;max-height:88vh">
     <div class="mtop">
-      <div class="mtitle">📊 Digest Semanal</div>
+      <div class="mtitle" style="display:flex;align-items:center;gap:8px"><ico-n name="bar-chart-2" size="16"></ico-n> Digest Semanal</div>
       <button class="mclose" onclick="closeModal('digestModal')">×</button>
     </div>
     <div class="mb" style="overflow-y:auto;max-height:calc(88vh - 120px)">
@@ -15359,20 +15407,20 @@ async function digest_sendNow() {
 
       <!-- Próximas actividades -->
       <div style="margin-bottom:16px">
-        <div class="ics-section-title">📅 Próximas actividades (7 días)</div>
+        <div class="ics-section-title" style="display:flex;align-items:center;gap:6px"><ico-n name="calendar" size="13"></ico-n> Próximas actividades (7 días)</div>
         <div id="digest-upcoming-list" style="font-size:13px"></div>
       </div>
 
       <!-- Preview del email -->
       <div>
-        <div class="ics-section-title">✉️ Tu digest por email</div>
+        <div class="ics-section-title" style="display:flex;align-items:center;gap:6px"><ico-n name="mail" size="13"></ico-n> Tu digest por email</div>
         <div class="digest-email-preview" id="digest-email-preview">
           Configura tu email en el perfil para recibir el digest automáticamente cada lunes a las 8 AM.
         </div>
       </div>
 
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-top:16px;font-size:11px;color:var(--text3);line-height:1.6">
-        🗓 El digest automático se envía cada <strong>lunes a las 8:00 AM</strong> (hora local).<br>
+        El digest automático se envía cada <strong>lunes a las 8:00 AM</strong> (hora local).<br>
         También puedes enviarlo manualmente con el botón de abajo.
       </div>
 
@@ -15380,9 +15428,7 @@ async function digest_sendNow() {
     <div class="mf" style="justify-content:space-between;align-items:center">
       <div id="digest-send-status" style="font-size:12px;color:var(--text3)"></div>
       <div style="display:flex;gap:8px">
-        <button class="btn btn-s btn-sm" onclick="digest_sendNow()" id="digest-send-btn">
-          📨 Enviar ahora
-        </button>
+        <button class="btn btn-s btn-sm" onclick="digest_sendNow()" id="digest-send-btn" style="display:flex;align-items:center;gap:6px"><ico-n name="send" size="13"></ico-n> Enviar ahora</button>
         <button class="btn btn-p btn-sm" onclick="closeModal('digestModal')">Cerrar</button>
       </div>
     </div>
