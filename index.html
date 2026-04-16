@@ -5125,6 +5125,7 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
   <div class="logo" style="display:flex;align-items:center;justify-content:space-between;padding-right:12px">
     <h1 class="logo-text">Planifica<span style="-webkit-text-fill-color:inherit">Me</span></h1>
     <button onclick="toggleSidebarCompact()" title="Compactar sidebar"
+      aria-label="Compactar sidebar"
       data-tip="Compactar sidebar"
       class="icon-btn-v2"
       id="sbCompactBtn"><i data-lucide="panel-left-close" class="icon icon-sm"></i></button>
@@ -5294,16 +5295,16 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
       <!-- DERECHA: acciones -->
       <div class="hdr-right">
         <button class="btn btn-p guest-login-btn btn-sm" id="guestLoginBtn" onclick="openModal('authModal')" title="Iniciar sesión" style="display:none;gap:5px"><i data-lucide="log-in" class="icon icon-sm"></i> Iniciar sesión</button>
-        <button class="nbtn icon-btn icon-btn-v2" onclick="openNotesModal()" title="Notas rápidas (N)"><i data-lucide="notebook-pen" class="icon"></i></button>
-        <button class="nbtn icon-btn icon-btn-v2" onclick="openExportModal()" title="Exportar datos"><i data-lucide="download" class="icon"></i></button>
-        <button class="nbtn icon-btn icon-btn-v2" onclick="ws_openGame()" title="Modo Juego"><i data-lucide="gamepad-2" class="icon"></i></button>
-        <button class="nbtn icon-btn icon-btn-v2" onclick="openStatsModal()" title="Estadísticas"><i data-lucide="bar-chart-3" class="icon"></i></button>
+        <button class="nbtn icon-btn icon-btn-v2" onclick="openNotesModal()" title="Notas rápidas (N)" aria-label="Notas rápidas"><i data-lucide="notebook-pen" class="icon"></i></button>
+        <button class="nbtn icon-btn icon-btn-v2" onclick="openExportModal()" title="Exportar datos" aria-label="Exportar datos"><i data-lucide="download" class="icon"></i></button>
+        <button class="nbtn icon-btn icon-btn-v2" onclick="ws_openGame()" title="Modo Juego" aria-label="Modo Juego"><i data-lucide="gamepad-2" class="icon"></i></button>
+        <button class="nbtn icon-btn icon-btn-v2" onclick="openStatsModal()" title="Estadísticas" aria-label="Estadísticas"><i data-lucide="bar-chart-3" class="icon"></i></button>
         <div class="trash-nav-wrap">
-          <button class="nbtn icon-btn icon-btn-v2" onclick="openTrashModal()" title="Papelera"><i data-lucide="trash-2" class="icon"></i></button>
+          <button class="nbtn icon-btn icon-btn-v2" onclick="openTrashModal()" title="Papelera" aria-label="Papelera"><i data-lucide="trash-2" class="icon"></i></button>
           <div class="trash-nav-badge" id="trashNavBadge">0</div>
         </div>
-        <button class="nbtn icon-btn icon-btn-v2" id="themeToggleBtn" onclick="toggleTheme()" title="Cambiar tema"><i data-lucide="moon" class="icon" id="themeIcon"></i></button>
-        <button class="nbtn icon-btn icon-btn-v2 rp-toggle-mobile" id="rpMobileBtn" onclick="toggleRightPanelMobile()" title="Historial"><i data-lucide="layout-list" class="icon"></i></button>
+        <button class="nbtn icon-btn icon-btn-v2" id="themeToggleBtn" onclick="toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema"><i data-lucide="moon" class="icon" id="themeIcon"></i></button>
+        <button class="nbtn icon-btn icon-btn-v2 rp-toggle-mobile" id="rpMobileBtn" onclick="toggleRightPanelMobile()" title="Historial" aria-label="Historial"><i data-lucide="layout-list" class="icon"></i></button>
       </div>
     </div>
     <!-- Fila 2: filtros + buscador -->
@@ -9207,7 +9208,7 @@ function switchSession(){
   document.getElementById('histList').innerHTML = '';
   render();
   openModal('authModal');
-  toast('🔄 Sesión cerrada — inicia con otra cuenta');
+  toast('Sesión cerrada — inicia con otra cuenta');
 }
 
 // Confirmar logout
@@ -10361,7 +10362,7 @@ async function loadChatMessages(){
 function renderChatMessages(){
   const el = document.getElementById('chatMessages');
   if(!_chatMessages.length){
-    el.innerHTML='<div class="chat-empty">Sin mensajes aún. ¡Inicia la conversación! 👋</div>';
+    el.innerHTML='<div class="chat-empty">Sin mensajes aún. ¡Inicia la conversación!</div>';
     return;
   }
   let html = '';
@@ -11406,13 +11407,13 @@ function exportStatsPDF(){
 
 
 // ═══════════════════════════════════════════════════════════
-//  🎮  WORD SEARCH MINI GAME  — ws_* namespace  (v2)
+//  WORD SEARCH MINI GAME  — ws_* namespace  (v2)
 // ═══════════════════════════════════════════════════════════
 
 const WS_DIFFICULTY = {
-  easy:   {label:'Fácil',  emoji:'🟢',size:10,maxWords:6,  dirs:4,countdown:null,multiplier:1,  },
-  normal: {label:'Normal', emoji:'🟡',size:12,maxWords:10, dirs:8,countdown:null,multiplier:1.5,},
-  hard:   {label:'Difícil',emoji:'🔴',size:14,maxWords:14, dirs:8,countdown:180, multiplier:2.5,},
+  easy:   {label:'Fácil',  color:'#10b981',size:10,maxWords:6,  dirs:4,countdown:null,multiplier:1,  },
+  normal: {label:'Normal', color:'#f59e0b',size:12,maxWords:10, dirs:8,countdown:null,multiplier:1.5,},
+  hard:   {label:'Difícil',color:'#ef4444',size:14,maxWords:14, dirs:8,countdown:180, multiplier:2.5,},
 };
 
 const WS = {
@@ -11554,7 +11555,7 @@ function ws_showComboBanner(combo){
   const el=document.createElement('div');
   el.id='ws-combo-banner-el';
   el.className='ws-combo-banner';
-  el.textContent=`${combo}x COMBO! 🔥`;
+  el.textContent=`${combo}x COMBO!`;
   document.body.appendChild(el);
   setTimeout(()=>{
     el.style.transition='opacity .4s';el.style.opacity='0';
@@ -11601,7 +11602,7 @@ function ws_updateScoreDisplay(){
   const hi=document.getElementById('ws-hi-val');if(hi)hi.textContent=(prog.highScore||0).toLocaleString();
   const total=WS.words.length,found=WS.words.filter(w=>w.found).length;
   const fill=document.getElementById('ws-progress-fill');if(fill)fill.style.width=`${total?(found/total*100):0}%`;
-  const comboEl=document.getElementById('ws-combo-val');if(comboEl)comboEl.textContent=WS.combo>1?`🔥 ${WS.combo}x`:'';
+  const comboEl=document.getElementById('ws-combo-val');if(comboEl)comboEl.textContent=WS.combo>1?`${WS.combo}x`:'';
 }
 
 // ─── Wrong selection ──────────────────────────────────────────
@@ -11993,7 +11994,7 @@ function ws_newGame(){
   const hintEl=document.getElementById('ws-dir-hint');
   if(hintEl){
     hintEl.innerHTML=diff.dirs===4
-      ?`<span class="ws-dir-badge">→ Horizontal</span><span class="ws-dir-badge">↓ Vertical</span><span class="ws-dir-badge">${diff.emoji} Solo H+V</span>`
+      ?`<span class="ws-dir-badge">→ Horizontal</span><span class="ws-dir-badge">↓ Vertical</span><span class="ws-dir-badge" style="color:${diff.color}">Solo H+V</span>`
       :`<span class="ws-dir-badge">→ Horizontal</span><span class="ws-dir-badge">↓ Vertical</span><span class="ws-dir-badge">↘ Diagonal</span><span class="ws-dir-badge">← Invertidas</span>`;
   }
 
@@ -12016,7 +12017,7 @@ function ws_newGame(){
   document.getElementById('ws-win-banner').classList.remove('show');
   document.getElementById('ws-dir-hint').style.display='';
   document.getElementById('ws-grid-wrap').style.display='';
-  document.getElementById('ws-subtitle').textContent=`${diff.emoji} ${diff.label} · ${placed.length} palabras`;
+  document.getElementById('ws-subtitle').innerHTML=`<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${diff.color};margin-right:5px;vertical-align:middle"></span>${diff.label} · ${placed.length} palabras`;
 
   ws_updateScoreDisplay();
   ws_renderGrid();
@@ -13040,7 +13041,7 @@ function habit_render(){
     const streakEl = document.createElement('div');
     streakEl.className = 'habit-streak' + (isHot ? ' hot' : '');
     streakEl.innerHTML = streak > 0
-      ? `<span class="habit-streak-fire">${isHot ? '🔥' : '◉'}</span>${streak}`
+      ? `<span class="habit-streak-fire">◉</span>${streak}`
       : `<span style="opacity:.4">—</span>`;
 
     item.appendChild(check);
@@ -13470,7 +13471,7 @@ function renderHome(container) {
   greetRow.className = 'hw-greeting-row';
   greetRow.innerHTML = `
     <div>
-      <div class="hw-greeting">${greeting}, ${ME.name?.split(' ')[0] || 'Usuario'} ${streak >= 3 ? '🔥' : ''}</div>
+      <div class="hw-greeting">${greeting}, ${ME.name?.split(' ')[0] || 'Usuario'}</div>
       <div class="hw-greeting-sub">${now.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).replace(/^\w/,c=>c.toUpperCase())}</div>
     </div>
     <button class="hw-new-btn" onclick="openTaskModal('${todayStr}')">+ Nueva actividad</button>
@@ -13484,8 +13485,8 @@ function renderHome(container) {
   const stats = [
     { val: completed, lbl: 'Completadas', sub: 'esta semana', color: 'var(--accent3)' },
     { val: `${pct}%`, lbl: 'Completado', sub: `${completed}/${total} actividades`, color: 'var(--accent)' },
-    { val: `${streak}d`, lbl: 'Racha', sub: streak >= 3 ? '¡Sigue así! 🔥' : 'Completa algo hoy', color: streak >= 3 ? '#f59e0b' : 'var(--text3)' },
-    { val: todayEvs.length, lbl: 'Hoy', sub: todayEvs.length === 0 ? 'Día libre 🎉' : `${todayEvs.filter(e=>!['completed','early-voluntary','early-forced'].includes(e.status)).length} pendientes`, color: 'var(--accent2)' },
+    { val: `${streak}d`, lbl: 'Racha', sub: streak >= 3 ? '¡Sigue así!' : 'Completa algo hoy', color: streak >= 3 ? '#f59e0b' : 'var(--text3)' },
+    { val: todayEvs.length, lbl: 'Hoy', sub: todayEvs.length === 0 ? 'Día libre' : `${todayEvs.filter(e=>!['completed','early-voluntary','early-forced'].includes(e.status)).length} pendientes`, color: 'var(--accent2)' },
   ];
   stats.forEach(s => {
     const card = document.createElement('div');
@@ -13500,7 +13501,7 @@ function renderHome(container) {
   todaySec.className = 'hw-sec';
   todaySec.innerHTML = `<div class="hw-sec-hdr"><div class="hw-sec-title" style="display:flex;align-items:center;gap:6px">${_svgIco('calendar',15)} Actividades de hoy</div><button class="hw-sec-link" onclick="setView('day')">Ver día completo →</button></div>`;
   if(todayEvs.length === 0) {
-    todaySec.innerHTML += `<div class="hw-today-empty">Sin actividades hoy — ¿empezamos algo? 💪</div>`;
+    todaySec.innerHTML += `<div class="hw-today-empty">Sin actividades hoy — ¿empezamos algo?</div>`;
   } else {
     todayEvs.slice(0, 6).forEach(ev => {
       const isDone = ['completed','early-voluntary','early-forced'].includes(ev.status);
@@ -14246,7 +14247,7 @@ let _pwaInstallPrompt = null;
         const newSW = reg.installing;
         newSW.addEventListener('statechange', () => {
           if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
-            toast('🔄 Nueva versión disponible — recarga para actualizar');
+            toast('Nueva versión disponible — recarga para actualizar');
           }
         });
       });
@@ -14272,7 +14273,7 @@ window.addEventListener('offline', () => {
 });
 window.addEventListener('online', () => {
   document.getElementById('pwa-offline-bar').style.display = 'none';
-  toast('🌐 Conexión restaurada');
+  toast('✓ Conexión restaurada');
 });
 
 // ── Install Prompt (beforeinstallprompt) ─────────────────────
@@ -14287,7 +14288,7 @@ window.addEventListener('beforeinstallprompt', e => {
 
 window.addEventListener('appinstalled', () => {
   pwa_dismissBanner();
-  toast('🎉 PlanificaMe instalada correctamente');
+  toast('✓ PlanificaMe instalada correctamente');
   _pwaInstallPrompt = null;
 });
 
@@ -14349,7 +14350,7 @@ async function pwa_requestNotifPermission() {
   try {
     const perm = await Notification.requestPermission();
     if (perm === 'granted') {
-      toast('🔔 Notificaciones activadas — recibirás recordatorios de tus actividades');
+      toast('✓ Notificaciones activadas — recibirás recordatorios de tus actividades');
       pwa_initNotifications();
       pwa_subscribeToServer();
     } else {
