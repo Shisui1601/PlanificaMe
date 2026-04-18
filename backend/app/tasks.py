@@ -47,7 +47,8 @@ def send_event_reminders(self):
                         to_email=event.email,
                         event_date=event.date,
                         event_time=event.time,
-                        reminder_minutes=event.reminder
+                        reminder_minutes=event.reminder,
+                        event_id=str(event.id)
                     )
                     if success:
                         event.reminder_sent = True
@@ -99,7 +100,8 @@ def check_upcoming_deadlines(self):
                         event_title=event.title,
                         to_email=event.email,
                         days_left=days_left,
-                        deadline_date=event.deadline_date
+                        deadline_date=event.deadline_date,
+                        event_id=str(event.id)
                     )
                     if success:
                         sent_count += 1
@@ -136,7 +138,8 @@ def send_status_update_notification(self, event_id: str, status: str, status_not
                 event_title=event.title,
                 to_email=event.email,
                 status=status,
-                status_note=status_note
+                status_note=status_note,
+                event_id=str(event.id)
             )
             if success:
                 logger.info(f"📊 Estado notificado → {event.title} = {status}")

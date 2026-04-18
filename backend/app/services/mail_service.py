@@ -72,13 +72,20 @@ def _base_template(content: str, color: str = "#7c5aff") -> str:
 """
 
 
-def _btn(text: str, color: str = "#7c5aff") -> str:
+def _btn(text: str, url: str = None, color: str = "#7c5aff") -> str:
     """
     Genera un botón de acción compatible con todos los clientes de correo.
     Usa tabla HTML (funciona en Outlook, Gmail, Apple Mail, móviles).
     Incluye URL de respaldo en texto plano por si el botón no responde.
+
+    Args:
+        text: Texto del botón
+        url: URL destino completa (ej: https://planificame.net/actividad/123)
+        color: Color del botón
     """
-    url = settings.FRONTEND_URL
+    if not url:
+        url = settings.FRONTEND_URL
+
     return f"""
         <div style="text-align:center;margin:24px 0 8px;">
           <table cellspacing="0" cellpadding="0" border="0" style="margin:0 auto;border-collapse:separate;">
@@ -166,10 +173,13 @@ class MailService:
     # ─────────────────────────────────────
     @staticmethod
     def send_reminder_email(event_title: str, to_email: str, event_date: str,
-                             event_time: str, reminder_minutes: int) -> bool:
+                             event_time: str, reminder_minutes: int, event_id: str = None) -> bool:
         subject = f"🔔 Recordatorio: {event_title}"
         time_label = f"{reminder_minutes} min" if reminder_minutes < 60 else (
             "1 hora" if reminder_minutes == 60 else "1 día")
+
+        # Construir URL de la actividad
+        activity_url = f"{settings.FRONTEND_URL}/actividad/{event_id}" if event_id else settings.FRONTEND_URL
 
         content = f"""
         <h2 style="margin:0 0 6px;font-size:22px;color:#111128;">🔔 Recordatorio de actividad</h2>
@@ -184,7 +194,7 @@ class MailService:
             {_info_row("⏰", "Recordatorio", f"{time_label} antes")}
           </table>
         </div>
-        {_btn("Ver actividad →", "#7c5aff")}"""
+        {_btn("Ver actividad →", activity_url, "#7c5aff")}"""
 
         return MailService.send_email(
             to_email, subject,
@@ -197,7 +207,7 @@ class MailService:
     # ─────────────────────────────────────
     @staticmethod
     def send_deadline_warning_email(event_title: str, to_email: str,
-                                     days_left: int, deadline_date: str) -> bool:
+                                     days_left: int, deadline_date: str, event_id: str = None) -> bool:
         if days_left < 0:
             subject = f"🚨 Venció: {event_title}"
             badge = f"<span style='background:#fee2e2;color:#dc2626;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;'>Venció hace {abs(days_left)} día(s)</span>"
@@ -219,6 +229,9 @@ class MailService:
             color = "#059669"
             message = f"Faltan <strong>{days_left} días</strong> para la fecha límite."
 
+        # Construir URL de la actividad
+        activity_url = f"{settings.FRONTEND_URL}/actividad/{event_id}" if event_id else settings.FRONTEND_URL
+
         content = f"""
         <h2 style="margin:0 0 6px;font-size:22px;color:#111128;">⏳ Fecha límite</h2>
         <p style="margin:0 0 20px;">{badge}</p>
@@ -229,7 +242,7 @@ class MailService:
           </table>
         </div>
         <p style="font-size:14px;color:#44446a;margin-bottom:24px;">{message}</p>
-        {_btn("Actualizar estado →", color)}"""
+        {_btn("Actualizar estado →", activity_url, color)}"""
 
         return MailService.send_email(
             to_email, subject,
@@ -278,7 +291,7 @@ class MailService:
     # ─────────────────────────────────────
     @staticmethod
     def send_status_update_email(event_title: str, to_email: str, status: str,
-                                  status_note: str = None) -> bool:
+                                  status_note: str = None, event_id: str = None) -> bool:
         status_map = {
             "completed":       ("✅", "Completada",             "#059669", "#d1fae5"),
             "early-voluntary": ("⚡", "Adelantada — voluntad",  "#d97706", "#fef3c7"),
@@ -294,6 +307,9 @@ class MailService:
           <p style="margin:0;font-size:13px;color:#44446a;"><strong>Nota:</strong> {status_note}</p>
         </div>""" if status_note else ""
 
+        # Construir URL de la actividad
+        activity_url = f"{settings.FRONTEND_URL}/actividad/{event_id}" if event_id else settings.FRONTEND_URL
+
         content = f"""
         <h2 style="margin:0 0 6px;font-size:22px;color:#111128;">📊 Estado actualizado</h2>
         <p style="margin:0 0 20px;font-size:14px;color:#44446a;">
@@ -305,7 +321,7 @@ class MailService:
           <div style="font-size:14px;color:#44446a;margin-top:8px;font-weight:600;">{event_title}</div>
         </div>
         {note_block}
-        {_btn("Ver en PlanificaMe →", color)}"""
+        {_btn("Ver en PlanificaMe →", activity_url, color)}"""
 
         return MailService.send_email(
             to_email, subject,
