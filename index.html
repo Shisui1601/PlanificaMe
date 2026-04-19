@@ -392,6 +392,73 @@ body{
 .sb-sec{padding:16px 20px 8px;}
 .sb-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.8px;color:var(--text3);margin-bottom:10px;}
 
+/* ── Calendar List ── */
+.sb-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.sb-cal-add-btn{width:auto!important;padding:3px 7px!important;display:flex;align-items:center;gap:3px;}
+.cal-list{display:flex;flex-direction:column;gap:2px;}
+.cal-list-empty{text-align:center;font-size:11px;color:var(--text3);padding:10px 0;}
+.cal-item{
+  display:flex;align-items:center;gap:9px;
+  padding:7px 9px;border-radius:8px;
+  cursor:pointer;transition:background .14s, border-color .14s, box-shadow .18s;
+  border:1px solid transparent;position:relative;
+  user-select:none;
+}
+.cal-item:hover{background:var(--surface2);border-color:var(--border);}
+.cal-item.active{
+  background:rgba(124,90,255,.08);
+  border-color:rgba(124,90,255,.28);
+  box-shadow:0 0 0 1px rgba(124,90,255,.1) inset;
+}
+.cal-item-dot{
+  width:9px;height:9px;border-radius:50%;flex-shrink:0;
+  transition:transform .2s, box-shadow .2s;
+}
+.cal-item:hover .cal-item-dot{transform:scale(1.25);}
+.cal-item.active .cal-item-dot{transform:scale(1.25);box-shadow:0 0 6px currentColor;}
+.cal-item-name{
+  font-size:12px;font-weight:500;flex:1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  color:var(--text2);transition:color .14s;
+}
+.cal-item.active .cal-item-name{color:var(--text);font-weight:600;}
+.cal-item-check{
+  width:15px;height:15px;border-radius:50%;
+  background:linear-gradient(135deg,#7c5aff,#a78bfa);
+  color:white;font-size:8px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:scale(0.4);
+  transition:opacity .18s, transform .22s cubic-bezier(.34,1.56,.64,1);
+  flex-shrink:0;
+}
+.cal-item.active .cal-item-check{opacity:1;transform:scale(1);}
+
+/* ── Calendar Info Panel ── */
+.cal-info-panel{
+  margin-top:8px;
+  border:1px solid var(--border2);
+  border-radius:var(--r);
+  overflow:hidden;
+  animation:calInfoIn .22s cubic-bezier(.34,1.2,.64,1) both;
+}
+@keyframes calInfoIn{from{opacity:0;transform:translateY(-8px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.cal-info-bar{height:3px;width:100%;transition:background .3s;}
+.cal-info-body{padding:10px 12px;}
+.cal-info-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.cal-info-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;box-shadow:0 0 8px currentColor;}
+.cal-info-name{font-size:13px;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cal-role-badge{
+  font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  padding:2px 7px;border-radius:20px;
+  background:rgba(124,90,255,.14);color:var(--accent-bright);
+  white-space:nowrap;flex-shrink:0;
+}
+.cal-info-members-lbl{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:5px;}
+.cal-info-members{display:flex;flex-direction:column;gap:3px;max-height:88px;overflow-y:auto;margin-bottom:8px;scrollbar-width:thin;}
+.cal-info-actions{display:flex;gap:5px;}
+.cal-action-btn{flex:1!important;display:flex!important;align-items:center;justify-content:center;gap:5px;padding:5px 8px!important;font-size:11px!important;}
+.cal-action-danger{border-color:var(--danger)!important;color:var(--danger)!important;}
+
 /* ══ CREAR BUTTON (Google Calendar style) ══ */
 .crear-wrap{position:relative;margin:16px 20px 6px;}
 .crear-btn{
@@ -5322,25 +5389,39 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
     </button>
   </div>
 
-  <div class="sb-sec">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+  <div class="sb-sec sb-cal-wrap">
+    <div class="sb-cal-header">
       <div class="sb-title">Calendarios</div>
-      <button class="nbtn" style="width:auto;padding:4px 8px;font-size:13px" onclick="openCreateCalendarModal()">＋</button>
+      <button class="nbtn sb-cal-add-btn" onclick="openCreateCalendarModal()" title="Nuevo calendario">
+        <i data-lucide="plus" class="icon" style="width:13px;height:13px"></i>
+      </button>
     </div>
-    <select id="calendarSelect" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface2);color:var(--text);font-family:'Inter';font-size:12px;cursor:pointer" onchange="switchCalendar(this.value)">
-      <option value="">- Seleccionar calendario -</option>
-    </select>
-    <div id="calendarInfo" style="margin-top:10px;padding:10px;background:var(--surface2);border-radius:var(--r-sm);display:none">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-        <div id="calendarColorDisplay" style="width:20px;height:20px;border-radius:6px;flex-shrink:0"></div>
-        <div id="calendarNameDisplay" style="font-size:13px;font-weight:600;flex:1"></div>
+    <!-- Lista dinámica de calendarios -->
+    <div id="calendarList" class="cal-list">
+      <div class="cal-list-empty">
+        <i data-lucide="calendar-x" class="icon" style="width:18px;height:18px;opacity:.35;display:block;margin:0 auto 5px"></i>
+        <span>Sin calendarios aún</span>
       </div>
-      <div id="calendarRoleBadge" style="font-size:10px;font-weight:700;margin-bottom:8px;letter-spacing:.3px"></div>
-      <div style="font-size:11px;color:var(--text3);margin-bottom:5px">Miembros:</div>
-      <div id="calendarMembers" style="font-size:11px;color:var(--text2);max-height:100px;overflow-y:auto;margin-bottom:8px"></div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button class="nbtn" style="flex:1;padding:6px;font-size:11px" onclick="openInviteMemberModal()">+ Invitar</button>
-        <button id="deleteCalendarBtn" class="nbtn" style="flex:1;padding:6px;font-size:11px;border-color:var(--danger);color:var(--danger);display:none" onclick="deleteCalendar()">Eliminar</button>
+    </div>
+    <!-- Panel de info del calendario seleccionado -->
+    <div id="calendarInfo" class="cal-info-panel" style="display:none">
+      <div class="cal-info-bar" id="calendarInfoBar"></div>
+      <div class="cal-info-body">
+        <div class="cal-info-top">
+          <div id="calendarColorDisplay" class="cal-info-dot"></div>
+          <div id="calendarNameDisplay" class="cal-info-name"></div>
+          <div id="calendarRoleBadge" class="cal-role-badge"></div>
+        </div>
+        <div class="cal-info-members-lbl">Miembros</div>
+        <div id="calendarMembers" class="cal-info-members"></div>
+        <div class="cal-info-actions">
+          <button class="nbtn cal-action-btn" onclick="openInviteMemberModal()">
+            <i data-lucide="user-plus" class="icon" style="width:11px;height:11px"></i> Invitar
+          </button>
+          <button id="deleteCalendarBtn" class="nbtn cal-action-btn cal-action-danger" onclick="deleteCalendar()" style="display:none">
+            <i data-lucide="trash-2" class="icon" style="width:11px;height:11px"></i> Eliminar
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -6653,22 +6734,26 @@ function updateUserInfo(){
 // CALENDAR FUNCTIONS
 // ═══════════════════════════════════
 function updateCalendarList(){
-  // Actualiza el dropdown de calendarios
-  const select = document.getElementById('calendarSelect');
-  select.innerHTML = '<option value="">- Seleccionar calendario -</option>';
-  
-  S.calendars.forEach(cal => {
-    const option = document.createElement('option');
-    option.value = cal.id;
-    option.text = cal.name;
-    option.style.borderLeft = `4px solid ${cal.color}`;
-    select.appendChild(option);
-  });
-  
-  // Si hay un calendario actual, seleccionarlo
-  if(S.currentCalendarId){
-    select.value = S.currentCalendarId;
+  const listEl = document.getElementById('calendarList');
+  if(!listEl) return;
+
+  if(!S.calendars || S.calendars.length === 0){
+    listEl.innerHTML = `<div class="cal-list-empty">
+      <i data-lucide="calendar-x" class="icon" style="width:18px;height:18px;opacity:.35;display:block;margin:0 auto 5px"></i>
+      <span>Sin calendarios aún</span>
+    </div>`;
+    if(window.lucide) lucide.createIcons();
+    return;
   }
+
+  listEl.innerHTML = S.calendars.map(cal => {
+    const isActive = cal.id === S.currentCalendarId;
+    return `<div class="cal-item${isActive ? ' active' : ''}" onclick="switchCalendar('${cal.id}')" title="${cal.name}">
+      <div class="cal-item-dot" style="background:${cal.color};box-shadow:0 0 6px ${cal.color}55"></div>
+      <span class="cal-item-name">${cal.name}</span>
+      <div class="cal-item-check">✓</div>
+    </div>`;
+  }).join('');
 }
 
 function switchCalendar(calendarId){
@@ -6677,68 +6762,86 @@ function switchCalendar(calendarId){
     S.currentCalendarRole = 'none';
     localStorage.removeItem('planificame_calendar');
     document.getElementById('calendarInfo').style.display = 'none';
+    // Quitar estado activo de todos los items
+    document.querySelectorAll('#calendarList .cal-item').forEach(el => el.classList.remove('active'));
     render();
     return;
   }
-  
+
   const cal = S.calendars.find(c => c.id === calendarId);
   if(!cal) return;
-  
+
+  // Si ya estaba seleccionado, deseleccionar (toggle)
+  if(S.currentCalendarId === calendarId){
+    switchCalendar('');
+    return;
+  }
+
   S.currentCalendarId = calendarId;
   localStorage.setItem('planificame_calendar', calendarId);
   S.currentCalendarColor = cal.color;
+
+  // Actualizar estado activo en la lista de items
+  document.querySelectorAll('#calendarList .cal-item').forEach(el => {
+    el.classList.toggle('active', el.querySelector('.cal-item-name')?.textContent === cal.name);
+  });
 
   // Determinar rol del usuario en este calendario
   const myMembership = cal.members?.find(m => m.user_id === ME.id || m.user?.id === ME.id);
   S.currentCalendarRole = myMembership?.role || (cal.owner_id === ME.id ? 'owner' : 'viewer');
 
   const isOwner = S.currentCalendarRole === 'owner';
-  const canEdit = ['owner','editor'].includes(S.currentCalendarRole);
-  
-  // Mostrar información del calendario
+
+  // Mostrar y animar el panel de info
   const infoEl = document.getElementById('calendarInfo');
   infoEl.style.display = 'block';
-  
-  // Nombre y color
+  // Re-trigger animation
+  infoEl.style.animation = 'none';
+  infoEl.offsetHeight; // reflow
+  infoEl.style.animation = '';
+
+  // Barra de color superior
+  const barEl = document.getElementById('calendarInfoBar');
+  if(barEl) barEl.style.background = `linear-gradient(90deg, ${cal.color}, ${cal.color}88)`;
+
+  // Color dot y nombre
   const calNameDiv = document.getElementById('calendarNameDisplay');
   if(calNameDiv) calNameDiv.textContent = cal.name;
   const calColorDiv = document.getElementById('calendarColorDisplay');
-  if(calColorDiv) calColorDiv.style.background = cal.color;
+  if(calColorDiv){ calColorDiv.style.background = cal.color; calColorDiv.style.boxShadow = `0 0 8px ${cal.color}88`; }
 
-  // Badge de rol del usuario actual
-  const roleColors = {owner:'var(--accent)',editor:'var(--accent3)',viewer:'var(--text3)',member:'var(--text3)'};
+  // Badge de rol
   const roleLabels = {owner:'Propietario',editor:'Editor',viewer:'Viewer',member:'Miembro'};
+  const roleBgColors = {owner:'rgba(124,90,255,.18)',editor:'rgba(52,211,153,.15)',viewer:'rgba(255,255,255,.08)',member:'rgba(255,255,255,.08)'};
+  const roleTxtColors = {owner:'#a78bfa',editor:'#34d399',viewer:'var(--text3)',member:'var(--text3)'};
   const roleEl = document.getElementById('calendarRoleBadge');
   if(roleEl){
     roleEl.textContent = roleLabels[S.currentCalendarRole] || S.currentCalendarRole;
-    roleEl.style.color = roleColors[S.currentCalendarRole] || 'var(--text3)';
+    roleEl.style.background = roleBgColors[S.currentCalendarRole] || 'rgba(255,255,255,.06)';
+    roleEl.style.color = roleTxtColors[S.currentCalendarRole] || 'var(--text3)';
   }
-  
+
   // Listar miembros
   const membersDiv = document.getElementById('calendarMembers');
   if(cal.members && cal.members.length > 0){
     membersDiv.innerHTML = cal.members.map(m => {
       const mIsOwner = m.role === 'owner';
-      // Owner puede eliminar a cualquiera excepto a sí mismo siendo owner
       const canRemove = isOwner && !mIsOwner;
       const deleteBtn = canRemove ? `<button class="member-delete-btn" onclick="removeMember('${m.user_id || m.id}')" title="Eliminar miembro">×</button>` : '';
-      const roleLabel = '';
-      return `<div class="member-item">${roleLabel} ${m.user?.name || 'Usuario'} <span style="color:var(--text3);font-size:10px">(${m.role})</span>${deleteBtn}</div>`;
+      return `<div class="member-item">${m.user?.name || 'Usuario'} <span style="color:var(--text3);font-size:10px">(${m.role})</span>${deleteBtn}</div>`;
     }).join('');
   } else {
     membersDiv.innerHTML = '<div style="color:var(--text3);font-size:11px">Solo tú</div>';
   }
-  
-  // Mostrar botón invitar solo a owners
+
+  // Mostrar botones según rol
   const inviteBtn = document.querySelector('#calendarInfo button[onclick="openInviteMemberModal()"]');
   if(inviteBtn) inviteBtn.style.display = isOwner ? 'inline-flex' : 'none';
-
-  // Mostrar botón eliminar solo a owners
   const delCalBtn = document.getElementById('deleteCalendarBtn');
   if(delCalBtn) delCalBtn.style.display = isOwner ? 'inline-flex' : 'none';
-  
+
+  if(window.lucide) lucide.createIcons();
   render();
-  // Update chat header and reload messages if chat is open
   updateChatHeader();
   _chatMessages = [];
   _chatLastTs = null;
@@ -6933,8 +7036,8 @@ async function deleteCalendar(){
         if(res.ok){
           S.currentCalendarId = null;
           document.getElementById('calendarInfo').style.display = 'none';
-          document.getElementById('calendarSelect').value = '';
           await loadUserCalendars();
+          updateCalendarList();
           toast('✓ Calendario eliminado'); render();
         } else toast('❌ Error al eliminar calendario');
       } catch(err){ toast('❌ Error de conexión'); }
@@ -9361,7 +9464,8 @@ function switchSession(){
   document.getElementById('userName').textContent = 'Usuario';
   document.getElementById('userRole').textContent = 'Invitado';
   document.getElementById('userAvatar').textContent = 'U';
-  document.getElementById('calendarSelect').innerHTML = '<option value="">- Seleccionar calendario -</option>';
+  S.calendars = [];
+  updateCalendarList();
   document.getElementById('calendarInfo').style.display = 'none';
   document.getElementById('projList').innerHTML = '';
   document.getElementById('teamList').innerHTML = '';
@@ -9477,7 +9581,8 @@ function logoutUser(){
   document.getElementById('userName').textContent = 'Usuario';
   document.getElementById('userRole').textContent = 'Invitado';
   document.getElementById('userAvatar').textContent = 'U';
-  document.getElementById('calendarSelect').innerHTML = '<option value="">- Seleccionar calendario -</option>';
+  S.calendars = [];
+  updateCalendarList();
   document.getElementById('calendarInfo').style.display = 'none';
   document.getElementById('projList').innerHTML = '';
   document.getElementById('teamList').innerHTML = '';
