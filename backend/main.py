@@ -10,6 +10,7 @@ from .app.routes import messages as messages_route
 from .app.routes import tags as tags_route
 from .app.routes import templates as templates_route
 from .app.routes import subtasks as subtasks_route
+from .app.routes import reminders as reminders_route
 from .app.routes import auth as auth_route
 import sys
 import os
@@ -92,6 +93,7 @@ app.include_router(messages_route.router)
 app.include_router(tags_route.router)
 app.include_router(templates_route.router)
 app.include_router(subtasks_route.router)
+app.include_router(reminders_route.router)
 
 # Servir archivos estáticos
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

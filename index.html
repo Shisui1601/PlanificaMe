@@ -5112,6 +5112,124 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
 }
 
 /* END PWA CSS */
+
+/* ═══════════════════════════════════════════════════════
+   REMINDER SYSTEM CSS
+═══════════════════════════════════════════════════════ */
+.reminder-label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text2);
+  margin-bottom: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.reminder-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.reminder-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.reminder-recipients {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  min-height: 36px;
+  padding: var(--space-2);
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-sm);
+}
+
+.reminder-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  background: var(--surface3);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text);
+}
+
+.reminder-chip-remove {
+  cursor: pointer;
+  color: var(--text3);
+  transition: color var(--t-base);
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.reminder-chip-remove:hover {
+  color: var(--danger);
+}
+
+.reminder-type-selector {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+}
+
+.reminder-type-option {
+  padding: var(--space-3);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-sm);
+  background: var(--surface2);
+  cursor: pointer;
+  transition: all var(--t-base);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--text2);
+  font-weight: 500;
+}
+
+.reminder-type-option:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.reminder-type-option.active {
+  background: rgba(124,90,255,.12);
+  border-color: var(--accent);
+  color: var(--accent-bright);
+}
+
+.reminder-success {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--success-bg);
+  border: 1px solid var(--success);
+  border-radius: var(--r-sm);
+  padding: var(--space-3);
+  color: var(--success);
+  font-size: var(--text-sm);
+  animation: slideDown var(--t-spring);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -5253,6 +5371,26 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
       <button class="fbadge team" id="team-filter-calendar" onclick="setTeamFilter('calendar')" style="flex:1;cursor:pointer;padding:4px;font-size:10px;border:1px solid var(--border)">Calendario</button>
     </div>
     <div class="team-list" id="teamList"></div>
+  </div>
+  <!-- ── REMINDER SYSTEM ── -->
+  <div class="sb-sec">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div class="sb-title">Recordatorios</div>
+      <button class="nbtn" style="width:auto;padding:4px 8px;font-size:11px;display:flex;align-items:center;gap:4px" onclick="openReminderModal()" title="Nuevo recordatorio">
+        <i data-lucide="plus" class="icon" style="width:13px;height:13px"></i>
+      </button>
+    </div>
+    <div style="font-size:12px;color:var(--text3)">
+      <button class="btn btn-s" style="width:100%;justify-content:center;gap:6px;margin-bottom:8px" onclick="openReminderModal()" title="Enviar recordatorio">
+        <i data-lucide="bell" class="icon icon-sm"></i> Enviar recordatorio
+      </button>
+      <div id="remindersList" style="font-size:11px">
+        <div style="color:var(--text3);text-align:center;padding:8px">
+          <i data-lucide="inbox" class="icon icon-sm" style="opacity:.6;margin-bottom:4px;display:block;margin-left:auto;margin-right:auto"></i>
+          Sin recordatorios aún
+        </div>
+      </div>
+    </div>
   </div>
   <!-- ── HABIT TRACKER ── -->
   <div class="sb-sec habits-section" id="habitsSection" style="display:none">
@@ -5979,6 +6117,19 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
 </div>
 
 <div class="nstack" id="nstack"></div>
+
+<!-- REMINDER MODAL -->
+<div class="overlay" id="reminderModal" onclick="if(event.target===this)closeModal('reminderModal')">
+  <div class="modal" style="max-width:480px">
+    <div class="mh">
+      <h2 class="mtitle">Enviar Recordatorio</h2>
+      <button class="mclose" onclick="closeModal('reminderModal')">×</button>
+    </div>
+    <div class="mb" id="reminderModalBody">
+      <!-- Se llena dinámicamente -->
+    </div>
+  </div>
+</div>
 
 <!-- CREATE CALENDAR MODAL -->
 <div class="overlay" id="createCalendarModal">
@@ -8294,6 +8445,15 @@ function showEventDetail(ev){
         toast_withUndo('Actividad enviada a la papelera', ()=>{ trash_restore(ev.id); render(); trash_updateBadge(); });
       }));
     }
+
+    // Botón Recordador
+    const remindSvg = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`;
+    const rb = document.createElement('button');
+    rb.className = 'btn btn-s';
+    rb.title = 'Enviar recordatorio';
+    rb.innerHTML = `${remindSvg}<span class="det-btn-label">Recordador</span>`;
+    rb.onclick = () => { closeModal('detModal'); openReminderModal(ev.id, ev.title); };
+    foot.appendChild(rb);
 
     // Cerrar — cierra la fila 2
     foot.appendChild(mkBtn('btn-p', 'close', 'Cerrar', 'Cerrar detalle', ()=>closeModal('detModal')));
@@ -14781,6 +14941,243 @@ async function digest_sendNow() {
     btn.textContent = 'Enviar ahora';
   }
 }
+
+// ═══════════════════════════════════════════════════════
+// REMINDER SYSTEM - GLOBAL FUNCTIONS
+// ═══════════════════════════════════════════════════════
+
+let _reminderState = {
+  recipients: [],
+  subject: '',
+  message: '',
+  type: 'general',
+  activityId: null
+};
+
+// Abrir modal de recordatorio
+function openReminderModal(eventId = null, eventTitle = null) {
+  _reminderState.recipients = [];
+  _reminderState.subject = eventTitle ? `Recordatorio: ${eventTitle}` : '';
+  _reminderState.message = '';
+  _reminderState.type = 'general';
+  _reminderState.activityId = eventId;
+
+  renderReminderModal();
+  openModal('reminderModal');
+}
+
+// Renderizar contenido del modal
+function renderReminderModal() {
+  const body = document.getElementById('reminderModalBody');
+  const activity = _reminderState.activityId
+    ? S.events.find(e => e.id === _reminderState.activityId)
+    : null;
+
+  body.innerHTML = `
+    <div class="fg">
+      <label class="reminder-label">
+        <i data-lucide="bell" class="icon reminder-icon"></i>
+        Tipo de recordatorio
+      </label>
+      <div class="reminder-type-selector">
+        <div class="reminder-type-option ${_reminderState.type === 'general' ? 'active' : ''}"
+             onclick="selectReminderType('general')">General</div>
+        <div class="reminder-type-option ${_reminderState.type === 'task' ? 'active' : ''}"
+             onclick="selectReminderType('task')">Tarea</div>
+        <div class="reminder-type-option ${_reminderState.type === 'activity' ? 'active' : ''}"
+             onclick="selectReminderType('activity')">Actividad</div>
+        <div class="reminder-type-option ${_reminderState.type === 'question' ? 'active' : ''}"
+             onclick="selectReminderType('question')">Consulta</div>
+      </div>
+    </div>
+
+    ${activity ? `
+      <div class="fg" style="padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm)">
+        <label class="reminder-label">
+          <i data-lucide="calendar" class="icon reminder-icon"></i>
+          Actividad vinculada
+        </label>
+        <div style="font-size:13px;color:var(--text);font-weight:500">${activity.title}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px">${activity.date} a las ${activity.time}</div>
+      </div>
+    ` : ''}
+
+    <div class="fg">
+      <label class="reminder-label">
+        <i data-lucide="mail" class="icon reminder-icon"></i>
+        Destinatarios
+      </label>
+      <div class="reminder-recipients" id="reminderChips">
+        ${_reminderState.recipients.map(email => `
+          <div class="reminder-chip">
+            <span>${email}</span>
+            <span class="reminder-chip-remove" onclick="removeReminderRecipient('${email}')">&times;</span>
+          </div>
+        `).join('')}
+      </div>
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <input class="finp" id="reminderEmailInput" type="email"
+               placeholder="Agregar correo..."
+               style="flex:1"
+               onkeydown="if(event.key==='Enter'){event.preventDefault();addReminderRecipient()}">
+        <button type="button" class="btn btn-s" style="flex-shrink:0"
+                onclick="addReminderRecipient()">Agregar</button>
+      </div>
+    </div>
+
+    <div class="fg">
+      <label class="reminder-label">
+        <i data-lucide="type" class="icon reminder-icon"></i>
+        Asunto
+      </label>
+      <input class="finp" type="text" id="reminderSubject"
+             value="${_reminderState.subject}"
+             oninput="_reminderState.subject=this.value"
+             placeholder="Asunto del recordatorio...">
+    </div>
+
+    <div class="fg">
+      <label class="reminder-label">
+        <i data-lucide="message-square" class="icon reminder-icon"></i>
+        Mensaje
+      </label>
+      <textarea class="ftarea" id="reminderMessage"
+                placeholder="Escribe tu mensaje..."
+                oninput="_reminderState.message=this.value">${_reminderState.message}</textarea>
+    </div>
+  `;
+
+  // Rellenar valores si existen
+  if (_reminderState.subject) {
+    const subjectInput = document.getElementById('reminderSubject');
+    if (subjectInput) subjectInput.value = _reminderState.subject;
+  }
+  if (_reminderState.message) {
+    const messageInput = document.getElementById('reminderMessage');
+    if (messageInput) messageInput.value = _reminderState.message;
+  }
+
+  // Renderizar footer con botones
+  const modalEl = document.getElementById('reminderModal').querySelector('.modal');
+  let footer = modalEl.querySelector('.mf');
+  if (!footer) {
+    footer = document.createElement('div');
+    footer.className = 'mf';
+    modalEl.appendChild(footer);
+  }
+  footer.style.gap = '8px';
+  footer.innerHTML = `
+    <button class="btn btn-s" onclick="closeModal('reminderModal')">Cancelar</button>
+    <button class="btn btn-p" onclick="sendReminder()" id="reminderSendBtn">
+      <i data-lucide="send" class="icon icon-sm"></i> Enviar
+    </button>
+  `;
+
+  // Lucide re-render
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+// Seleccionar tipo de recordatorio
+function selectReminderType(type) {
+  _reminderState.type = type;
+  renderReminderModal();
+}
+
+// Agregar destinatario
+function addReminderRecipient() {
+  const input = document.getElementById('reminderEmailInput');
+  const email = input?.value?.trim();
+
+  if (!email) return;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    toast('Email inválido');
+    return;
+  }
+  if (_reminderState.recipients.includes(email)) {
+    toast('Este correo ya está agregado');
+    return;
+  }
+
+  _reminderState.recipients.push(email);
+  input.value = '';
+  renderReminderModal();
+}
+
+// Remover destinatario
+function removeReminderRecipient(email) {
+  _reminderState.recipients = _reminderState.recipients.filter(e => e !== email);
+  renderReminderModal();
+}
+
+// Enviar recordatorio
+async function sendReminder() {
+  if (_reminderState.recipients.length === 0) {
+    toast('Agrega al menos un destinatario');
+    return;
+  }
+  if (!_reminderState.subject.trim()) {
+    toast('El asunto es obligatorio');
+    return;
+  }
+  if (!_reminderState.message.trim()) {
+    toast('El mensaje es obligatorio');
+    return;
+  }
+
+  const btn = document.getElementById('reminderSendBtn');
+  btn.disabled = true;
+  const oldHTML = btn.innerHTML;
+  btn.innerHTML = '<i data-lucide="loader" class="icon icon-sm"></i> Enviando...';
+
+  try {
+    const payload = {
+      recipient_emails: _reminderState.recipients,
+      subject: _reminderState.subject,
+      message: _reminderState.message,
+      reminder_type: _reminderState.type,
+      activity_id: _reminderState.activityId || null,
+      link_url: null
+    };
+
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${API_URL}/reminders/send`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.detail || 'Error al enviar');
+    }
+
+    const data = await res.json();
+
+    // Mostrar éxito
+    toast(`Recordatorio enviado a ${data.sent_to.length} persona(s)`);
+    closeModal('reminderModal');
+
+    // Resetear estado
+    _reminderState = {
+      recipients: [],
+      subject: '',
+      message: '',
+      type: 'general',
+      activityId: null
+    };
+
+  } catch (error) {
+    console.error('Error:', error);
+    toast('Error: ' + error.message);
+    btn.disabled = false;
+    btn.innerHTML = oldHTML;
+  }
+}
+
+// END REMINDER SYSTEM
 
 // END PWA + ICS + DIGEST JS
 </script>

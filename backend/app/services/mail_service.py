@@ -558,3 +558,122 @@ class MailService:
             _base_template(content, "#7c5aff"),
             f"¡Bienvenido a PlanificaMe, {user_name}! Tu cuenta ha sido creada."
         )
+
+    # ─────────────────────────────────────
+    # 10. RECORDATORIO PERSONALIZADO
+    # ─────────────────────────────────────
+    @staticmethod
+    def send_custom_reminder(
+        to_emails: list,
+        subject: str,
+        message: str,
+        sender_name: str,
+        reminder_type: str = "general",
+        activity_id: str = None,
+        activity_title: str = None,
+        link_url: str = None
+    ) -> dict:
+        """
+        Envía recordatorios personalizados a uno o varios usuarios.
+
+        Args:
+            to_emails: Lista de emails destinatarios
+            subject: Asunto del recordatorio
+            message: Mensaje/descripción del recordatorio
+            sender_name: Nombre de quién envía el recordatorio
+            reminder_type: Tipo de recordatorio (general, activity, task, question)
+            activity_id: ID de la actividad relacionada (opcional)
+            activity_title: Título de la actividad (opcional)
+            link_url: URL adicional (opcional)
+
+        Returns:
+            Dict con resultado del envío
+        """
+
+        # Iconos según el tipo
+        type_icons = {
+            "general": "📌",
+            "activity": "📅",
+            "task": "✓",
+            "question": "❓"
+        }
+        icon = type_icons.get(reminder_type, "📌")
+
+        # Colores según el tipo
+        type_colors = {
+            "general": "#7c5aff",
+            "activity": "#f59e0b",
+            "task": "#10b981",
+            "question": "#3b82f6"
+        }
+        color = type_colors.get(reminder_type, "#7c5aff")
+
+        # Construir contenido HTML
+        activity_block = ""
+        if activity_id and activity_title:
+            activity_url = f"{settings.FRONTEND_URL}/actividad/{activity_id}"
+            activity_block = f"""
+            <div style="background:#f7f8ff;border-radius:12px;padding:16px;margin:20px 0;border-left:4px solid {color};">
+              <p style="margin:0 0 8px;font-size:12px;color:#8888aa;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">
+                📋 Actividad relacionada
+              </p>
+              <p style="margin:0;font-size:14px;color:#111128;font-weight:600;">{activity_title}</p>
+              <p style="margin:8px 0 0;font-size:12px;color:{color};">
+                <a href="{activity_url}" target="_blank" style="color:{color};text-decoration:underline;">Ver actividad →</a>
+              </p>
+            </div>"""
+
+        link_block = ""
+        if link_url:
+            link_block = f"""
+            <div style="margin:16px 0 0;padding:12px;background:#f0f0f0;border-radius:8px;text-align:center;">
+              <p style="margin:0;font-size:12px;color:#8888aa;">Enlace relacionado:</p>
+              <p style="margin:6px 0 0;">
+                <a href="{link_url}" target="_blank" style="color:{color};font-weight:600;text-decoration:none;">
+                  {link_url} →
+                </a>
+              </p>
+            </div>"""
+
+        content = f"""
+        <h2 style="margin:0 0 6px;font-size:22px;color:#111128;">{icon} {subject}</h2>
+        <p style="margin:0 0 20px;font-size:14px;color:#44446a;">
+          <strong>{sender_name}</strong> te envió un recordatorio en PlanificaMe.
+        </p>
+
+        <div style="background:#f7f8ff;border-radius:12px;padding:20px;margin-bottom:20px;">
+          <p style="margin:0;font-size:14px;line-height:1.6;color:#111128;">{message}</p>
+        </div>
+
+        {activity_block}
+        {link_block}
+
+        {_btn("Ir a PlanificaMe →", f"{settings.FRONTEND_URL}/dashboard", color)}"""
+
+        # Enviar a cada destinatario
+        sent_to = []
+        failed = []
+
+        for email in to_emails:
+            try:
+                success = MailService.send_email(
+                    email, subject,
+                    _base_template(content, color),
+                    f"Recordatorio: {message[:100]}..."
+                )
+                if success:
+                    sent_to.append(email)
+                    logger.info(f"📮 Recordatorio enviado → {email}")
+                else:
+                    failed.append(email)
+            except Exception as e:
+                failed.append(email)
+                logger.error(f"Error enviando recordatorio a {email}: {str(e)}")
+
+        return {
+            "success": len(sent_to) > 0,
+            "sent_to": sent_to,
+            "failed": failed if failed else None,
+            "total_sent": len(sent_to),
+            "total_failed": len(failed)
+        }

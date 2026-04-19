@@ -314,3 +314,28 @@ class SubtaskResponse(BaseModel):
     done: bool
     position: int
     class Config: from_attributes = True
+
+
+# ════════════════════════════════════════
+# RECORDATORIOS PERSONALIZADOS
+# ════════════════════════════════════════
+
+class SendCustomReminderRequest(BaseModel):
+    """Schema para enviar recordatorios personalizados a usuarios"""
+    recipient_emails: List[str]  # Lista de emails de destinatarios
+    subject: str  # Asunto del recordatorio
+    message: str  # Mensaje/descripción del recordatorio
+    reminder_type: Optional[str] = "general"  # general, activity, task, question
+    activity_id: Optional[str] = None  # Si es sobre una actividad específica
+    link_url: Optional[str] = None  # Link adicional si es necesario
+
+    class Config:
+        from_attributes = True
+
+
+class SendCustomReminderResponse(BaseModel):
+    """Respuesta del envío de recordatorios"""
+    success: bool
+    message: str
+    sent_to: List[str]
+    failed: Optional[List[str]] = None
