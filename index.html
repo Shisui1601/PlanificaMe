@@ -3737,16 +3737,20 @@ html.light-mode textarea:focus{
   background:var(--surface);
   border:1px solid var(--border2);
   border-radius:9px;
-  padding:11px 12px;
+  padding:10px 12px 10px 15px;
   cursor:pointer;
   transition:all .18s;
   position:relative;
-  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-height:52px;
+  word-break:break-word;
 }
 .kb-card::before{
   content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
   background:var(--card-accent,var(--border2));
-  border-radius:3px 0 0 3px;
+  border-radius:9px 0 0 9px;
 }
 .kb-card:hover{
   border-color:var(--border2);
@@ -3759,8 +3763,10 @@ html.light-mode textarea:focus{
 .kb-card.project{--card-accent:#fbbf24;}
 .kb-card-title{
   font-size:12px;font-weight:600;color:var(--text);
-  margin-bottom:6px;line-height:1.35;
+  margin-bottom:5px;line-height:1.4;
   font-family:'Inter',sans-serif;
+  word-break:break-word;
+  overflow-wrap:anywhere;
 }
 .kb-card-meta{
   display:flex;align-items:center;flex-wrap:wrap;gap:5px;
@@ -4102,7 +4108,8 @@ html.light-mode .exp-formats{background:transparent;}
   display:flex;align-items:center;
   padding:0 9px;
   font-size:10px;font-weight:600;color:#fff;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;
+  min-width:max-content;
   transition:filter .15s,box-shadow .15s;
   z-index:2;
   box-shadow:0 1px 4px rgba(0,0,0,.2);
@@ -13157,7 +13164,9 @@ function renderGantt(container){
     if(barStart >= 0){
       const bar = document.createElement('div');
       bar.className = 'gantt-bar ' + (ev.type || 'personal');
-      bar.style.cssText = `left:${barLeft}px;width:${barWidth}px;`;
+      // min-width garantiza que la barra tenga al menos el ancho del período,
+      // pero si el texto es más largo la barra crece para mostrarlo completo.
+      bar.style.cssText = `left:${barLeft}px;width:${barWidth}px;min-width:max-content;`;
       bar.textContent = ev.title;
       bar.title = `${ev.title} — ${ev.date}`;
       bar.onclick = (e) => { e.stopPropagation(); showEventDetail(ev); };
