@@ -18,8 +18,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiar código del backend (conserva la estructura de paquete: backend/)
 COPY backend/ ./backend/
 
-# Copiar frontend (index.html al nivel raíz del WORKDIR)
+# Copiar frontend (archivos HTML al nivel raíz del WORKDIR)
 COPY index.html ./index.html
+COPY home.html  ./home.html
 
 # Carpeta para archivos subidos
 RUN mkdir -p ./uploads

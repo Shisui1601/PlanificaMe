@@ -128,14 +128,28 @@ async def home():
     return JSONResponse(status_code=404, content={"error": "home.html no encontrado"})
 
 
-@app.get("/app", tags=["Frontend"])
-async def serve_app():
+@app.get("/agendificame", tags=["Frontend"])
+async def serve_agendificame():
     """Sirve index.html — AgendificaMe (la aplicación de calendario)"""
     parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     index_path = os.path.join(parent_dir, "index.html")
     if os.path.exists(index_path):
         return FileResponse(index_path, media_type="text/html")
     return JSONResponse(status_code=404, content={"error": "index.html no encontrado"})
+
+
+@app.get("/organizame", tags=["Frontend"])
+async def serve_organizame():
+    """Sirve organizame.html — OrganizaMe (próximamente)"""
+    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    organizame_path = os.path.join(parent_dir, "organizame.html")
+    if os.path.exists(organizame_path):
+        return FileResponse(organizame_path, media_type="text/html")
+    # Fallback al home mientras no esté listo
+    home_path = os.path.join(parent_dir, "home.html")
+    if os.path.exists(home_path):
+        return FileResponse(home_path, media_type="text/html")
+    return JSONResponse(status_code=404, content={"error": "organizame.html no encontrado"})
 
 
 @app.get("/health", tags=["Health"])
