@@ -5315,7 +5315,9 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
 <div class="rp-mobile-overlay" id="rpMobileOverlay" onclick="closeRightPanelMobile()"></div>
 <aside class="sidebar" id="sidebar">
   <div class="logo" style="display:flex;align-items:center;justify-content:space-between;padding-right:12px">
-    <h1 class="logo-text">Planifica<span style="-webkit-text-fill-color:inherit">Me</span></h1>
+    <a href="/" title="Ir a la página de inicio" style="text-decoration:none">
+      <h1 class="logo-text">Planifica<span style="-webkit-text-fill-color:inherit">Me</span></h1>
+    </a>
     <button onclick="toggleSidebarCompact()" title="Compactar sidebar"
       aria-label="Compactar sidebar"
       data-tip="Compactar sidebar"
@@ -5822,6 +5824,16 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
           <div class="umenu-item-sub" id="umenu-notif-sub">Recordatorios push del navegador</div>
         </div>
       </button>
+      <div class="umenu-divider"></div>
+      <div class="umenu-section">Navegación</div>
+      <a href="/" class="umenu-item" style="text-decoration:none" onclick="closeModal('userMenuModal')">
+        <div class="umenu-item-icon" style="background:rgba(124,90,255,.12);color:var(--accent2)"><i data-lucide="home" class="icon"></i></div>
+        <div class="umenu-item-text">
+          <div class="umenu-item-label">Página de Inicio</div>
+          <div class="umenu-item-sub">Volver al home de PlanificaMe</div>
+        </div>
+        <i data-lucide="arrow-up-right" class="icon icon-sm icon-muted"></i>
+      </a>
       <div class="umenu-divider"></div>
       <div class="umenu-section">Sesión</div>
       <button class="umenu-item" onclick="switchSession()">

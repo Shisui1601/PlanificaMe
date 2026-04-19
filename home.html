@@ -538,7 +538,11 @@
       transition: all .2s;
     }
     .about-value:hover { border-color: rgba(124,90,255,.3); transform: translateY(-2px); }
-    .about-value-icon { font-size: 24px; margin-bottom: 10px; }
+    .about-value-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 12px; flex-shrink: 0;
+    }
     .about-value-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
     .about-value-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
     .about-team { display: flex; flex-direction: column; gap: 16px; }
@@ -797,7 +801,7 @@
         <button class="theme-toggle" id="themeToggle" title="Cambiar tema">
           <i data-lucide="moon" style="width:16px;height:16px" id="themeIcon"></i>
         </button>
-        <a href="index.html" class="btn btn-primary btn-sm nav-cta">
+        <a href="/app" class="btn btn-primary btn-sm nav-cta">
           <i data-lucide="layout-dashboard" style="width:14px;height:14px"></i>
           Abrir App
         </a>
@@ -818,7 +822,7 @@
   <a href="#nosotros" onclick="closeMobileMenu()">Nosotros</a>
   <a href="#contacto" onclick="closeMobileMenu()">Contacto</a>
   <a href="#soporte" onclick="closeMobileMenu()">Soporte</a>
-  <a href="index.html" style="color:var(--accent2);font-weight:600;">→ Abrir AgendificaMe</a>
+  <a href="/app" style="color:var(--accent2);font-weight:600;">→ Abrir AgendificaMe</a>
 </div>
 
 
@@ -855,7 +859,7 @@
           <i data-lucide="rocket" style="width:16px;height:16px"></i>
           Explorar productos
         </a>
-        <a href="index.html" class="btn btn-secondary">
+        <a href="/app" class="btn btn-secondary">
           <i data-lucide="layout-dashboard" style="width:16px;height:16px"></i>
           Ir a AgendificaMe
         </a>
@@ -940,7 +944,7 @@
           </div>
         </div>
         <div class="product-actions">
-          <a href="index.html" class="btn btn-primary">
+          <a href="/app" class="btn btn-primary">
             <i data-lucide="arrow-right" style="width:15px;height:15px"></i>
             Entrar a AgendificaMe
           </a>
@@ -1122,8 +1126,8 @@
         <div class="forum-card-title">Preguntas y Respuestas</div>
         <div class="forum-card-desc">Resuelve tus dudas sobre el uso de la plataforma con la ayuda de la comunidad.</div>
         <div class="forum-card-meta">
-          <span>💬 124 temas</span>
-          <span>👥 48 activos hoy</span>
+          <span style="display:flex;align-items:center;gap:4px"><i data-lucide="message-circle" style="width:12px;height:12px"></i> 124 temas</span>
+          <span style="display:flex;align-items:center;gap:4px"><i data-lucide="users" style="width:12px;height:12px"></i> 48 activos hoy</span>
         </div>
       </div>
       <div class="forum-card reveal reveal-delay-1">
@@ -1133,8 +1137,8 @@
         <div class="forum-card-title">Ideas y Sugerencias</div>
         <div class="forum-card-desc">Propón nuevas funcionalidades y vota las ideas que más te interesan.</div>
         <div class="forum-card-meta">
-          <span>💡 67 ideas</span>
-          <span>🔥 12 trending</span>
+          <span style="display:flex;align-items:center;gap:4px"><i data-lucide="lightbulb" style="width:12px;height:12px"></i> 67 ideas</span>
+          <span style="display:flex;align-items:center;gap:4px"><i data-lucide="trending-up" style="width:12px;height:12px"></i> 12 trending</span>
         </div>
       </div>
       <div class="forum-card reveal reveal-delay-2">
@@ -1144,8 +1148,8 @@
         <div class="forum-card-title">Casos de Éxito</div>
         <div class="forum-card-desc">Conoce cómo otros usuarios y equipos usan PlanificaMe para ser más productivos.</div>
         <div class="forum-card-meta">
-          <span>🏆 31 historias</span>
-          <span>⭐ 4.9/5 promedio</span>
+          <span style="display:flex;align-items:center;gap:4px"><i data-lucide="trophy" style="width:12px;height:12px"></i> 31 historias</span>
+          <span style="display:flex;align-items:center;gap:4px"><i data-lucide="star" style="width:12px;height:12px"></i> 4.9/5 promedio</span>
         </div>
       </div>
     </div>
@@ -1162,7 +1166,7 @@
           <div class="forum-post-meta">Edison Aguero · hace 2 horas · <span style="color:var(--accent3)">Preguntas</span></div>
         </div>
         <div class="forum-post-right">
-          <div class="forum-post-replies">💬 8 respuestas</div>
+          <div class="forum-post-replies" style="display:flex;align-items:center;gap:4px"><i data-lucide="message-circle" style="width:12px;height:12px"></i> 8 respuestas</div>
         </div>
       </div>
       <div class="forum-post">
@@ -1172,7 +1176,7 @@
           <div class="forum-post-meta">Shisui Díaz · hace 5 horas · <span style="color:#fbbf24">Idea</span></div>
         </div>
         <div class="forum-post-right">
-          <div class="forum-post-replies">👍 24 votos</div>
+          <div class="forum-post-replies" style="display:flex;align-items:center;gap:4px"><i data-lucide="thumbs-up" style="width:12px;height:12px"></i> 24 votos</div>
         </div>
       </div>
       <div class="forum-post">
@@ -1182,7 +1186,7 @@
           <div class="forum-post-meta">María González · ayer · <span style="color:#fbbf24">Caso de éxito</span></div>
         </div>
         <div class="forum-post-right">
-          <div class="forum-post-replies">❤️ 41 likes</div>
+          <div class="forum-post-replies" style="display:flex;align-items:center;gap:4px"><i data-lucide="heart" style="width:12px;height:12px"></i> 41 likes</div>
         </div>
       </div>
       <div class="forum-post">
@@ -1192,7 +1196,7 @@
           <div class="forum-post-meta">Rodrigo M. · hace 1 día · <span style="color:var(--danger)">Reporte</span></div>
         </div>
         <div class="forum-post-right">
-          <div class="forum-post-replies">🔧 En revisión</div>
+          <div class="forum-post-replies" style="display:flex;align-items:center;gap:4px"><i data-lucide="wrench" style="width:12px;height:12px"></i> En revisión</div>
         </div>
       </div>
     </div>
@@ -1313,22 +1317,30 @@
 
         <div class="about-values reveal reveal-delay-3">
           <div class="about-value">
-            <div class="about-value-icon">🚀</div>
+            <div class="about-value-icon" style="background:rgba(124,90,255,.12)">
+              <i data-lucide="zap" style="width:22px;height:22px;color:var(--accent2)"></i>
+            </div>
             <div class="about-value-title">Velocidad</div>
             <div class="about-value-desc">Iteramos rápido y enviamos mejoras constantemente.</div>
           </div>
           <div class="about-value">
-            <div class="about-value-icon">🎯</div>
+            <div class="about-value-icon" style="background:rgba(52,211,153,.10)">
+              <i data-lucide="crosshair" style="width:22px;height:22px;color:var(--accent3)"></i>
+            </div>
             <div class="about-value-title">Foco</div>
             <div class="about-value-desc">Cada feature tiene un propósito claro y un impacto real.</div>
           </div>
           <div class="about-value">
-            <div class="about-value-icon">🤝</div>
+            <div class="about-value-icon" style="background:rgba(96,165,250,.10)">
+              <i data-lucide="users" style="width:22px;height:22px;color:var(--accent4)"></i>
+            </div>
             <div class="about-value-title">Comunidad</div>
             <div class="about-value-desc">Nuestros usuarios son co-creadores del producto.</div>
           </div>
           <div class="about-value">
-            <div class="about-value-icon">🔒</div>
+            <div class="about-value-icon" style="background:rgba(251,191,36,.10)">
+              <i data-lucide="shield-check" style="width:22px;height:22px;color:#fbbf24"></i>
+            </div>
             <div class="about-value-title">Privacidad</div>
             <div class="about-value-desc">Tus datos te pertenecen. Siempre.</div>
           </div>
@@ -1495,10 +1507,10 @@
             <label class="form-label">Tipo de consulta</label>
             <select class="form-select" id="sType">
               <option value="">Selecciona una opción...</option>
-              <option value="bug">🐛 Reporte de problema / bug</option>
-              <option value="feature">✨ Sugerencia de mejora</option>
-              <option value="question">❓ Consulta general</option>
-              <option value="other">💬 Otro</option>
+              <option value="bug">Reporte de problema / bug</option>
+              <option value="feature">Sugerencia de mejora</option>
+              <option value="question">Consulta general</option>
+              <option value="other">Otro</option>
             </select>
           </div>
 
@@ -1563,7 +1575,7 @@
     </h2>
     <p class="reveal reveal-delay-2">Únete y empieza a planificar de forma más inteligente.</p>
     <div class="cta-btns reveal reveal-delay-3">
-      <a href="index.html" class="btn btn-primary">
+      <a href="/app" class="btn btn-primary">
         <i data-lucide="calendar" style="width:16px;height:16px"></i>
         Abrir AgendificaMe
       </a>
@@ -1608,7 +1620,7 @@
       <div>
         <div class="footer-col-title">Productos</div>
         <div class="footer-links">
-          <a href="index.html">AgendificaMe</a>
+          <a href="/app">AgendificaMe</a>
           <a href="#">OrganizaMe <span class="badge badge-coming" style="font-size:9px;padding:1px 6px;vertical-align:middle">Pronto</span></a>
           <a href="#caracteristicas">Características</a>
           <a href="#instructivos">Instructivos</a>
@@ -1720,8 +1732,12 @@
     const wrap = document.getElementById('toastWrap');
     const t = document.createElement('div');
     t.className = 'toast';
-    const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
-    t.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
+    const iconSvg = type === 'success'
+      ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+      : type === 'error'
+      ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`
+      : `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+    t.innerHTML = `<span>${iconSvg}</span><span>${msg}</span>`;
     wrap.appendChild(t);
     setTimeout(() => {
       t.style.animation = 'toastOut .3s ease forwards';

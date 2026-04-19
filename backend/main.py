@@ -102,20 +102,40 @@ if os.path.exists(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 
-# Health check endpoints
-@app.get("/", tags=["Health"])
+# ─── Páginas principales ──────────────────────────────────────────────────────
+
+@app.get("/", tags=["Frontend"])
 async def root():
-    """Endpoint raíz de bienvenida - Sirve el archivo HTML"""
+    """Página de inicio (home.html) — landing principal de PlanificaMe"""
+    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    home_path = os.path.join(parent_dir, "home.html")
+    if os.path.exists(home_path):
+        return FileResponse(home_path, media_type="text/html")
+    # Fallback al index si no existe home.html
+    index_path = os.path.join(parent_dir, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path, media_type="text/html")
+    return {"name": settings.APP_NAME, "version": settings.APP_VERSION, "status": "online"}
+
+
+@app.get("/home", tags=["Frontend"])
+async def home():
+    """Sirve home.html — landing page principal"""
+    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    home_path = os.path.join(parent_dir, "home.html")
+    if os.path.exists(home_path):
+        return FileResponse(home_path, media_type="text/html")
+    return JSONResponse(status_code=404, content={"error": "home.html no encontrado"})
+
+
+@app.get("/app", tags=["Frontend"])
+async def serve_app():
+    """Sirve index.html — AgendificaMe (la aplicación de calendario)"""
     parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     index_path = os.path.join(parent_dir, "index.html")
     if os.path.exists(index_path):
         return FileResponse(index_path, media_type="text/html")
-    return {
-        "name": settings.APP_NAME,
-        "version": settings.APP_VERSION,
-        "status": "online",
-        "message": "Bienvenido a PlanificaMe API - index.html no encontrado"
-    }
+    return JSONResponse(status_code=404, content={"error": "index.html no encontrado"})
 
 
 @app.get("/health", tags=["Health"])
