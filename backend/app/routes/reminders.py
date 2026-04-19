@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from ..database import SessionLocal, User
 from ..schemas.schemas import SendCustomReminderRequest, SendCustomReminderResponse
 from ..services.mail_service import MailService
-from ..utils.auth import get_current_user
+from ..auth import get_current_user
 import logging
 
 logger = logging.getLogger(__name__)
