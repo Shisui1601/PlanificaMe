@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PlanificaMe — Organiza tu mundo</title>
+  <meta name="description" content="PlanificaMe es la plataforma todo-en-uno para gestionar tu tiempo, tareas y proyectos con tu equipo.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    /* ═══════════════════════════════════════════
+       VARIABLES — DARK / LIGHT
+    ═══════════════════════════════════════════ */
+    :root {
+      --transition-theme: background .3s, color .3s, border-color .3s, box-shadow .3s;
+    }
+    [data-theme="dark"] {
+      --bg:        #0e0e14;
+      --bg2:       #13131a;
+      --surface:   #1a1a25;
+      --surface2:  #22222f;
+      --surface3:  #2a2a3a;
+      --border:    rgba(255,255,255,.08);
+      --border2:   rgba(255,255,255,.12);
+      --text:      #f0f0f8;
+      --text2:     #b8b8cc;
+      --text3:     #6e6e88;
+      --accent:    #7c5aff;
+      --accent2:   #a78bfa;
+      --accent3:   #34d399;
+      --accent4:   #60a5fa;
+      --danger:    #f87171;
+      --glow:      rgba(124,90,255,.25);
+      --card-bg:   rgba(26,26,37,.8);
+      --nav-bg:    rgba(13,13,20,.85);
+      --hero-text: #ffffff;
+    }
+    [data-theme="light"] {
+      --bg:        #f5f5fb;
+      --bg2:       #eeeef8;
+      --surface:   #ffffff;
+      --surface2:  #f0f0f8;
+      --surface3:  #e8e8f4;
+      --border:    rgba(0,0,0,.08);
+      --border2:   rgba(0,0,0,.12);
+      --text:      #1a1a2e;
+      --text2:     #4a4a6a;
+      --text3:     #8888a8;
+      --accent:    #6d48f7;
+      --accent2:   #8b72f5;
+      --accent3:   #10b981;
+      --accent4:   #3b82f6;
+      --danger:    #ef4444;
+      --glow:      rgba(109,72,247,.2);
+      --card-bg:   rgba(255,255,255,.9);
+      --nav-bg:    rgba(245,245,251,.9);
+      --hero-text: #1a1a2e;
+    }
+
+    /* ═══════════════════════════════════════════
+       RESET & BASE
+    ═══════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: var(--transition-theme);
+    }
+    ::selection { background: rgba(124,90,255,.35); color: white; }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; }
+
+    /* ═══════════════════════════════════════════
+       SCROLLBAR
+    ═══════════════════════════════════════════ */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg2); }
+    ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+
+    /* ═══════════════════════════════════════════
+       UTILITIES
+    ═══════════════════════════════════════════ */
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    .gradient-text {
+      background: linear-gradient(135deg, #7c5aff 0%, #a78bfa 40%, #34d399 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+    }
+    .badge-purple { background: rgba(124,90,255,.15); color: var(--accent2); border: 1px solid rgba(124,90,255,.25); }
+    .badge-green  { background: rgba(52,211,153,.12); color: var(--accent3); border: 1px solid rgba(52,211,153,.2); }
+    .badge-blue   { background: rgba(96,165,250,.12); color: var(--accent4); border: 1px solid rgba(96,165,250,.2); }
+    .badge-coming { background: rgba(251,191,36,.1);  color: #fbbf24;        border: 1px solid rgba(251,191,36,.2); }
+    .section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--text3); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 16px; color: var(--text2); max-width: 560px; line-height: 1.7;
+    }
+    .divider {
+      height: 1px; background: var(--border); margin: 0;
+    }
+    /* Fade-in animation */
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: .1s; }
+    .reveal-delay-2 { transition-delay: .2s; }
+    .reveal-delay-3 { transition-delay: .3s; }
+    .reveal-delay-4 { transition-delay: .4s; }
+
+    /* ═══════════════════════════════════════════
+       BUTTONS
+    ═══════════════════════════════════════════ */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 12px;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      border: none; transition: all .2s; font-family: 'Inter', sans-serif;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #7c5aff, #a78bfa);
+      color: white;
+      box-shadow: 0 4px 20px rgba(124,90,255,.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(124,90,255,.5);
+    }
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border2);
+    }
+    .btn-secondary:hover {
+      background: var(--surface3);
+      border-color: rgba(124,90,255,.4);
+      transform: translateY(-1px);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--accent2);
+      border: 1px solid rgba(124,90,255,.35);
+    }
+    .btn-outline:hover {
+      background: rgba(124,90,255,.08);
+      border-color: var(--accent2);
+    }
+    .btn-sm { padding: 8px 16px; font-size: 12px; border-radius: 9px; }
+
+    /* ═══════════════════════════════════════════
+       NAVIGATION
+    ═══════════════════════════════════════════ */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: var(--nav-bg);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: var(--transition-theme), box-shadow .3s;
+    }
+    .nav.scrolled { box-shadow: 0 4px 32px rgba(0,0,0,.2); }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px; gap: 24px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px;
+      font-family: 'DM Serif Display', serif;
+    }
+    .nav-logo-icon {
+      width: 34px; height: 34px; border-radius: 10px;
+      background: linear-gradient(135deg, #7c5aff, #34d399);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; box-shadow: 0 0 18px rgba(124,90,255,.4);
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 4px; list-style: none;
+    }
+    .nav-links a {
+      padding: 6px 12px; border-radius: 8px;
+      font-size: 13px; font-weight: 500; color: var(--text2);
+      transition: all .15s;
+    }
+    .nav-links a:hover { color: var(--text); background: var(--surface2); }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .theme-toggle {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--surface2); border: 1px solid var(--border2);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--text2); transition: all .2s;
+    }
+    .theme-toggle:hover { background: var(--surface3); color: var(--text); }
+    .nav-cta { padding: 8px 18px; font-size: 13px; }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--surface2); border: 1px solid var(--border2);
+      cursor: pointer; align-items: center; justify-content: center;
+    }
+    .hamburger span {
+      display: block; width: 18px; height: 2px;
+      background: var(--text2); border-radius: 2px; transition: all .2s;
+    }
+    .mobile-menu {
+      display: none; position: fixed; top: 64px; left: 0; right: 0;
+      background: var(--nav-bg); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px; flex-direction: column; gap: 4px;
+      z-index: 999;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      padding: 10px 14px; border-radius: 8px;
+      font-size: 14px; font-weight: 500; color: var(--text2); transition: all .15s;
+    }
+    .mobile-menu a:hover { color: var(--text); background: var(--surface2); }
+
+    /* ═══════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════ */
+    .hero {
+      position: relative; overflow: hidden;
+      padding: 140px 0 100px;
+      text-align: center;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+    }
+    .hero-orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); opacity: .5;
+    }
+    .hero-orb-1 {
+      width: 600px; height: 600px;
+      top: -200px; left: 50%; transform: translateX(-60%);
+      background: radial-gradient(circle, rgba(124,90,255,.4), transparent 70%);
+    }
+    .hero-orb-2 {
+      width: 400px; height: 400px;
+      bottom: -100px; right: 5%;
+      background: radial-gradient(circle, rgba(52,211,153,.25), transparent 70%);
+    }
+    .hero-orb-3 {
+      width: 300px; height: 300px;
+      top: 10%; left: 5%;
+      background: radial-gradient(circle, rgba(96,165,250,.2), transparent 70%);
+    }
+    .hero-content { position: relative; z-index: 2; }
+    .hero-badge { margin-bottom: 28px; }
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(40px, 7vw, 80px);
+      line-height: 1.08;
+      color: var(--hero-text);
+      margin-bottom: 24px;
+      letter-spacing: -.5px;
+    }
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--text2);
+      max-width: 580px;
+      margin: 0 auto 40px;
+      line-height: 1.65;
+    }
+    .hero-btns {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      flex-wrap: wrap;
+    }
+    .hero-scroll-hint {
+      margin-top: 72px; color: var(--text3); font-size: 12px;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+    .hero-stats {
+      display: flex; justify-content: center; gap: 48px;
+      margin-top: 64px; padding-top: 48px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .hero-stat-num {
+      font-size: 32px; font-weight: 800;
+      font-family: 'DM Serif Display', serif;
+    }
+    .hero-stat-lbl { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+    /* ═══════════════════════════════════════════
+       PRODUCTOS
+    ═══════════════════════════════════════════ */
+    .products { padding: 100px 0; }
+    .products-header { text-align: center; margin-bottom: 60px; }
+    .products-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    }
+    .product-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      transition: all .3s;
+      backdrop-filter: blur(10px);
+    }
+    .product-card::before {
+      content: ''; position: absolute; inset: 0; border-radius: 20px;
+      opacity: 0; transition: opacity .3s;
+    }
+    .product-card-agenda::before { background: linear-gradient(135deg, rgba(124,90,255,.06), rgba(52,211,153,.04)); }
+    .product-card-organiza::before { background: linear-gradient(135deg, rgba(96,165,250,.06), rgba(251,191,36,.04)); }
+    .product-card:hover::before { opacity: 1; }
+    .product-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(124,90,255,.3);
+      box-shadow: 0 20px 60px rgba(0,0,0,.2);
+    }
+    .product-card-organiza:hover {
+      border-color: rgba(96,165,250,.3);
+      box-shadow: 0 20px 60px rgba(0,0,0,.15);
+    }
+    .product-icon {
+      width: 60px; height: 60px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px; flex-shrink: 0;
+      position: relative; z-index: 1;
+    }
+    .product-icon-agenda {
+      background: linear-gradient(135deg, #7c5aff, #a78bfa);
+      box-shadow: 0 8px 32px rgba(124,90,255,.35);
+    }
+    .product-icon-organiza {
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      box-shadow: 0 8px 32px rgba(59,130,246,.35);
+      filter: grayscale(.3);
+    }
+    .product-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px; margin-bottom: 10px;
+      position: relative; z-index: 1;
+    }
+    .product-desc {
+      font-size: 14px; color: var(--text2); line-height: 1.65;
+      margin-bottom: 28px; position: relative; z-index: 1;
+    }
+    .product-features {
+      display: flex; flex-direction: column; gap: 8px;
+      margin-bottom: 32px; position: relative; z-index: 1;
+    }
+    .product-feature {
+      display: flex; align-items: center; gap: 9px;
+      font-size: 13px; color: var(--text2);
+    }
+    .product-feature-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent3); flex-shrink: 0;
+    }
+    .product-card-organiza .product-feature-dot { background: var(--accent4); }
+    .product-actions { display: flex; align-items: center; gap: 10px; position: relative; z-index: 1; }
+    .product-coming-overlay {
+      position: absolute; top: 16px; right: 16px; z-index: 5;
+    }
+
+    /* ═══════════════════════════════════════════
+       CARACTERÍSTICAS
+    ═══════════════════════════════════════════ */
+    .features { padding: 100px 0; background: var(--bg2); }
+    .features-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: center;
+    }
+    .features-visual {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,.2);
+    }
+    .features-visual-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .wm-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .features-visual-body { padding: 20px; }
+    .mini-task {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px;
+      margin-bottom: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      font-size: 12px;
+    }
+    .mini-task-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .mini-task-name { flex: 1; color: var(--text2); }
+    .mini-task-badge {
+      font-size: 9px; font-weight: 700;
+      padding: 2px 7px; border-radius: 6px;
+      text-transform: uppercase; letter-spacing: .3px;
+    }
+    .features-list { display: flex; flex-direction: column; gap: 24px; }
+    .feature-item { display: flex; gap: 16px; }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .feature-icon-purple { background: rgba(124,90,255,.12); color: var(--accent2); }
+    .feature-icon-green  { background: rgba(52,211,153,.10); color: var(--accent3); }
+    .feature-icon-blue   { background: rgba(96,165,250,.10); color: var(--accent4); }
+    .feature-icon-orange { background: rgba(251,146,60,.10); color: #fb923c; }
+    .feature-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .feature-desc { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+    /* ═══════════════════════════════════════════
+       FORO / COMUNIDAD
+    ═══════════════════════════════════════════ */
+    .forum { padding: 100px 0; }
+    .forum-header { text-align: center; margin-bottom: 60px; }
+    .forum-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+      margin-bottom: 40px;
+    }
+    .forum-card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 16px; padding: 24px;
+      transition: all .2s; cursor: pointer;
+    }
+    .forum-card:hover {
+      border-color: rgba(124,90,255,.3);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,.15);
+    }
+    .forum-card-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .forum-card-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .forum-card-desc { font-size: 12px; color: var(--text2); line-height: 1.55; margin-bottom: 14px; }
+    .forum-card-meta { display: flex; align-items: center; gap: 12px; font-size: 11px; color: var(--text3); }
+    .forum-posts {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 16px; overflow: hidden;
+    }
+    .forum-post {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      transition: background .15s; cursor: pointer;
+    }
+    .forum-post:last-child { border-bottom: none; }
+    .forum-post:hover { background: var(--surface2); }
+    .forum-post-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; flex-shrink: 0;
+    }
+    .forum-post-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .forum-post-meta { font-size: 11px; color: var(--text3); }
+    .forum-post-right { margin-left: auto; text-align: right; }
+    .forum-post-replies { font-size: 11px; color: var(--text3); }
+
+    /* ═══════════════════════════════════════════
+       INSTRUCTIVOS
+    ═══════════════════════════════════════════ */
+    .docs { padding: 100px 0; background: var(--bg2); }
+    .docs-header { text-align: center; margin-bottom: 60px; }
+    .docs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .doc-card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 16px; padding: 28px;
+      transition: all .2s; cursor: pointer;
+      display: flex; flex-direction: column;
+    }
+    .doc-card:hover {
+      border-color: rgba(124,90,255,.3);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,.12);
+    }
+    .doc-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+    }
+    .doc-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .doc-desc { font-size: 13px; color: var(--text2); line-height: 1.55; flex: 1; margin-bottom: 18px; }
+    .doc-link {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 600; color: var(--accent2);
+      transition: gap .15s;
+    }
+    .doc-card:hover .doc-link { gap: 8px; }
+
+    /* ═══════════════════════════════════════════
+       SOBRE NOSOTROS
+    ═══════════════════════════════════════════ */
+    .about { padding: 100px 0; }
+    .about-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: center;
+    }
+    .about-text .section-sub { max-width: 100%; }
+    .about-values {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+      margin-top: 36px;
+    }
+    .about-value {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 14px; padding: 20px;
+      transition: all .2s;
+    }
+    .about-value:hover { border-color: rgba(124,90,255,.3); transform: translateY(-2px); }
+    .about-value-icon { font-size: 24px; margin-bottom: 10px; }
+    .about-value-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+    .about-value-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+    .about-team { display: flex; flex-direction: column; gap: 16px; }
+    .team-member {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 16px; padding: 20px;
+      transition: all .2s;
+    }
+    .team-member:hover { border-color: rgba(124,90,255,.3); transform: translateX(4px); }
+    .team-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 800; flex-shrink: 0;
+    }
+    .team-name { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+    .team-role { font-size: 12px; color: var(--text3); }
+    .team-badge { margin-left: auto; }
+
+    /* ═══════════════════════════════════════════
+       CONTACTO
+    ═══════════════════════════════════════════ */
+    .contact { padding: 100px 0; background: var(--bg2); }
+    .contact-header { text-align: center; margin-bottom: 60px; }
+    .contact-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    .contact-card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 16px; padding: 28px;
+      text-align: center;
+      transition: all .2s;
+    }
+    .contact-card:hover {
+      border-color: rgba(124,90,255,.3);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,.12);
+    }
+    .contact-icon {
+      width: 56px; height: 56px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+    }
+    .contact-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .contact-value { font-size: 13px; color: var(--text2); margin-bottom: 18px; line-height: 1.5; }
+    .contact-action {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600; color: var(--accent2);
+      transition: gap .15s;
+    }
+    .contact-card:hover .contact-action { gap: 10px; }
+
+    /* ═══════════════════════════════════════════
+       SOPORTE — FORM
+    ═══════════════════════════════════════════ */
+    .support { padding: 100px 0; }
+    .support-inner {
+      display: grid; grid-template-columns: 1fr 1.3fr;
+      gap: 64px; align-items: start;
+    }
+    .support-info { padding-top: 8px; }
+    .support-reasons { margin-top: 36px; display: flex; flex-direction: column; gap: 16px; }
+    .support-reason {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 14px; padding: 16px 18px;
+    }
+    .support-reason-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .support-reason-title { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+    .support-reason-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+    .support-form {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 20px; padding: 40px;
+    }
+    .form-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .form-sub { font-size: 13px; color: var(--text2); margin-bottom: 28px; line-height: 1.5; }
+    .form-group { margin-bottom: 18px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-label {
+      display: block; font-size: 12px; font-weight: 600; color: var(--text2);
+      margin-bottom: 7px; letter-spacing: .2px;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; padding: 11px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      color: var(--text); font-family: 'Inter', sans-serif; font-size: 13px;
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: rgba(124,90,255,.5);
+      box-shadow: 0 0 0 3px rgba(124,90,255,.1);
+    }
+    .form-select { cursor: pointer; }
+    .form-textarea { resize: vertical; min-height: 110px; line-height: 1.5; }
+    .form-input::placeholder, .form-textarea::placeholder { color: var(--text3); }
+    .form-submit { width: 100%; justify-content: center; margin-top: 8px; padding: 13px; font-size: 14px; }
+    .form-success {
+      display: none; text-align: center; padding: 32px 20px;
+    }
+    .form-success-icon {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: rgba(52,211,153,.12); border: 1px solid rgba(52,211,153,.25);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px; color: var(--accent3);
+    }
+    .form-success-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .form-success-desc { font-size: 13px; color: var(--text2); }
+    .char-count { font-size: 11px; color: var(--text3); text-align: right; margin-top: 4px; }
+
+    /* ═══════════════════════════════════════════
+       CTA FINAL
+    ═══════════════════════════════════════════ */
+    .cta-section {
+      padding: 100px 0; text-align: center;
+      background: linear-gradient(135deg, rgba(124,90,255,.08) 0%, rgba(52,211,153,.05) 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .cta-section h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(28px, 4vw, 46px);
+      margin-bottom: 16px;
+    }
+    .cta-section p { font-size: 16px; color: var(--text2); margin-bottom: 36px; }
+    .cta-btns { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    .footer {
+      padding: 60px 0 40px;
+      border-top: 1px solid var(--border);
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 48px; margin-bottom: 48px;
+    }
+    .footer-brand { display: flex; flex-direction: column; gap: 14px; }
+    .footer-logo {
+      display: flex; align-items: center; gap: 9px;
+      font-family: 'DM Serif Display', serif; font-size: 18px; font-weight: 800;
+    }
+    .footer-logo-icon {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: linear-gradient(135deg, #7c5aff, #34d399);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .footer-desc { font-size: 13px; color: var(--text2); line-height: 1.6; max-width: 260px; }
+    .footer-social { display: flex; gap: 8px; margin-top: 4px; }
+    .footer-social-btn {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: var(--surface2); border: 1px solid var(--border2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text2); cursor: pointer; transition: all .15s;
+    }
+    .footer-social-btn:hover { background: var(--surface3); color: var(--text); }
+    .footer-col-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.2px; color: var(--text3); margin-bottom: 16px;
+    }
+    .footer-links { display: flex; flex-direction: column; gap: 9px; }
+    .footer-links a {
+      font-size: 13px; color: var(--text2); transition: color .15s;
+    }
+    .footer-links a:hover { color: var(--text); }
+    .footer-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 28px; border-top: 1px solid var(--border);
+      font-size: 12px; color: var(--text3); flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom-links { display: flex; gap: 20px; }
+    .footer-bottom-links a { color: var(--text3); transition: color .15s; }
+    .footer-bottom-links a:hover { color: var(--text2); }
+
+    /* ═══════════════════════════════════════════
+       TOAST
+    ═══════════════════════════════════════════ */
+    .toast-wrap {
+      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+    }
+    .toast {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 12px; padding: 12px 18px;
+      font-size: 13px; font-weight: 500;
+      box-shadow: 0 8px 32px rgba(0,0,0,.3);
+      display: flex; align-items: center; gap: 10px;
+      animation: toastIn .3s ease forwards;
+      pointer-events: all;
+    }
+    @keyframes toastIn { from { opacity:0; transform:translateX(30px); } to { opacity:1; transform:translateX(0); } }
+    @keyframes toastOut { from { opacity:1; transform:translateX(0); } to { opacity:0; transform:translateX(30px); } }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 900px) {
+      .products-grid { grid-template-columns: 1fr; }
+      .features-inner { grid-template-columns: 1fr; gap: 40px; }
+      .about-inner { grid-template-columns: 1fr; gap: 40px; }
+      .support-inner { grid-template-columns: 1fr; gap: 40px; }
+      .forum-grid { grid-template-columns: 1fr 1fr; }
+      .docs-grid { grid-template-columns: 1fr 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .about-values { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .forum-grid, .docs-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .hero { padding: 120px 0 80px; }
+      .hero-stats { gap: 28px; }
+      .form-row { grid-template-columns: 1fr; }
+      .products, .features, .forum, .docs, .about, .contact, .support, .cta-section { padding: 64px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     NAVIGATION
+══════════════════════════════ -->
+<nav class="nav" id="mainNav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <span class="gradient-text">PlanificaMe</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#productos">Productos</a></li>
+        <li><a href="#caracteristicas">Características</a></li>
+        <li><a href="#foro">Foro</a></li>
+        <li><a href="#instructivos">Instructivos</a></li>
+        <li><a href="#nosotros">Nosotros</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+        <li><a href="#soporte">Soporte</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <button class="theme-toggle" id="themeToggle" title="Cambiar tema">
+          <i data-lucide="moon" style="width:16px;height:16px" id="themeIcon"></i>
+        </button>
+        <a href="index.html" class="btn btn-primary btn-sm nav-cta">
+          <i data-lucide="layout-dashboard" style="width:14px;height:14px"></i>
+          Abrir App
+        </a>
+        <button class="hamburger" id="hamburger">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#productos" onclick="closeMobileMenu()">Productos</a>
+  <a href="#caracteristicas" onclick="closeMobileMenu()">Características</a>
+  <a href="#foro" onclick="closeMobileMenu()">Foro</a>
+  <a href="#instructivos" onclick="closeMobileMenu()">Instructivos</a>
+  <a href="#nosotros" onclick="closeMobileMenu()">Nosotros</a>
+  <a href="#contacto" onclick="closeMobileMenu()">Contacto</a>
+  <a href="#soporte" onclick="closeMobileMenu()">Soporte</a>
+  <a href="index.html" style="color:var(--accent2);font-weight:600;">→ Abrir AgendificaMe</a>
+</div>
+
+
+<!-- ══════════════════════════════
+     HERO
+══════════════════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-bg">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+  </div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge reveal">
+        <span class="badge badge-purple">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+          Plataforma de productividad todo-en-uno
+        </span>
+      </div>
+
+      <h1 class="reveal reveal-delay-1">
+        Organiza tu mundo<br>
+        <span class="gradient-text">con inteligencia</span>
+      </h1>
+
+      <p class="hero-sub reveal reveal-delay-2">
+        PlanificaMe reúne todas las herramientas que necesitas para gestionar tu tiempo,
+        tareas y proyectos — junto a tu equipo, en un solo lugar.
+      </p>
+
+      <div class="hero-btns reveal reveal-delay-3">
+        <a href="#productos" class="btn btn-primary">
+          <i data-lucide="rocket" style="width:16px;height:16px"></i>
+          Explorar productos
+        </a>
+        <a href="index.html" class="btn btn-secondary">
+          <i data-lucide="layout-dashboard" style="width:16px;height:16px"></i>
+          Ir a AgendificaMe
+        </a>
+        <a href="#soporte" class="btn btn-outline">
+          <i data-lucide="message-circle" style="width:16px;height:16px"></i>
+          Enviar sugerencia
+        </a>
+      </div>
+
+      <div class="hero-stats reveal reveal-delay-4">
+        <div>
+          <div class="hero-stat-num gradient-text">8+</div>
+          <div class="hero-stat-lbl">Vistas de calendario</div>
+        </div>
+        <div>
+          <div class="hero-stat-num gradient-text">100%</div>
+          <div class="hero-stat-lbl">Colaborativo</div>
+        </div>
+        <div>
+          <div class="hero-stat-num gradient-text">2</div>
+          <div class="hero-stat-lbl">Productos disponibles</div>
+        </div>
+        <div>
+          <div class="hero-stat-num gradient-text">∞</div>
+          <div class="hero-stat-lbl">Actividades y metas</div>
+        </div>
+      </div>
+
+      <div class="hero-scroll-hint reveal">
+        <span>Explorar</span>
+        <i data-lucide="chevrons-down" style="width:18px;height:18px"></i>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     PRODUCTOS
+══════════════════════════════ -->
+<section class="products" id="productos">
+  <div class="container">
+    <div class="products-header">
+      <div class="section-label reveal">Nuestros productos</div>
+      <h2 class="section-title reveal reveal-delay-1">
+        Todo lo que necesitas,<br>
+        <span class="gradient-text">en un mismo ecosistema</span>
+      </h2>
+      <p class="section-sub reveal reveal-delay-2" style="margin:0 auto">
+        Dos herramientas potentes diseñadas para cubrir todas tus necesidades de planificación y organización.
+      </p>
+    </div>
+
+    <div class="products-grid">
+      <!-- AgendificaMe -->
+      <div class="product-card product-card-agenda reveal">
+        <div class="product-icon product-icon-agenda">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <span class="badge badge-green" style="margin-bottom:16px;display:inline-flex">Disponible ahora</span>
+        <div class="product-name gradient-text">AgendificaMe</div>
+        <p class="product-desc">
+          Tu calendario inteligente para gestionar actividades personales, de equipo y metas.
+          Visualiza tu tiempo en múltiples vistas: Día, Semana, Mes, Gantt, Kanban y más.
+        </p>
+        <div class="product-features">
+          <div class="product-feature">
+            <div class="product-feature-dot"></div>
+            <span>8 vistas de calendario (Día, Semana, Mes, Año, Agenda, Kanban, Gantt)</span>
+          </div>
+          <div class="product-feature">
+            <div class="product-feature-dot"></div>
+            <span>Actividades personales, de equipo y metas con colaboradores</span>
+          </div>
+          <div class="product-feature">
+            <div class="product-feature-dot"></div>
+            <span>Recordatorios, calendarios compartidos y chat en tiempo real</span>
+          </div>
+          <div class="product-feature">
+            <div class="product-feature-dot"></div>
+            <span>Estadísticas, hábitos, notas rápidas y modo Kanban drag & drop</span>
+          </div>
+        </div>
+        <div class="product-actions">
+          <a href="index.html" class="btn btn-primary">
+            <i data-lucide="arrow-right" style="width:15px;height:15px"></i>
+            Entrar a AgendificaMe
+          </a>
+          <a href="#caracteristicas" class="btn btn-secondary btn-sm">Ver características</a>
+        </div>
+      </div>
+
+      <!-- OrganizaMe -->
+      <div class="product-card product-card-organiza reveal reveal-delay-1" style="opacity:.92">
+        <div class="product-coming-overlay">
+          <span class="badge badge-coming">
+            <i data-lucide="clock" style="width:10px;height:10px"></i>
+            Próximamente
+          </span>
+        </div>
+        <div class="product-icon product-icon-organiza">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div>
+        <span class="badge badge-blue" style="margin-bottom:16px;display:inline-flex">En desarrollo</span>
+        <div class="product-name" style="background:linear-gradient(135deg,#60a5fa,#93c5fd,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">OrganizaMe</div>
+        <p class="product-desc">
+          La próxima herramienta del ecosistema PlanificaMe. Diseñada para llevar tu organización
+          personal y empresarial al siguiente nivel con funcionalidades avanzadas de gestión.
+        </p>
+        <div class="product-features">
+          <div class="product-feature" style="opacity:.6">
+            <div class="product-feature-dot" style="background:var(--accent4)"></div>
+            <span>Gestión avanzada de proyectos y recursos</span>
+          </div>
+          <div class="product-feature" style="opacity:.6">
+            <div class="product-feature-dot" style="background:var(--accent4)"></div>
+            <span>Tableros de control personalizables</span>
+          </div>
+          <div class="product-feature" style="opacity:.6">
+            <div class="product-feature-dot" style="background:var(--accent4)"></div>
+            <span>Integraciones con herramientas externas</span>
+          </div>
+          <div class="product-feature" style="opacity:.6">
+            <div class="product-feature-dot" style="background:var(--accent4)"></div>
+            <span>Reportes y analíticas avanzadas</span>
+          </div>
+        </div>
+        <div class="product-actions">
+          <button class="btn btn-secondary" onclick="notifyMe()" style="cursor:pointer">
+            <i data-lucide="bell" style="width:15px;height:15px"></i>
+            Notificarme cuando esté listo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     CARACTERÍSTICAS
+══════════════════════════════ -->
+<section class="features" id="caracteristicas">
+  <div class="container">
+    <div class="features-inner">
+      <div>
+        <div class="section-label reveal">Características</div>
+        <h2 class="section-title reveal reveal-delay-1">
+          Todo lo que<br>
+          <span class="gradient-text">necesita tu equipo</span>
+        </h2>
+        <p class="section-sub reveal reveal-delay-2">
+          AgendificaMe fue construido pensando en la colaboración real, con herramientas
+          que se adaptan tanto al trabajo individual como al trabajo en equipo.
+        </p>
+
+        <div class="features-list" style="margin-top:40px">
+          <div class="feature-item reveal reveal-delay-1">
+            <div class="feature-icon feature-icon-purple">
+              <i data-lucide="calendar-days" style="width:20px;height:20px"></i>
+            </div>
+            <div>
+              <div class="feature-name">8 vistas de calendario</div>
+              <div class="feature-desc">Día, Semana, Mes, Año, Agenda, Kanban, Gantt y Vista de Inicio personalizables.</div>
+            </div>
+          </div>
+          <div class="feature-item reveal reveal-delay-2">
+            <div class="feature-icon feature-icon-green">
+              <i data-lucide="users" style="width:20px;height:20px"></i>
+            </div>
+            <div>
+              <div class="feature-name">Colaboración en tiempo real</div>
+              <div class="feature-desc">Calendarios compartidos, chat integrado, invitación de miembros con roles.</div>
+            </div>
+          </div>
+          <div class="feature-item reveal reveal-delay-3">
+            <div class="feature-icon feature-icon-blue">
+              <i data-lucide="target" style="width:20px;height:20px"></i>
+            </div>
+            <div>
+              <div class="feature-name">Metas y proyectos</div>
+              <div class="feature-desc">Define objetivos con fechas límite, subtareas y seguimiento de progreso visual.</div>
+            </div>
+          </div>
+          <div class="feature-item reveal reveal-delay-4">
+            <div class="feature-icon feature-icon-orange">
+              <i data-lucide="bar-chart-3" style="width:20px;height:20px"></i>
+            </div>
+            <div>
+              <div class="feature-name">Estadísticas y hábitos</div>
+              <div class="feature-desc">Analiza tu productividad con gráficos detallados y rastrea tus hábitos diarios.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="features-visual reveal reveal-delay-2">
+        <div class="features-visual-header">
+          <div class="wm-dot" style="background:#ff5f57"></div>
+          <div class="wm-dot" style="background:#febc2e"></div>
+          <div class="wm-dot" style="background:#28c840"></div>
+          <span style="font-size:12px;color:var(--text3);margin-left:8px">AgendificaMe — Hoy</span>
+        </div>
+        <div class="features-visual-body">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px">Actividades de hoy</div>
+          <div class="mini-task">
+            <div class="mini-task-dot" style="background:#a78bfa"></div>
+            <span class="mini-task-name">Reunión de equipo semanal</span>
+            <span class="mini-task-badge" style="background:rgba(167,139,250,.15);color:#a78bfa">9:00 AM</span>
+          </div>
+          <div class="mini-task">
+            <div class="mini-task-dot" style="background:#34d399"></div>
+            <span class="mini-task-name">Revisión de propuesta Q2</span>
+            <span class="mini-task-badge" style="background:rgba(52,211,153,.15);color:#34d399">11:30 AM</span>
+          </div>
+          <div class="mini-task">
+            <div class="mini-task-dot" style="background:#60a5fa"></div>
+            <span class="mini-task-name">Llamada con cliente</span>
+            <span class="mini-task-badge" style="background:rgba(96,165,250,.15);color:#60a5fa">2:00 PM</span>
+          </div>
+          <div class="mini-task" style="opacity:.5">
+            <div class="mini-task-dot" style="background:#a78bfa"></div>
+            <span class="mini-task-name">Preparar presentación</span>
+            <span class="mini-task-badge" style="background:rgba(167,139,250,.15);color:#a78bfa">4:00 PM</span>
+          </div>
+          <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border)">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">Meta activa</div>
+            <div style="background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:12px 14px">
+              <div style="font-size:12px;font-weight:700;margin-bottom:6px">Lanzar versión 2.0</div>
+              <div style="height:6px;background:var(--surface3);border-radius:3px;overflow:hidden">
+                <div style="width:65%;height:100%;background:linear-gradient(90deg,#7c5aff,#34d399);border-radius:3px"></div>
+              </div>
+              <div style="font-size:10px;color:var(--text3);margin-top:5px">65% completado · 12 días restantes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     FORO
+══════════════════════════════ -->
+<section class="forum" id="foro">
+  <div class="container">
+    <div class="forum-header">
+      <div class="section-label reveal">Comunidad</div>
+      <h2 class="section-title reveal reveal-delay-1">
+        Conecta con la<br>
+        <span class="gradient-text">comunidad PlanificaMe</span>
+      </h2>
+      <p class="section-sub reveal reveal-delay-2" style="margin:0 auto">
+        Comparte ideas, encuentra respuestas y aprende junto a otros usuarios que ya están transformando su productividad.
+      </p>
+    </div>
+
+    <div class="forum-grid">
+      <div class="forum-card reveal">
+        <div class="forum-card-icon" style="background:rgba(124,90,255,.12)">
+          <i data-lucide="help-circle" style="width:22px;height:22px;color:var(--accent2)"></i>
+        </div>
+        <div class="forum-card-title">Preguntas y Respuestas</div>
+        <div class="forum-card-desc">Resuelve tus dudas sobre el uso de la plataforma con la ayuda de la comunidad.</div>
+        <div class="forum-card-meta">
+          <span>💬 124 temas</span>
+          <span>👥 48 activos hoy</span>
+        </div>
+      </div>
+      <div class="forum-card reveal reveal-delay-1">
+        <div class="forum-card-icon" style="background:rgba(52,211,153,.1)">
+          <i data-lucide="lightbulb" style="width:22px;height:22px;color:var(--accent3)"></i>
+        </div>
+        <div class="forum-card-title">Ideas y Sugerencias</div>
+        <div class="forum-card-desc">Propón nuevas funcionalidades y vota las ideas que más te interesan.</div>
+        <div class="forum-card-meta">
+          <span>💡 67 ideas</span>
+          <span>🔥 12 trending</span>
+        </div>
+      </div>
+      <div class="forum-card reveal reveal-delay-2">
+        <div class="forum-card-icon" style="background:rgba(251,191,36,.1)">
+          <i data-lucide="trophy" style="width:22px;height:22px;color:#fbbf24"></i>
+        </div>
+        <div class="forum-card-title">Casos de Éxito</div>
+        <div class="forum-card-desc">Conoce cómo otros usuarios y equipos usan PlanificaMe para ser más productivos.</div>
+        <div class="forum-card-meta">
+          <span>🏆 31 historias</span>
+          <span>⭐ 4.9/5 promedio</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="forum-posts reveal">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:13px;font-weight:700">Temas recientes</span>
+        <span class="badge badge-purple">Comunidad activa</span>
+      </div>
+      <div class="forum-post">
+        <div class="forum-post-avatar" style="background:rgba(124,90,255,.15);color:var(--accent2)">E</div>
+        <div>
+          <div class="forum-post-title">¿Cómo configurar recordatorios automáticos para el equipo?</div>
+          <div class="forum-post-meta">Edison Aguero · hace 2 horas · <span style="color:var(--accent3)">Preguntas</span></div>
+        </div>
+        <div class="forum-post-right">
+          <div class="forum-post-replies">💬 8 respuestas</div>
+        </div>
+      </div>
+      <div class="forum-post">
+        <div class="forum-post-avatar" style="background:rgba(52,211,153,.12);color:var(--accent3)">S</div>
+        <div>
+          <div class="forum-post-title">Sugerencia: Vista de Timeline para proyectos grandes</div>
+          <div class="forum-post-meta">Shisui Díaz · hace 5 horas · <span style="color:#fbbf24">Idea</span></div>
+        </div>
+        <div class="forum-post-right">
+          <div class="forum-post-replies">👍 24 votos</div>
+        </div>
+      </div>
+      <div class="forum-post">
+        <div class="forum-post-avatar" style="background:rgba(96,165,250,.12);color:var(--accent4)">M</div>
+        <div>
+          <div class="forum-post-title">Cómo usamos AgendificaMe para coordinar 3 equipos remotos</div>
+          <div class="forum-post-meta">María González · ayer · <span style="color:#fbbf24">Caso de éxito</span></div>
+        </div>
+        <div class="forum-post-right">
+          <div class="forum-post-replies">❤️ 41 likes</div>
+        </div>
+      </div>
+      <div class="forum-post">
+        <div class="forum-post-avatar" style="background:rgba(251,146,60,.1);color:#fb923c">R</div>
+        <div>
+          <div class="forum-post-title">Bug: La vista Gantt no muestra eventos de más de 3 días en móvil</div>
+          <div class="forum-post-meta">Rodrigo M. · hace 1 día · <span style="color:var(--danger)">Reporte</span></div>
+        </div>
+        <div class="forum-post-right">
+          <div class="forum-post-replies">🔧 En revisión</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:32px" class="reveal">
+      <a href="#soporte" class="btn btn-outline">
+        <i data-lucide="plus" style="width:15px;height:15px"></i>
+        Crear nuevo tema
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     INSTRUCTIVOS
+══════════════════════════════ -->
+<section class="docs" id="instructivos">
+  <div class="container">
+    <div class="docs-header">
+      <div class="section-label reveal">Aprende</div>
+      <h2 class="section-title reveal reveal-delay-1">
+        Domina cada<br>
+        <span class="gradient-text">funcionalidad</span>
+      </h2>
+      <p class="section-sub reveal reveal-delay-2" style="margin:0 auto">
+        Guías paso a paso para que aproveches al máximo todas las herramientas de PlanificaMe.
+      </p>
+    </div>
+
+    <div class="docs-grid">
+      <div class="doc-card reveal">
+        <div class="doc-icon" style="background:rgba(124,90,255,.12)">
+          <i data-lucide="play-circle" style="width:24px;height:24px;color:var(--accent2)"></i>
+        </div>
+        <div class="doc-title">Primeros pasos</div>
+        <div class="doc-desc">Crea tu cuenta, configura tu primer calendario y agrega tu primera actividad en menos de 5 minutos.</div>
+        <div class="doc-link">
+          Leer guía <i data-lucide="arrow-right" style="width:13px;height:13px"></i>
+        </div>
+      </div>
+      <div class="doc-card reveal reveal-delay-1">
+        <div class="doc-icon" style="background:rgba(52,211,153,.1)">
+          <i data-lucide="users" style="width:24px;height:24px;color:var(--accent3)"></i>
+        </div>
+        <div class="doc-title">Calendarios compartidos</div>
+        <div class="doc-desc">Aprende a crear calendarios de equipo, invitar colaboradores y gestionar roles y permisos.</div>
+        <div class="doc-link">
+          Leer guía <i data-lucide="arrow-right" style="width:13px;height:13px"></i>
+        </div>
+      </div>
+      <div class="doc-card reveal reveal-delay-2">
+        <div class="doc-icon" style="background:rgba(96,165,250,.1)">
+          <i data-lucide="gantt-chart" style="width:24px;height:24px;color:var(--accent4)"></i>
+        </div>
+        <div class="doc-title">Vista Gantt</div>
+        <div class="doc-desc">Cómo usar la vista de Gantt para planificar proyectos con múltiples actividades en el tiempo.</div>
+        <div class="doc-link">
+          Leer guía <i data-lucide="arrow-right" style="width:13px;height:13px"></i>
+        </div>
+      </div>
+      <div class="doc-card reveal">
+        <div class="doc-icon" style="background:rgba(251,191,36,.1)">
+          <i data-lucide="trello" style="width:24px;height:24px;color:#fbbf24"></i>
+        </div>
+        <div class="doc-title">Kanban y gestión de estados</div>
+        <div class="doc-desc">Arrastra y suelta actividades entre columnas: Pendiente, En progreso, Completada y más.</div>
+        <div class="doc-link">
+          Leer guía <i data-lucide="arrow-right" style="width:13px;height:13px"></i>
+        </div>
+      </div>
+      <div class="doc-card reveal reveal-delay-1">
+        <div class="doc-icon" style="background:rgba(251,146,60,.1)">
+          <i data-lucide="bell" style="width:24px;height:24px;color:#fb923c"></i>
+        </div>
+        <div class="doc-title">Recordatorios y notificaciones</div>
+        <div class="doc-desc">Configura recordatorios automáticos por correo para no perder ninguna actividad importante.</div>
+        <div class="doc-link">
+          Leer guía <i data-lucide="arrow-right" style="width:13px;height:13px"></i>
+        </div>
+      </div>
+      <div class="doc-card reveal reveal-delay-2">
+        <div class="doc-icon" style="background:rgba(244,114,182,.1)">
+          <i data-lucide="bar-chart-3" style="width:24px;height:24px;color:#f472b6"></i>
+        </div>
+        <div class="doc-title">Estadísticas y reportes</div>
+        <div class="doc-desc">Analiza tu productividad semanal/mensual y entiende en qué tareas inviertes más tiempo.</div>
+        <div class="doc-link">
+          Leer guía <i data-lucide="arrow-right" style="width:13px;height:13px"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     SOBRE NOSOTROS
+══════════════════════════════ -->
+<section class="about" id="nosotros">
+  <div class="container">
+    <div class="about-inner">
+      <div class="about-text">
+        <div class="section-label reveal">Sobre nosotros</div>
+        <h2 class="section-title reveal reveal-delay-1">
+          Construido por personas<br>
+          <span class="gradient-text">que aman la productividad</span>
+        </h2>
+        <p class="section-sub reveal reveal-delay-2">
+          PlanificaMe nació de la necesidad de tener una herramienta flexible que se adaptara
+          a la forma de trabajar de cada equipo, sin complicaciones. Somos un equipo pequeño
+          con grandes ambiciones, comprometidos con la mejora continua.
+        </p>
+        <p class="section-sub reveal reveal-delay-3" style="margin-top:16px">
+          Cada funcionalidad que construimos viene de escuchar a nuestros usuarios.
+          Tu feedback no solo es bienvenido — es la razón por la que seguimos mejorando.
+        </p>
+
+        <div class="about-values reveal reveal-delay-3">
+          <div class="about-value">
+            <div class="about-value-icon">🚀</div>
+            <div class="about-value-title">Velocidad</div>
+            <div class="about-value-desc">Iteramos rápido y enviamos mejoras constantemente.</div>
+          </div>
+          <div class="about-value">
+            <div class="about-value-icon">🎯</div>
+            <div class="about-value-title">Foco</div>
+            <div class="about-value-desc">Cada feature tiene un propósito claro y un impacto real.</div>
+          </div>
+          <div class="about-value">
+            <div class="about-value-icon">🤝</div>
+            <div class="about-value-title">Comunidad</div>
+            <div class="about-value-desc">Nuestros usuarios son co-creadores del producto.</div>
+          </div>
+          <div class="about-value">
+            <div class="about-value-icon">🔒</div>
+            <div class="about-value-title">Privacidad</div>
+            <div class="about-value-desc">Tus datos te pertenecen. Siempre.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-team reveal reveal-delay-2">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:20px">El equipo</div>
+        <div class="team-member">
+          <div class="team-avatar" style="background:linear-gradient(135deg,#7c5aff,#a78bfa);color:white">E</div>
+          <div>
+            <div class="team-name">Edison Aguero</div>
+            <div class="team-role">Fundador & Desarrollador Principal</div>
+          </div>
+          <div class="team-badge">
+            <span class="badge badge-purple">Founder</span>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="team-avatar" style="background:linear-gradient(135deg,#34d399,#10b981);color:white">S</div>
+          <div>
+            <div class="team-name">Shisui Díaz</div>
+            <div class="team-role">Co-fundador & Diseño de Producto</div>
+          </div>
+          <div class="team-badge">
+            <span class="badge badge-green">Co-founder</span>
+          </div>
+        </div>
+        <div class="team-member" style="background:linear-gradient(135deg,rgba(96,165,250,.05),transparent);border-style:dashed">
+          <div class="team-avatar" style="background:var(--surface3);color:var(--text3);font-size:22px">+</div>
+          <div>
+            <div class="team-name">¿Te unes al equipo?</div>
+            <div class="team-role">Siempre buscamos personas apasionadas</div>
+          </div>
+          <div class="team-badge">
+            <a href="#contacto" class="badge badge-blue" style="cursor:pointer">Contactar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     CONTACTO
+══════════════════════════════ -->
+<section class="contact" id="contacto">
+  <div class="container">
+    <div class="contact-header">
+      <div class="section-label reveal">Contacto</div>
+      <h2 class="section-title reveal reveal-delay-1">
+        Estamos aquí para<br>
+        <span class="gradient-text">ayudarte</span>
+      </h2>
+      <p class="section-sub reveal reveal-delay-2" style="margin:0 auto">
+        Múltiples canales para que nos encuentres cuando lo necesites.
+      </p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-card reveal">
+        <div class="contact-icon" style="background:rgba(124,90,255,.12)">
+          <i data-lucide="mail" style="width:26px;height:26px;color:var(--accent2)"></i>
+        </div>
+        <div class="contact-title">Correo electrónico</div>
+        <div class="contact-value">Escríbenos para consultas generales, propuestas o cualquier pregunta sobre la plataforma.</div>
+        <a href="mailto:hola@planificame.app" class="contact-action">
+          hola@planificame.app <i data-lucide="arrow-right" style="width:12px;height:12px"></i>
+        </a>
+      </div>
+      <div class="contact-card reveal reveal-delay-1">
+        <div class="contact-icon" style="background:rgba(52,211,153,.1)">
+          <i data-lucide="message-square" style="width:26px;height:26px;color:var(--accent3)"></i>
+        </div>
+        <div class="contact-title">Soporte técnico</div>
+        <div class="contact-value">¿Tienes un problema técnico o un bug que reportar? Usa nuestro formulario de soporte directo.</div>
+        <a href="#soporte" class="contact-action">
+          Ir al formulario <i data-lucide="arrow-right" style="width:12px;height:12px"></i>
+        </a>
+      </div>
+      <div class="contact-card reveal reveal-delay-2">
+        <div class="contact-icon" style="background:rgba(96,165,250,.1)">
+          <i data-lucide="globe" style="width:26px;height:26px;color:var(--accent4)"></i>
+        </div>
+        <div class="contact-title">Redes sociales</div>
+        <div class="contact-value">Síguenos para actualizaciones, tips de productividad y novedades del producto.</div>
+        <a href="#" class="contact-action">
+          Ver redes <i data-lucide="arrow-right" style="width:12px;height:12px"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     SOPORTE
+══════════════════════════════ -->
+<section class="support" id="soporte">
+  <div class="container">
+    <div class="support-inner">
+      <div class="support-info">
+        <div class="section-label reveal">Soporte</div>
+        <h2 class="section-title reveal reveal-delay-1">
+          Tu voz importa<br>
+          <span class="gradient-text">de verdad</span>
+        </h2>
+        <p class="section-sub reveal reveal-delay-2">
+          Cada mensaje que recibimos lo leemos y analizamos.
+          Tus sugerencias, reportes de problemas y consultas son
+          el motor que impulsa la evolución de PlanificaMe.
+        </p>
+
+        <div class="support-reasons reveal reveal-delay-3">
+          <div class="support-reason">
+            <div class="support-reason-icon" style="background:rgba(124,90,255,.12)">
+              <i data-lucide="bug" style="width:18px;height:18px;color:var(--accent2)"></i>
+            </div>
+            <div>
+              <div class="support-reason-title">Reportar un problema</div>
+              <div class="support-reason-desc">Encontraste un bug o algo no funciona como esperabas. Cuéntanos con detalle.</div>
+            </div>
+          </div>
+          <div class="support-reason">
+            <div class="support-reason-icon" style="background:rgba(52,211,153,.1)">
+              <i data-lucide="sparkles" style="width:18px;height:18px;color:var(--accent3)"></i>
+            </div>
+            <div>
+              <div class="support-reason-title">Sugerir una mejora</div>
+              <div class="support-reason-desc">¿Tienes una idea que mejoraría tu experiencia? La queremos escuchar.</div>
+            </div>
+          </div>
+          <div class="support-reason">
+            <div class="support-reason-icon" style="background:rgba(251,191,36,.1)">
+              <i data-lucide="help-circle" style="width:18px;height:18px;color:#fbbf24"></i>
+            </div>
+            <div>
+              <div class="support-reason-title">Consulta general</div>
+              <div class="support-reason-desc">Preguntas sobre uso, facturación, integración o cualquier otra consulta.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <div class="support-form reveal reveal-delay-2">
+        <div id="formContent">
+          <div class="form-title">Envíanos tu mensaje</div>
+          <div class="form-sub">Te responderemos lo antes posible. Tiempo de respuesta habitual: menos de 24 horas.</div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Nombre</label>
+              <input class="form-input" type="text" id="sName" placeholder="Tu nombre" maxlength="80">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Correo</label>
+              <input class="form-input" type="email" id="sEmail" placeholder="tu@correo.com" maxlength="120">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tipo de consulta</label>
+            <select class="form-select" id="sType">
+              <option value="">Selecciona una opción...</option>
+              <option value="bug">🐛 Reporte de problema / bug</option>
+              <option value="feature">✨ Sugerencia de mejora</option>
+              <option value="question">❓ Consulta general</option>
+              <option value="other">💬 Otro</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Asunto</label>
+            <input class="form-input" type="text" id="sSubject" placeholder="Breve descripción de tu mensaje" maxlength="120">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Mensaje</label>
+            <textarea class="form-textarea" id="sMessage" placeholder="Describe tu consulta, problema o sugerencia con el mayor detalle posible..." maxlength="1000" oninput="updateCharCount()"></textarea>
+            <div class="char-count"><span id="charCount">0</span>/1000 caracteres</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">¿Qué producto utilizas?</label>
+            <select class="form-select" id="sProduct">
+              <option value="">Selecciona...</option>
+              <option value="agendificame">AgendificaMe</option>
+              <option value="organizame">OrganizaMe</option>
+              <option value="general">Plataforma en general</option>
+            </select>
+          </div>
+
+          <button class="btn btn-primary form-submit" onclick="submitForm()">
+            <i data-lucide="send" style="width:16px;height:16px"></i>
+            Enviar mensaje
+          </button>
+        </div>
+
+        <div class="form-success" id="formSuccess">
+          <div class="form-success-icon">
+            <i data-lucide="check" style="width:28px;height:28px"></i>
+          </div>
+          <div class="form-success-title">¡Mensaje enviado!</div>
+          <div class="form-success-desc">
+            Gracias por escribirnos. Hemos recibido tu mensaje y te responderemos
+            a la brevedad posible.
+          </div>
+          <button class="btn btn-secondary" style="margin-top:20px" onclick="resetForm()">
+            Enviar otro mensaje
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     CTA FINAL
+══════════════════════════════ -->
+<section class="cta-section">
+  <div class="container">
+    <div class="badge badge-purple reveal" style="margin:0 auto 24px;display:inline-flex">
+      <i data-lucide="zap" style="width:11px;height:11px"></i>
+      Empieza hoy — es gratis
+    </div>
+    <h2 class="reveal reveal-delay-1">
+      ¿Listo para organizar<br>
+      <span class="gradient-text">tu mundo?</span>
+    </h2>
+    <p class="reveal reveal-delay-2">Únete y empieza a planificar de forma más inteligente.</p>
+    <div class="cta-btns reveal reveal-delay-3">
+      <a href="index.html" class="btn btn-primary">
+        <i data-lucide="calendar" style="width:16px;height:16px"></i>
+        Abrir AgendificaMe
+      </a>
+      <a href="#soporte" class="btn btn-secondary">
+        <i data-lucide="message-circle" style="width:16px;height:16px"></i>
+        Enviar sugerencia
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     FOOTER
+══════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <span class="gradient-text">PlanificaMe</span>
+        </div>
+        <p class="footer-desc">
+          La plataforma de productividad diseñada para personas y equipos que quieren hacer más con menos esfuerzo.
+        </p>
+        <div class="footer-social">
+          <div class="footer-social-btn" title="Twitter/X">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </div>
+          <div class="footer-social-btn" title="LinkedIn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          </div>
+          <div class="footer-social-btn" title="GitHub">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Productos</div>
+        <div class="footer-links">
+          <a href="index.html">AgendificaMe</a>
+          <a href="#">OrganizaMe <span class="badge badge-coming" style="font-size:9px;padding:1px 6px;vertical-align:middle">Pronto</span></a>
+          <a href="#caracteristicas">Características</a>
+          <a href="#instructivos">Instructivos</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Comunidad</div>
+        <div class="footer-links">
+          <a href="#foro">Foro</a>
+          <a href="#foro">Preguntas y Respuestas</a>
+          <a href="#foro">Ideas y Sugerencias</a>
+          <a href="#foro">Casos de Éxito</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Empresa</div>
+        <div class="footer-links">
+          <a href="#nosotros">Sobre Nosotros</a>
+          <a href="#contacto">Contacto</a>
+          <a href="#soporte">Soporte</a>
+          <a href="#">Política de privacidad</a>
+          <a href="#">Términos de uso</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2025 PlanificaMe. Todos los derechos reservados.</span>
+      <div class="footer-bottom-links">
+        <a href="#">Privacidad</a>
+        <a href="#">Términos</a>
+        <a href="#soporte">Soporte</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- Toast container -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+
+<!-- ══════════════════════════════
+     SCRIPTS
+══════════════════════════════ -->
+<script>
+  // ── Init Lucide icons ──
+  lucide.createIcons();
+
+  // ── Theme toggle ──
+  const root = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon   = document.getElementById('themeIcon');
+
+  // Load saved theme
+  const savedTheme = localStorage.getItem('pm_home_theme') || 'dark';
+  root.setAttribute('data-theme', savedTheme);
+  updateThemeIcon(savedTheme);
+
+  themeToggle.addEventListener('click', () => {
+    const current = root.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('pm_home_theme', next);
+    updateThemeIcon(next);
+  });
+
+  function updateThemeIcon(theme){
+    themeIcon.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
+    lucide.createIcons();
+  }
+
+  // ── Nav scroll effect ──
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // ── Mobile menu ──
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+  function closeMobileMenu(){ mobileMenu.classList.remove('open'); }
+
+  // Close mobile menu on outside click
+  document.addEventListener('click', e => {
+    if(!hamburger.contains(e.target) && !mobileMenu.contains(e.target)){
+      mobileMenu.classList.remove('open');
+    }
+  });
+
+  // ── Scroll reveal ──
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // ── Toast ──
+  function toast(msg, type = 'default'){
+    const wrap = document.getElementById('toastWrap');
+    const t = document.createElement('div');
+    t.className = 'toast';
+    const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+    t.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
+    wrap.appendChild(t);
+    setTimeout(() => {
+      t.style.animation = 'toastOut .3s ease forwards';
+      setTimeout(() => t.remove(), 300);
+    }, 3500);
+  }
+
+  // ── Notify me ──
+  function notifyMe(){
+    toast('¡Anotado! Te notificaremos cuando OrganizaMe esté disponible.', 'success');
+  }
+
+  // ── Char count ──
+  function updateCharCount(){
+    const msg = document.getElementById('sMessage');
+    document.getElementById('charCount').textContent = msg.value.length;
+  }
+
+  // ── Support form ──
+  function submitForm(){
+    const name    = document.getElementById('sName').value.trim();
+    const email   = document.getElementById('sEmail').value.trim();
+    const type    = document.getElementById('sType').value;
+    const subject = document.getElementById('sSubject').value.trim();
+    const message = document.getElementById('sMessage').value.trim();
+
+    if(!name){    toast('Por favor escribe tu nombre.', 'error'); return; }
+    if(!email || !email.includes('@')){
+                  toast('Por favor ingresa un correo válido.', 'error'); return; }
+    if(!type){    toast('Selecciona el tipo de consulta.', 'error'); return; }
+    if(!subject){ toast('Escribe un asunto para tu mensaje.', 'error'); return; }
+    if(message.length < 15){ toast('El mensaje es demasiado corto. Sé más específico.', 'error'); return; }
+
+    // Simulate sending (replace with real fetch to your backend)
+    const submitBtn = document.querySelector('.form-submit');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<svg class="spin" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg> Enviando...`;
+
+    // Add spin animation inline
+    const style = document.createElement('style');
+    style.textContent = '.spin{animation:spin 1s linear infinite}@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}';
+    document.head.appendChild(style);
+
+    setTimeout(() => {
+      document.getElementById('formContent').style.display = 'none';
+      const success = document.getElementById('formSuccess');
+      success.style.display = 'block';
+      lucide.createIcons();
+      toast('Mensaje enviado correctamente.', 'success');
+    }, 1400);
+  }
+
+  function resetForm(){
+    document.getElementById('sName').value = '';
+    document.getElementById('sEmail').value = '';
+    document.getElementById('sType').value = '';
+    document.getElementById('sSubject').value = '';
+    document.getElementById('sMessage').value = '';
+    document.getElementById('charCount').textContent = '0';
+    document.getElementById('formContent').style.display = 'block';
+    document.getElementById('formSuccess').style.display = 'none';
+    const btn = document.querySelector('.form-submit');
+    btn.disabled = false;
+    btn.innerHTML = `<i data-lucide="send" style="width:16px;height:16px"></i> Enviar mensaje`;
+    lucide.createIcons();
+  }
+
+  // ── Smooth active nav link ──
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(sec => {
+      if(window.scrollY >= sec.offsetTop - 100){
+        current = sec.getAttribute('id');
+      }
+    });
+    navLinks.forEach(link => {
+      link.style.color = '';
+      link.style.background = '';
+      if(link.getAttribute('href') === '#' + current){
+        link.style.color = 'var(--accent2)';
+        link.style.background = 'rgba(124,90,255,.08)';
+      }
+    });
+  });
+</script>
+</body>
+</html>
