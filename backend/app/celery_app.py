@@ -1,5 +1,5 @@
 """
-celery_app.py — Configuración de Celery para PlanificaMe
+celery_app.py - Configuracion de Celery para PlanificaMe
 """
 from celery import Celery
 from celery.schedules import crontab
@@ -25,25 +25,30 @@ celery_app.conf.update(
     task_acks_late=True,
 
     beat_schedule={
-        # Recordatorios — cada minuto
+        # Recordatorios cada minuto
         "send-reminders-every-minute": {
             "task": "app.tasks.send_event_reminders",
             "schedule": 60.0,
         },
-        # Alertas de deadline — cada hora
+        # Alertas de deadline cada hora
         "check-deadlines-hourly": {
             "task": "app.tasks.check_upcoming_deadlines",
             "schedule": 3600.0,
         },
-        # Resumen semanal — lunes a las 8:00am
+        # Resumen semanal - lunes a las 8:00am hora local (12pm UTC)
         "weekly-summary-monday": {
             "task": "app.tasks.send_weekly_summaries",
-            "schedule": crontab(hour=8, minute=0, day_of_week=1),
+            "schedule": crontab(hour=12, minute=0, day_of_week=1),
         },
-        # Limpieza — cada día a las 2am
+        # Recordatorio diario para actividades 2+ dias - 10:00am hora local (14:00 UTC)
+        "daily-advance-reminders": {
+            "task": "app.tasks.send_daily_advance_reminders",
+            "schedule": crontab(hour=14, minute=0),
+        },
+        # Limpieza diaria a las 2am hora local (06:00 UTC)
         "cleanup-reminders-daily": {
             "task": "app.tasks.cleanup_old_reminders",
-            "schedule": crontab(hour=2, minute=0),
+            "schedule": crontab(hour=6, minute=0),
         },
     },
 )

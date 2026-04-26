@@ -95,8 +95,15 @@ class Event(Base):
     actual_date = Column(String, nullable=True)  # Formato YYYY-MM-DD
     actual_time = Column(String, nullable=True)  # Formato HH:MM
     
-    # Reminder tracking
+    # Reminder tracking (legacy — se mantiene por compatibilidad)
     reminder_sent = Column(Boolean, default=False, index=True)
+
+    # Smart reminders — recordatorios repetidos con snooze
+    snooze_interval = Column(Integer, default=10, nullable=True)          # minutos entre recordatorios (default 10)
+    reminder_active = Column(Boolean, default=True, index=True)           # False = usuario desactivó los recordatorios
+    next_reminder_at = Column(DateTime, nullable=True, index=True)        # cuándo enviar el próximo recordatorio
+    reminder_count = Column(Integer, default=0)                           # cuántos recordatorios se han enviado
+    daily_reminder_sent_date = Column(String, nullable=True)              # última fecha en que se envió recordatorio diario (YYYY-MM-DD)
 
     # Recurrencia
     is_recurring = Column(Boolean, default=False, index=True)

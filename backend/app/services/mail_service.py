@@ -677,3 +677,217 @@ class MailService:
             "total_sent": len(sent_to),
             "total_failed": len(failed)
         }
+
+    # ─────────────────────────────────────
+    # 11. RECORDATORIO INTELIGENTE CON SNOOZE
+    # ─────────────────────────────────────
+    @staticmethod
+    def send_snooze_reminder_email(
+        event_title: str,
+        to_email: str,
+        event_date: str,
+        event_time: str,
+        event_id: str,
+        snooze_interval: int,
+        reminder_count: int,
+        minutes_until_event: int,
+    ) -> bool:
+        """
+        Recordatorio repetido con botones de Posponer y Desactivar.
+
+        Args:
+            minutes_until_event: Minutos restantes. 0 = actividad en curso. Negativo = ya pasó.
+        """
+        base_url = settings.FRONTEND_URL
+        snooze_url  = f"{base_url}/api/reminders/snooze/{event_id}"
+        disable_url = f"{base_url}/api/reminders/disable/{event_id}"
+        activity_url = f"{base_url}/actividad/{event_id}"
+
+        # ── Calcular etiqueta de tiempo restante ──
+        if minutes_until_event <= 0:
+            time_label = "¡Ya comenzó!"
+            time_color = "#dc2626"
+            header_msg = "🚨 ¡Tu actividad está en curso ahora!"
+            body_msg = f"""
+            <div style="background:#fef2f2;border:2px solid #dc2626;border-radius:12px;
+                        padding:20px;margin-bottom:20px;text-align:center;">
+              <p style="margin:0;font-size:18px;font-weight:700;color:#dc2626;">
+                🏃 ¡Esta actividad ya comenzó!
+              </p>
+              <p style="margin:8px 0 0;font-size:14px;color:#44446a;">
+                Es el momento de ir a realizarla. ¡Mucho éxito!
+              </p>
+            </div>"""
+            show_snooze = False
+        elif minutes_until_event < 60:
+            time_label = f"{minutes_until_event} minuto(s)"
+            time_color = "#d97706"
+            header_msg = f"⏰ Faltan {time_label} para tu actividad"
+            body_msg = f"""
+            <div style="background:#fffbeb;border-left:4px solid #d97706;border-radius:8px;
+                        padding:16px;margin-bottom:20px;">
+              <p style="margin:0;font-size:14px;color:#44446a;">
+                Faltan <strong style="color:#d97706;">{time_label}</strong> para que comience.
+                {'Prepárate, ¡ya casi es la hora!' if minutes_until_event <= 15 else 'Ve terminando lo que estás haciendo.'}
+              </p>
+            </div>"""
+            show_snooze = True
+        else:
+            hours = minutes_until_event // 60
+            mins  = minutes_until_event % 60
+            if mins > 0:
+                time_label = f"{hours}h {mins}min"
+            else:
+                time_label = f"{hours} hora(s)"
+            time_color = "#7c5aff"
+            header_msg = f"🔔 Recordatorio #{reminder_count}: faltan {time_label}"
+            body_msg = f"""
+            <div style="background:#f7f8ff;border-left:4px solid #7c5aff;border-radius:8px;
+                        padding:16px;margin-bottom:20px;">
+              <p style="margin:0;font-size:14px;color:#44446a;">
+                Tu actividad comienza en <strong style="color:#7c5aff;">{time_label}</strong>.
+              </p>
+            </div>"""
+            show_snooze = True
+
+        # ── Botón de posponer (solo si aún no empezó) ──
+        snooze_block = ""
+        if show_snooze:
+            snooze_block = f"""
+            <div style="text-align:center;margin:0 0 12px;">
+              <table cellspacing="0" cellpadding="0" border="0" style="margin:0 auto;border-collapse:separate;">
+                <tr>
+                  <td align="center" bgcolor="{time_color}"
+                      style="background-color:{time_color};border-radius:9px;padding:0;">
+                    <a href="{snooze_url}" target="_blank" rel="noopener noreferrer"
+                       style="display:inline-block;padding:13px 28px;color:#ffffff !important;
+                              text-decoration:none !important;font-weight:700;font-size:14px;
+                              font-family:'Segoe UI',Helvetica,Arial,sans-serif;border-radius:9px;">
+                      ⏱️ Posponer {snooze_interval} min
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:6px 0 0;font-size:11px;color:#8888aa;">
+                ¿No carga? →
+                <a href="{snooze_url}" style="color:{time_color};">{snooze_url}</a>
+              </p>
+            </div>"""
+
+        content = f"""
+        <h2 style="margin:0 0 6px;font-size:20px;color:#111128;">{header_msg}</h2>
+        <p style="margin:0 0 20px;font-size:13px;color:#8888aa;">
+          Recordatorio #{reminder_count}
+          {'· Próximo en ' + str(snooze_interval) + ' min si pospones' if show_snooze else ''}
+        </p>
+
+        <!-- Datos de la actividad -->
+        <div style="background:#f7f8ff;border-radius:12px;padding:20px;margin-bottom:20px;">
+          <h3 style="margin:0 0 14px;font-size:16px;color:{time_color};">{event_title}</h3>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            {_info_row("📅", "Fecha", event_date)}
+            {_info_row("🕐", "Hora", event_time)}
+            {_info_row("⏳", "Tiempo restante", time_label)}
+          </table>
+        </div>
+
+        {body_msg}
+
+        <!-- Botón posponer -->
+        {snooze_block}
+
+        <!-- Botón ver actividad -->
+        {_btn("Ver actividad →", activity_url, time_color)}
+
+        <!-- Desactivar recordatorios -->
+        <div style="text-align:center;margin-top:20px;padding-top:16px;
+                    border-top:1px solid #f0f2f8;">
+          <p style="margin:0;font-size:12px;color:#8888aa;">
+            ¿Ya no quieres más recordatorios de esta actividad?
+          </p>
+          <a href="{disable_url}" target="_blank" rel="noopener noreferrer"
+             style="display:inline-block;margin-top:8px;font-size:12px;color:#8888aa;
+                    text-decoration:underline;">
+            Desactivar recordatorios
+          </a>
+        </div>"""
+
+        if minutes_until_event <= 0:
+            subject = f"🚨 ¡En curso ahora!: {event_title}"
+        elif minutes_until_event < 60:
+            subject = f"⏰ {time_label} para: {event_title}"
+        else:
+            subject = f"🔔 Recordatorio #{reminder_count}: {event_title}"
+
+        return MailService.send_email(
+            to_email, subject,
+            _base_template(content, time_color),
+            f"{subject} — {event_date} a las {event_time}"
+        )
+
+    # ─────────────────────────────────────
+    # 12. RECORDATORIO DIARIO (actividades 2+ días)
+    # ─────────────────────────────────────
+    @staticmethod
+    def send_daily_advance_reminder_email(
+        event_title: str,
+        to_email: str,
+        event_date: str,
+        event_time: str,
+        event_id: str,
+        days_until_event: int,
+    ) -> bool:
+        """
+        Recordatorio diario a las 10am para actividades que aún faltan 2+ días.
+        """
+        activity_url = f"{settings.FRONTEND_URL}/actividad/{event_id}"
+        disable_url  = f"{settings.FRONTEND_URL}/api/reminders/disable/{event_id}"
+
+        if days_until_event == 1:
+            days_label = "¡mañana!"
+            color = "#d97706"
+            icon = "📆"
+        else:
+            days_label = f"en {days_until_event} días"
+            color = "#7c5aff"
+            icon = "🗓️"
+
+        content = f"""
+        <h2 style="margin:0 0 6px;font-size:20px;color:#111128;">
+          {icon} Recordatorio diario
+        </h2>
+        <p style="margin:0 0 20px;font-size:14px;color:#44446a;">
+          Esta actividad ocurrirá <strong style="color:{color};">{days_label}</strong>.
+          Te recordamos para que te puedas preparar con anticipación.
+        </p>
+
+        <div style="background:#f7f8ff;border-radius:12px;padding:20px;margin-bottom:24px;">
+          <h3 style="margin:0 0 14px;font-size:16px;color:{color};">{event_title}</h3>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            {_info_row("📅", "Fecha", event_date)}
+            {_info_row("🕐", "Hora", event_time)}
+            {_info_row("⏳", "Faltan", days_label)}
+          </table>
+        </div>
+
+        {_btn("Ver actividad →", activity_url, color)}
+
+        <div style="text-align:center;margin-top:20px;padding-top:16px;
+                    border-top:1px solid #f0f2f8;">
+          <p style="margin:0;font-size:12px;color:#8888aa;">
+            Recibirás este recordatorio cada día a las 10:00 AM.
+          </p>
+          <a href="{disable_url}" target="_blank" rel="noopener noreferrer"
+             style="display:inline-block;margin-top:8px;font-size:12px;color:#8888aa;
+                    text-decoration:underline;">
+            Desactivar recordatorios
+          </a>
+        </div>"""
+
+        subject = f"{icon} Recordatorio: {event_title} — {days_label}"
+
+        return MailService.send_email(
+            to_email, subject,
+            _base_template(content, color),
+            f"Recordatorio: {event_title} — {days_label} ({event_date} {event_time})"
+        )

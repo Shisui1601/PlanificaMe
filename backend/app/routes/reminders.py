@@ -2,10 +2,12 @@
 reminders.py — Endpoints para enviar recordatorios personalizados
 """
 from fastapi import APIRouter, Depends, HTTPException, status
-from ..database import SessionLocal, User
+from fastapi.responses import HTMLResponse
+from ..database import SessionLocal, User, Event
 from ..schemas.schemas import SendCustomReminderRequest, SendCustomReminderResponse
 from ..services.mail_service import MailService
 from ..auth import get_current_user
+from datetime import datetime
 import logging
 
 logger = logging.getLogger(__name__)
@@ -172,3 +174,143 @@ def send_activity_reminder(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error al enviar el recordatorio"
         )
+
+
+# ════════════════════════════════════════
+# POSPONER RECORDATORIO (público, desde email)
+# ════════════════════════════════════════
+
+@router.get("/snooze/{event_id}", response_class=HTMLResponse)
+def snooze_reminder(event_id: str):
+    """
+    Pospone el próximo recordatorio X minutos (según snooze_interval del evento).
+    Se llama desde el botón del correo — no requiere autenticación.
+    """
+    db = SessionLocal()
+    try:
+        event = db.query(Event).filter(Event.id == event_id).first()
+
+        if not event:
+            return HTMLResponse(_reminder_action_page(
+                "❌ Actividad no encontrada",
+                "No se encontró la actividad solicitada.",
+                "#dc2626"
+            ), status_code=404)
+
+        if not event.reminder_active:
+            return HTMLResponse(_reminder_action_page(
+                "ℹ️ Recordatorios ya desactivados",
+                f"Los recordatorios de <strong>{event.title}</strong> ya estaban desactivados.",
+                "#8888aa"
+            ))
+
+        interval = event.snooze_interval or 10
+        event.next_reminder_at = datetime.utcnow().replace(second=0, microsecond=0)
+        from datetime import timedelta
+        event.next_reminder_at = event.next_reminder_at + timedelta(minutes=interval)
+        db.commit()
+
+        logger.info(f"⏱️ Snooze aplicado: evento {event.id}, próximo en {interval} min")
+
+        return HTMLResponse(_reminder_action_page(
+            "⏱️ Recordatorio pospuesto",
+            f"Te recordaremos sobre <strong>{event.title}</strong> en <strong>{interval} minutos</strong>.",
+            "#7c5aff"
+        ))
+
+    except Exception as e:
+        logger.error(f"Error en snooze_reminder: {e}")
+        return HTMLResponse(_reminder_action_page(
+            "❌ Error",
+            "Ocurrió un error al posponer el recordatorio. Inténtalo nuevamente.",
+            "#dc2626"
+        ), status_code=500)
+    finally:
+        db.close()
+
+
+# ════════════════════════════════════════
+# DESACTIVAR RECORDATORIOS (público, desde email)
+# ════════════════════════════════════════
+
+@router.get("/disable/{event_id}", response_class=HTMLResponse)
+def disable_reminder(event_id: str):
+    """
+    Desactiva todos los recordatorios futuros para el evento.
+    Se llama desde el enlace del correo — no requiere autenticación.
+    """
+    db = SessionLocal()
+    try:
+        event = db.query(Event).filter(Event.id == event_id).first()
+
+        if not event:
+            return HTMLResponse(_reminder_action_page(
+                "❌ Actividad no encontrada",
+                "No se encontró la actividad solicitada.",
+                "#dc2626"
+            ), status_code=404)
+
+        event.reminder_active = False
+        event.next_reminder_at = None
+        db.commit()
+
+        logger.info(f"🔕 Recordatorios desactivados: evento {event.id}")
+
+        return HTMLResponse(_reminder_action_page(
+            "🔕 Recordatorios desactivados",
+            f"No recibirás más recordatorios automáticos de <strong>{event.title}</strong>.<br>"
+            f"Puedes reactivarlos desde la aplicación si lo deseas.",
+            "#10b981"
+        ))
+
+    except Exception as e:
+        logger.error(f"Error en disable_reminder: {e}")
+        return HTMLResponse(_reminder_action_page(
+            "❌ Error",
+            "Ocurrió un error al desactivar los recordatorios. Inténtalo nuevamente.",
+            "#dc2626"
+        ), status_code=500)
+    finally:
+        db.close()
+
+
+# ════════════════════════════════════════
+# HELPER — Página HTML de confirmación
+# ════════════════════════════════════════
+
+def _reminder_action_page(title: str, message: str, color: str = "#7c5aff") -> str:
+    """Página HTML simple que se muestra al hacer clic en los botones del correo."""
+    from ..config import settings
+    return f"""<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title} — PlanificaMe</title>
+  <style>
+    * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+    body {{ font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f8;
+           display: flex; align-items: center; justify-content: center;
+           min-height: 100vh; padding: 20px; }}
+    .card {{ background: white; border-radius: 20px; padding: 48px 40px;
+             max-width: 460px; width: 100%; text-align: center;
+             box-shadow: 0 8px 32px rgba(0,0,0,0.10); }}
+    .icon {{ font-size: 52px; margin-bottom: 16px; }}
+    h1 {{ font-size: 22px; color: {color}; margin-bottom: 12px; font-weight: 700; }}
+    p {{ font-size: 15px; color: #44446a; line-height: 1.6; margin-bottom: 28px; }}
+    a.btn {{ display: inline-block; padding: 12px 28px; background: {color};
+             color: white; text-decoration: none; border-radius: 10px;
+             font-weight: 700; font-size: 14px; }}
+    .footer {{ margin-top: 24px; font-size: 12px; color: #8888aa; }}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">{title.split()[0]}</div>
+    <h1>{' '.join(title.split()[1:])}</h1>
+    <p>{message}</p>
+    <a href="{settings.FRONTEND_URL}" class="btn">Ir a PlanificaMe →</a>
+    <p class="footer">PlanificaMe © 2026</p>
+  </div>
+</body>
+</html>"""
