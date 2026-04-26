@@ -281,3 +281,34 @@ class CalendarMessage(Base):
     # Relaciones
     calendar = relationship("Calendar", back_populates="messages")
     sender = relationship("User", foreign_keys=[sender_id])
+
+
+class DirectContact(Base):
+    """Solicitudes y relaciones de chat directo entre usuarios"""
+    __tablename__ = "direct_contacts"
+
+    id = Column(String, primary_key=True, index=True)
+    requester_id = Column(String, ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    receiver_id = Column(String, ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    status = Column(String, default="pending", index=True)  # pending, accepted, declined
+    first_message = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    requester = relationship("User", foreign_keys=[requester_id])
+    receiver = relationship("User", foreign_keys=[receiver_id])
+
+
+class DirectMessage(Base):
+    """Mensajes directos entre dos usuarios"""
+    __tablename__ = "direct_messages"
+
+    id = Column(String, primary_key=True, index=True)
+    sender_id = Column(String, ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    receiver_id = Column(String, ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    content = Column(Text, nullable=False)
+    is_deleted = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+
+    sender = relationship("User", foreign_keys=[sender_id])
+    receiver = relationship("User", foreign_keys=[receiver_id])

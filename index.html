@@ -1724,6 +1724,148 @@ html.light-mode .sidebar.compact .avatar{
   padding:20px;text-align:center;color:var(--text3);font-size:12px;
 }
 
+/* ─── CHAT PERSONAL (DM) ─────────────────────────── */
+.dm-fab{
+  position:fixed;bottom:84px;right:20px;width:48px;height:48px;border-radius:50%;
+  background:linear-gradient(135deg,#10b981,#059669);
+  border:none;color:white;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(16,185,129,.4);
+  z-index:1000;transition:transform .2s;font-size:18px;
+}
+.dm-fab:hover{transform:scale(1.08);}
+.dm-fab-badge{
+  position:absolute;top:-3px;right:-3px;min-width:17px;height:17px;
+  background:#ef4444;color:white;border-radius:10px;
+  font-size:9px;font-weight:700;display:none;
+  align-items:center;justify-content:center;padding:0 4px;
+  border:2px solid var(--bg);
+}
+.dm-panel{
+  position:fixed;bottom:84px;right:78px;
+  width:320px;height:470px;
+  background:var(--surface);border-radius:16px;
+  box-shadow:0 8px 40px rgba(0,0,0,.22);
+  display:flex;flex-direction:column;
+  z-index:999;border:1px solid var(--border);overflow:hidden;
+  transform:scale(.9) translateY(20px);opacity:0;pointer-events:none;
+  transition:transform .2s,opacity .2s;
+}
+.dm-panel.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
+.dm-header{
+  padding:11px 14px;
+  background:linear-gradient(135deg,#10b981,#059669);
+  color:white;display:flex;align-items:center;gap:8px;flex-shrink:0;
+}
+.dm-header-title{font-size:13px;font-weight:700;flex:1;}
+.dm-close{background:none;border:none;color:rgba(255,255,255,.8);cursor:pointer;font-size:17px;padding:2px;}
+.dm-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;}
+.dm-tab{
+  flex:1;padding:8px 4px;font-size:11px;font-weight:600;
+  cursor:pointer;text-align:center;color:var(--text3);
+  border:none;border-bottom:2px solid transparent;
+  background:none;transition:all .15s;
+}
+.dm-tab.active{color:#10b981;border-bottom-color:#10b981;}
+.dm-body{flex:1;overflow-y:auto;overflow-x:hidden;}
+.dm-body::-webkit-scrollbar{width:3px;}
+.dm-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.dm-contact-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;cursor:pointer;
+  border-bottom:1px solid var(--border);transition:background .15s;
+}
+.dm-contact-item:hover{background:var(--surface2);}
+.dm-avatar{
+  width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:white;
+}
+.dm-contact-info{flex:1;min-width:0;}
+.dm-contact-name{font-size:12px;font-weight:700;color:var(--text);}
+.dm-contact-preview{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dm-add-box{padding:10px 12px;border-bottom:1px solid var(--border);}
+.dm-add-input{
+  width:100%;padding:7px 10px;border-radius:8px;
+  border:1px solid var(--border2);background:var(--surface2);
+  color:var(--text);font-size:12px;box-sizing:border-box;
+}
+.dm-add-input:focus{outline:none;border-color:#10b981;}
+.dm-add-hint{font-size:10px;color:var(--text3);margin:5px 0 6px;}
+.dm-add-msg-input{
+  width:100%;padding:7px 10px;border-radius:8px;
+  border:1px solid var(--border2);background:var(--surface2);
+  color:var(--text);font-size:12px;box-sizing:border-box;
+  resize:none;margin-bottom:6px;min-height:52px;
+}
+.dm-add-msg-input:focus{outline:none;border-color:#10b981;}
+.dm-add-btn{
+  width:100%;padding:7px;border-radius:8px;
+  background:#10b981;border:none;color:white;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s;
+}
+.dm-add-btn:hover{background:#059669;}
+.dm-add-btn:disabled{opacity:.5;cursor:not-allowed;}
+.dm-pending-item{padding:10px 12px;border-bottom:1px solid var(--border);}
+.dm-pending-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.dm-pending-msg{font-size:11px;color:var(--text3);font-style:italic;margin-bottom:8px;line-height:1.4;}
+.dm-pending-btns{display:flex;gap:6px;}
+.dm-btn-acc{
+  flex:1;padding:5px;border-radius:6px;
+  background:#10b981;border:none;color:white;font-size:11px;font-weight:600;cursor:pointer;
+}
+.dm-btn-dec{
+  flex:1;padding:5px;border-radius:6px;
+  background:var(--surface2);border:1px solid var(--border2);
+  color:var(--text3);font-size:11px;cursor:pointer;
+}
+.dm-conv-header{
+  padding:9px 12px;display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid var(--border);flex-shrink:0;background:var(--surface);
+}
+.dm-back{background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;line-height:1;padding:0 4px 0 0;}
+.dm-conv-name{font-size:13px;font-weight:700;color:var(--text);}
+.dm-messages{
+  flex:1;overflow-y:auto;padding:10px;
+  display:flex;flex-direction:column;gap:6px;
+}
+.dm-messages::-webkit-scrollbar{width:3px;}
+.dm-messages::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.dm-msg-mine,.dm-msg-theirs{
+  max-width:82%;padding:7px 10px;border-radius:12px;
+  font-size:12px;line-height:1.4;
+}
+.dm-msg-mine{
+  align-self:flex-end;background:#10b981;color:white;
+  border-bottom-right-radius:3px;
+}
+.dm-msg-theirs{
+  align-self:flex-start;background:var(--surface2);color:var(--text);
+  border-bottom-left-radius:3px;border:1px solid var(--border);
+}
+.dm-msg-time{font-size:9px;opacity:.6;margin-top:2px;text-align:right;}
+.dm-input-wrap{
+  padding:8px 10px;border-top:1px solid var(--border);
+  display:flex;gap:6px;flex-shrink:0;align-items:flex-end;
+}
+.dm-msg-input{
+  flex:1;padding:6px 10px;border-radius:8px;
+  border:1px solid var(--border2);background:var(--surface2);
+  color:var(--text);font-size:12px;resize:none;max-height:72px;
+}
+.dm-msg-input:focus{outline:none;border-color:#10b981;}
+.dm-send{
+  width:32px;height:32px;border-radius:8px;
+  background:#10b981;border:none;color:white;
+  cursor:pointer;font-size:14px;flex-shrink:0;transition:background .15s;
+}
+.dm-send:hover{background:#059669;}
+.dm-empty{text-align:center;color:var(--text3);font-size:11px;padding:24px 16px;font-style:italic;}
+@media(max-width:600px){
+  .dm-fab{bottom:76px;right:14px;}
+  .dm-panel{right:4px;bottom:140px;width:calc(100vw - 8px);height:60vh;}
+}
+
 /* ══ ONBOARDING ══ */
 .onboard-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.75);
@@ -6515,6 +6657,7 @@ function enterGuestMode(){
   const loginBtn = document.getElementById('guestLoginBtn');
   if(banner) banner.style.display = 'flex';
   if(loginBtn) loginBtn.style.display = '';
+  dmHideFab();
 }
 
 function exitGuestMode(){
@@ -10754,6 +10897,347 @@ function stopChatPoll(){ if(_chatPollInterval){ clearInterval(_chatPollInterval)
 
 
 // ═══════════════════════════════════════════════
+// CHAT PERSONAL (DM)
+// ═══════════════════════════════════════════════
+
+let _dmOpen       = false;
+let _dmTab        = 'chats';
+let _dmContacts   = [];
+let _dmPending    = [];
+let _dmConvUserId = null;    // ID del otro usuario en la conv activa
+let _dmConvName   = '';
+let _dmMessages   = [];
+let _dmLastTs     = null;
+let _dmPollInt    = null;
+
+const DM_API = API_URL + '/chat';
+
+// ── colores avatar ──────────────────────────────────────────────────
+function _dmColor(id){
+  const C=['#7c5aff','#10b981','#f59e0b','#ef4444','#3b82f6','#ec4899','#06b6d4','#84cc16'];
+  let h=0; for(let i=0;i<(id||'').length;i++) h=(h*31+id.charCodeAt(i))&0xffffffff;
+  return C[Math.abs(h)%C.length];
+}
+function _dmInitial(name){ return (name||'?')[0].toUpperCase(); }
+
+// ── toggle panel ────────────────────────────────────────────────────
+function toggleDmPanel(){
+  if(!ME.id){ toast('Inicia sesion para usar el chat personal'); return; }
+  _dmOpen = !_dmOpen;
+  document.getElementById('dmPanel').classList.toggle('open', _dmOpen);
+  if(_dmOpen){
+    dmLoadContacts();
+    dmLoadPending();
+    dmCheckPendingBadge();
+  }
+}
+
+// ── tabs ─────────────────────────────────────────────────────────────
+function dmSwitchTab(tab){
+  _dmTab = tab;
+  ['chats','requests','add'].forEach(t=>{
+    document.getElementById('dmBody'+t.charAt(0).toUpperCase()+t.slice(1)).style.display = t===tab ? '' : 'none';
+    document.getElementById('dmTab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('active', t===tab);
+  });
+  if(tab==='chats')    dmLoadContacts();
+  if(tab==='requests') dmLoadPending();
+}
+
+// ── cargar contactos aceptados ───────────────────────────────────────
+async function dmLoadContacts(){
+  if(!ME.id) return;
+  try {
+    const r = await fetch(DM_API+'/contacts?user_id='+ME.id);
+    if(!r.ok) return;
+    const d = await r.json();
+    _dmContacts = d.contacts || [];
+    dmRenderContacts();
+  } catch(e){}
+}
+
+function dmRenderContacts(){
+  const list = document.getElementById('dmContactsList');
+  const empty = document.getElementById('dmChatsEmpty');
+  if(!_dmContacts.length){
+    empty.style.display = '';
+    list.innerHTML = '';
+    return;
+  }
+  empty.style.display = 'none';
+  list.innerHTML = _dmContacts.map(c=>{
+    const u = c.other_user;
+    if(!u) return '';
+    const color = _dmColor(u.id);
+    const initial = _dmInitial(u.name);
+    const preview = c.last_message
+      ? (c.last_message.is_mine ? 'Tu: ' : '') + escapeHtml(c.last_message.content).slice(0,35)
+      : '<em>Sin mensajes aun</em>';
+    return `<div class="dm-contact-item" onclick="dmOpenConv('${u.id}','${escapeHtml(u.name)}')">
+      <div class="dm-avatar" style="background:${color}">${initial}</div>
+      <div class="dm-contact-info">
+        <div class="dm-contact-name">${escapeHtml(u.name)}</div>
+        <div class="dm-contact-preview">${preview}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── cargar solicitudes pendientes ────────────────────────────────────
+async function dmLoadPending(){
+  if(!ME.id) return;
+  try {
+    const r = await fetch(DM_API+'/contacts/pending?user_id='+ME.id);
+    if(!r.ok) return;
+    const d = await r.json();
+    _dmPending = d.pending || [];
+    dmRenderPending();
+    dmUpdateReqBadge();
+  } catch(e){}
+}
+
+function dmRenderPending(){
+  const list  = document.getElementById('dmPendingList');
+  const empty = document.getElementById('dmReqEmpty');
+  if(!_dmPending.length){
+    empty.style.display = '';
+    list.innerHTML = '';
+    return;
+  }
+  empty.style.display = 'none';
+  list.innerHTML = _dmPending.map(p=>{
+    const u = p.other_user;
+    if(!u) return '';
+    const msg = escapeHtml(p.first_message || '');
+    return `<div class="dm-pending-item" id="dmp-${p.id}">
+      <div class="dm-pending-name">${escapeHtml(u.name)}</div>
+      <div class="dm-pending-msg">"${msg}"</div>
+      <div class="dm-pending-btns">
+        <button class="dm-btn-acc" onclick="dmAccept('${p.id}')">Aceptar</button>
+        <button class="dm-btn-dec" onclick="dmDecline('${p.id}')">Rechazar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function dmUpdateReqBadge(){
+  const n = _dmPending.length;
+  const badge = document.getElementById('dmReqBadge');
+  if(badge){ badge.textContent=n; badge.style.display = n>0 ? '' : 'none'; }
+}
+
+async function dmCheckPendingBadge(){
+  if(!ME.id) return;
+  try{
+    const r = await fetch(DM_API+'/contacts/count?user_id='+ME.id);
+    if(!r.ok) return;
+    const d = await r.json();
+    const n = d.pending_count || 0;
+    const b = document.getElementById('dmFabBadge');
+    if(b){ b.textContent=n; b.style.display = n>0 ? 'flex' : 'none'; }
+  } catch(e){}
+}
+
+// ── aceptar solicitud ─────────────────────────────────────────────────
+async function dmAccept(contactId){
+  try {
+    const r = await fetch(DM_API+'/contacts/'+contactId+'/accept', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({user_id: ME.id})
+    });
+    if(r.ok){
+      toast('Solicitud aceptada');
+      _dmPending = _dmPending.filter(p=>p.id!==contactId);
+      dmRenderPending();
+      dmUpdateReqBadge();
+      dmLoadContacts();
+      dmCheckPendingBadge();
+    } else {
+      const e = await r.json();
+      toast(e.detail || 'Error al aceptar');
+    }
+  } catch(e){ toast('Error de conexion'); }
+}
+
+// ── rechazar solicitud ────────────────────────────────────────────────
+async function dmDecline(contactId){
+  try {
+    const r = await fetch(DM_API+'/contacts/'+contactId+'/decline', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({user_id: ME.id})
+    });
+    if(r.ok){
+      toast('Solicitud rechazada');
+      _dmPending = _dmPending.filter(p=>p.id!==contactId);
+      dmRenderPending();
+      dmUpdateReqBadge();
+      dmCheckPendingBadge();
+    }
+  } catch(e){ toast('Error de conexion'); }
+}
+
+// ── enviar solicitud de contacto ──────────────────────────────────────
+async function dmSendRequest(){
+  const ident   = (document.getElementById('dmSearchInput').value||'').trim();
+  const msg     = (document.getElementById('dmFirstMsg').value||'').trim();
+  const btn     = document.getElementById('dmAddBtn');
+
+  if(!ident){ toast('Ingresa un correo o nombre'); return; }
+  if(!msg)  { toast('Escribe un mensaje de presentacion'); return; }
+
+  btn.disabled = true; btn.textContent = 'Enviando...';
+  try {
+    const r = await fetch(DM_API+'/contacts/request', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ requester_id: ME.id, identifier: ident, first_message: msg })
+    });
+    const d = await r.json();
+    if(r.ok){
+      toast('Solicitud enviada a ' + (d.receiver_name||ident) + '. Le llego un correo.');
+      document.getElementById('dmSearchInput').value = '';
+      document.getElementById('dmFirstMsg').value = '';
+      dmSwitchTab('chats');
+    } else {
+      toast(d.detail || 'Error al enviar solicitud');
+    }
+  } catch(e){ toast('Error de conexion'); }
+  btn.disabled = false; btn.textContent = 'Enviar solicitud';
+}
+
+// ── abrir conversacion ────────────────────────────────────────────────
+async function dmOpenConv(userId, name){
+  _dmConvUserId = userId;
+  _dmConvName   = name;
+  document.getElementById('dmConvName').textContent = name;
+  const color = _dmColor(userId);
+  const av = document.getElementById('dmConvAvatar');
+  av.style.background = color;
+  av.textContent = _dmInitial(name);
+
+  // Mostrar vista conversacion
+  document.getElementById('dmListView').style.display = 'none';
+  document.getElementById('dmConvView').style.display = 'flex';
+  document.getElementById('dmHeaderTitle').textContent = name;
+
+  _dmMessages = [];
+  _dmLastTs   = null;
+  document.getElementById('dmMessages').innerHTML = '<div class="dm-empty">Cargando...</div>';
+
+  await dmLoadMessages();
+  dmStartConvPoll();
+  setTimeout(()=>dmScrollBottom(), 100);
+}
+
+function dmBackToList(){
+  _dmConvUserId = null;
+  dmStopConvPoll();
+  document.getElementById('dmConvView').style.display = 'none';
+  document.getElementById('dmListView').style.display = 'flex';
+  document.getElementById('dmHeaderTitle').textContent = 'Chat Personal';
+  dmLoadContacts();
+}
+
+// ── cargar mensajes de una conversacion ───────────────────────────────
+async function dmLoadMessages(){
+  if(!_dmConvUserId || !ME.id) return;
+  try {
+    const r = await fetch(DM_API+'/direct/'+_dmConvUserId+'/messages?user_id='+ME.id+'&limit=50');
+    if(!r.ok){ document.getElementById('dmMessages').innerHTML='<div class="dm-empty">Error al cargar mensajes</div>'; return; }
+    const d = await r.json();
+    _dmMessages = d.messages || [];
+    _dmLastTs   = _dmMessages.length ? _dmMessages[_dmMessages.length-1].created_at : new Date().toISOString();
+    dmRenderMessages();
+    dmScrollBottom();
+  } catch(e){ document.getElementById('dmMessages').innerHTML='<div class="dm-empty">Error de conexion</div>'; }
+}
+
+function dmRenderMessages(){
+  const el = document.getElementById('dmMessages');
+  if(!_dmMessages.length){
+    el.innerHTML='<div class="dm-empty">Sin mensajes aun. Di hola!</div>'; return;
+  }
+  el.innerHTML = _dmMessages.map(m=>{
+    const cls  = m.is_mine ? 'dm-msg-mine' : 'dm-msg-theirs';
+    const time = new Date(m.created_at).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+    const txt  = m.is_deleted ? '<em>Mensaje eliminado</em>' : escapeHtml(m.content);
+    return `<div class="${cls}">${txt}<div class="dm-msg-time">${time}</div></div>`;
+  }).join('');
+}
+
+function dmScrollBottom(){ const el=document.getElementById('dmMessages'); if(el) el.scrollTop=el.scrollHeight; }
+
+// ── enviar mensaje ────────────────────────────────────────────────────
+async function dmSendMessage(){
+  const inp = document.getElementById('dmMsgInput');
+  const content = inp.value.trim();
+  if(!content || !_dmConvUserId) return;
+  inp.value = ''; inp.style.height = 'auto';
+  try {
+    const r = await fetch(DM_API+'/direct/'+_dmConvUserId+'/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ sender_id: ME.id, content })
+    });
+    if(r.ok){
+      const m = await r.json();
+      _dmMessages.push(m);
+      _dmLastTs = m.created_at;
+      dmRenderMessages();
+      dmScrollBottom();
+    } else {
+      const e = await r.json();
+      toast(e.detail || 'Error al enviar');
+      inp.value = content;
+    }
+  } catch(e){ toast('Error de conexion'); inp.value = content; }
+}
+
+// ── polling mensajes nuevos ───────────────────────────────────────────
+async function dmPollMessages(){
+  if(!_dmConvUserId || !ME.id || !_dmLastTs) return;
+  try {
+    const r = await fetch(DM_API+'/direct/'+_dmConvUserId+'/messages/poll?user_id='+ME.id+'&since='+encodeURIComponent(_dmLastTs));
+    if(!r.ok) return;
+    const d = await r.json();
+    if(d.messages && d.messages.length){
+      let added = false;
+      d.messages.forEach(m=>{
+        if(!_dmMessages.find(x=>x.id===m.id)){
+          _dmMessages.push(m);
+          _dmLastTs = m.created_at;
+          added = true;
+        }
+      });
+      if(added){ dmRenderMessages(); dmScrollBottom(); }
+    }
+  } catch(e){}
+}
+
+// ── polling solicitudes pendientes (badge del FAB) ───────────────────
+async function dmGlobalPoll(){
+  if(!ME.id) return;
+  dmCheckPendingBadge();
+  // Si el panel esta abierto en solicitudes, actualizar
+  if(_dmOpen && _dmTab === 'requests') dmLoadPending();
+  // Si hay una conv abierta, hacer poll de mensajes nuevos
+  if(_dmOpen && _dmConvUserId) dmPollMessages();
+}
+
+function dmStartConvPoll(){
+  dmStopConvPoll();
+  _dmPollInt = setInterval(dmPollMessages, 3000);
+}
+function dmStopConvPoll(){
+  if(_dmPollInt){ clearInterval(_dmPollInt); _dmPollInt=null; }
+}
+
+// Mostrar FAB cuando el usuario esta autenticado
+function dmShowFab(){ const f=document.getElementById('dmFab'); if(f) f.style.display='flex'; }
+function dmHideFab(){ const f=document.getElementById('dmFab'); if(f) f.style.display='none'; }
+
+// Poll global cada 15 segundos (para el badge de solicitudes)
+setInterval(dmGlobalPoll, 15000);
+
+
+// ═══════════════════════════════════════════════
 // ONBOARDING
 // ═══════════════════════════════════════════════
 let _onboardStep = 0;
@@ -12462,6 +12946,8 @@ async function init(){
     const savedCal = localStorage.getItem('planificame_calendar');
     if(savedCal) switchCalendar(savedCal);
     renderTeam(); renderProjects(); updateUserInfo(); render();
+    dmShowFab();
+    dmCheckPendingBadge();
     // Deep link desde email: /agendificame?actividad=EVENT_ID
     const _dlId = new URLSearchParams(window.location.search).get('actividad');
     if(_dlId){ const _dlEv=getEv(_dlId); if(_dlEv) setTimeout(()=>showEventDetail(_dlEv),300); }
@@ -15467,6 +15953,70 @@ async function sendReminder() {
       onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMessage();}"
       oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px'"></textarea>
     <button class="chat-send" id="chatSendBtn" onclick="sendChatMessage()" title="Enviar">↑</button>
+  </div>
+</div>
+
+<!-- DM FAB -->
+<button class="dm-fab" id="dmFab" onclick="toggleDmPanel()" title="Chat personal">
+  <span style="font-size:19px">&#128172;</span>
+  <span class="dm-fab-badge" id="dmFabBadge"></span>
+</button>
+
+<!-- DM PANEL -->
+<div class="dm-panel" id="dmPanel">
+  <!-- Header fijo -->
+  <div class="dm-header">
+    <span style="font-size:16px">&#128172;</span>
+    <span class="dm-header-title" id="dmHeaderTitle">Chat Personal</span>
+    <button class="dm-close" onclick="toggleDmPanel()">&#10005;</button>
+  </div>
+
+  <!-- Vista lista (tabs Chats / Solicitudes) -->
+  <div id="dmListView" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+    <div class="dm-tabs">
+      <button class="dm-tab active" id="dmTabChats"    onclick="dmSwitchTab('chats')">Chats</button>
+      <button class="dm-tab"        id="dmTabRequests" onclick="dmSwitchTab('requests')">Solicitudes <span id="dmReqBadge" style="display:none;background:#ef4444;color:white;border-radius:8px;font-size:9px;padding:1px 5px;margin-left:3px;"></span></button>
+      <button class="dm-tab"        id="dmTabAdd"      onclick="dmSwitchTab('add')">+ Agregar</button>
+    </div>
+
+    <!-- Tab: Chats (contactos aceptados) -->
+    <div id="dmBodyChats" class="dm-body">
+      <div class="dm-empty" id="dmChatsEmpty" style="display:none">Aun no tienes contactos. Usa "+ Agregar" para iniciar.</div>
+      <div id="dmContactsList"></div>
+    </div>
+
+    <!-- Tab: Solicitudes pendientes -->
+    <div id="dmBodyRequests" class="dm-body" style="display:none">
+      <div class="dm-empty" id="dmReqEmpty">No tienes solicitudes pendientes.</div>
+      <div id="dmPendingList"></div>
+    </div>
+
+    <!-- Tab: Agregar contacto -->
+    <div id="dmBodyAdd" class="dm-body" style="display:none">
+      <div class="dm-add-box">
+        <div class="dm-add-hint">Ingresa el correo o nombre del usuario</div>
+        <input class="dm-add-input" id="dmSearchInput" type="text" placeholder="correo@ejemplo.com o Nombre..." />
+        <div class="dm-add-hint" style="margin-top:8px;">Tu mensaje de presentacion</div>
+        <textarea class="dm-add-msg-input" id="dmFirstMsg" placeholder="Hola, soy... me gustaria contactarme contigo para..."></textarea>
+        <button class="dm-add-btn" id="dmAddBtn" onclick="dmSendRequest()">Enviar solicitud</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista conversacion -->
+  <div id="dmConvView" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
+    <div class="dm-conv-header">
+      <button class="dm-back" onclick="dmBackToList()" title="Volver">&#8592;</button>
+      <div class="dm-avatar" id="dmConvAvatar" style="width:28px;height:28px;font-size:11px;margin-right:2px;"></div>
+      <span class="dm-conv-name" id="dmConvName"></span>
+    </div>
+    <div class="dm-messages" id="dmMessages"></div>
+    <div class="dm-input-wrap">
+      <textarea class="dm-msg-input" id="dmMsgInput" rows="1" placeholder="Escribe un mensaje..."
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();dmSendMessage();}"
+        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,72)+'px'"></textarea>
+      <button class="dm-send" onclick="dmSendMessage()" title="Enviar">&#8593;</button>
+    </div>
   </div>
 </div>
 

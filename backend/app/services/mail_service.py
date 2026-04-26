@@ -687,3 +687,52 @@ class MailService:
             "total_sent": len(sent_to),
             "total_failed": len(failed)
         }
+
+    @staticmethod
+    def send_contact_request_email(
+        requester_name: str,
+        to_email: str,
+        receiver_name: str,
+        first_message: str,
+    ) -> bool:
+        """
+        Notifica al receptor que alguien quiere contactarlo en PlanificaMe.
+        Solo se envia en el primer mensaje (la solicitud de contacto).
+        """
+        app_url = settings.FRONTEND_URL + "/agendificame"
+
+        content = """
+        <h2 style="margin:0 0 6px;font-size:22px;color:#111128;">Tienes una nueva solicitud de contacto</h2>
+        <p style="margin:0 0 24px;font-size:14px;color:#44446a;">
+          Hola <strong>%s</strong>, alguien quiere comunicarse contigo en PlanificaMe.
+        </p>
+
+        <div style="background:#f0fdf4;border-radius:12px;padding:20px;margin-bottom:20px;border-left:4px solid #10b981;">
+          <p style="margin:0 0 6px;font-size:12px;color:#059669;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">
+            Solicitud de
+          </p>
+          <p style="margin:0;font-size:18px;font-weight:700;color:#111128;">%s</p>
+        </div>
+
+        <div style="background:#f7f8ff;border-radius:12px;padding:20px;margin-bottom:24px;">
+          <p style="margin:0 0 8px;font-size:12px;color:#8888aa;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">
+            Mensaje de presentacion
+          </p>
+          <p style="margin:0;font-size:14px;line-height:1.6;color:#111128;font-style:italic;">
+            &ldquo;%s&rdquo;
+          </p>
+        </div>
+
+        <p style="margin:0 0 20px;font-size:13px;color:#44446a;text-align:center;">
+          Abre PlanificaMe para aceptar o rechazar esta solicitud.
+        </p>
+        """ % (receiver_name, requester_name, first_message)
+
+        content += _btn("Abrir PlanificaMe", app_url, "#10b981")
+
+        subject = "[PlanificaMe] %s quiere comunicarse contigo" % requester_name
+        return MailService.send_email(
+            to_email, subject,
+            _base_template(content, "#10b981"),
+            "%s quiere comunicarse contigo en PlanificaMe. Abre la app para responder." % requester_name
+        )
