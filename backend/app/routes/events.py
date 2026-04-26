@@ -89,7 +89,8 @@ def create_event(event: EventCreate, db: Session = Depends(get_db)):
                 calendar_name=g_name, calendar_color=g_col,
                 description=created.description or None,
                 deadline_date=created.deadline_date or None,
-                duration_minutes=created.duration or None)
+                duration_minutes=created.duration or None,
+                event_id=str(created.id))
         _notify_all(db, created, _notify_create, actor_id=created.creator_id)
     except Exception as ex:
         logger.error(f"Create notify error: {ex}")
@@ -218,7 +219,8 @@ def update_event(
             MailService.send_event_updated_email(
                 to_email=email, event_title=updated.title,
                 editor_name=ed_name, calendar_name=g_name,
-                calendar_color=g_col, changes=changes or None)
+                calendar_color=g_col, changes=changes or None,
+                event_id=str(updated.id))
         _notify_all(db, updated, _notify_update, actor_id=user_id)
     except Exception as ex:
         logger.error(f"Update notify error: {ex}")
@@ -247,7 +249,8 @@ def update_event_status(event_id: str, status_update: EventStatusUpdate, db: Ses
                     to_email=email, event_title=event.title,
                     new_status=status_update.status, changed_by=ch_name,
                     calendar_name=g_name, calendar_color=g_col,
-                    status_note=status_update.status_note)
+                    status_note=status_update.status_note,
+                    event_id=str(event.id))
             _notify_all(db, event, _notify_status, actor_id=changer_id)
         except Exception as ex:
             logger.error(f"Status notify error: {ex}")
@@ -443,8 +446,7 @@ async def mention_notify(
 
     success = MailService.send_email(
         to_email=body.to_email,
-        subject=f"💬 {body.sender_name} te mencionó en «{body.event_title}»",
-        html_content=html
+        subject="[PlanificaMe] " + body.sender_name + " te envió un mensaje",
+        html_content=html_content,
     )
-
-    return {"sent": success, "to": body.to_email}
+    return {"success": success}
