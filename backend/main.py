@@ -138,6 +138,13 @@ async def serve_agendificame():
     return JSONResponse(status_code=404, content={"error": "index.html no encontrado"})
 
 
+@app.get("/actividad/{event_id}", tags=["Frontend"])
+async def open_activity_deep_link(event_id: str):
+    """Redirige links de email hacia la SPA con el ID de actividad como parámetro de URL"""
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url=f"/agendificame?actividad={event_id}", status_code=302)
+
+
 @app.get("/organizame", tags=["Frontend"])
 async def serve_organizame():
     """Sirve organizame.html — OrganizaMe (próximamente)"""

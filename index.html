@@ -12462,6 +12462,9 @@ async function init(){
     const savedCal = localStorage.getItem('planificame_calendar');
     if(savedCal) switchCalendar(savedCal);
     renderTeam(); renderProjects(); updateUserInfo(); render();
+    // Deep link desde email: /agendificame?actividad=EVENT_ID
+    const _dlId = new URLSearchParams(window.location.search).get('actividad');
+    if(_dlId){ const _dlEv=getEv(_dlId); if(_dlEv) setTimeout(()=>showEventDetail(_dlEv),300); }
     startPolling();
     startChatPoll();
     loadTags();
