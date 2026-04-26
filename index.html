@@ -6104,6 +6104,21 @@ html.light-mode .etm-btn-cancel{background:#f5f5fa;border-color:#e0e0eb;}
             <option value="1440">1 día antes</option>
           </select>
         </div>
+      </div>
+      <div class="fg" id="tSnoozeGroup" style="margin-top:10px">
+        <label class="flbl" style="display:flex;align-items:center;gap:6px">
+          Repetir recordatorio cada
+          <span style="font-size:10px;color:var(--text3);font-weight:400">(hasta la hora del evento)</span>
+        </label>
+        <select class="fsel" id="tSnooze">
+          <option value="5">cada 5 min</option>
+          <option value="10" selected>cada 10 min (por defecto)</option>
+          <option value="15">cada 15 min</option>
+          <option value="20">cada 20 min</option>
+          <option value="30">cada 30 min</option>
+          <option value="60">cada 1 hora</option>
+        </select>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">Puedes pausar o desactivar desde el correo.</div>
       </div><br>
       <div class="fg" id="tEmailsGroup">
         <label class="flbl">Correos para notificaciones</label>
@@ -8110,7 +8125,7 @@ function openTaskModal(date,time){
   document.getElementById('btnDel').style.display='none';
   document.getElementById('btnDuplicate').style.display='none';
   document.getElementById('tTitle').value='';document.getElementById('tDesc').value='';renderEmailFields(['']);
-  document.getElementById('tDur').value='60';document.getElementById('tRemind').value='15';
+  document.getElementById('tDur').value='60';document.getElementById('tRemind').value='15';document.getElementById('tSnooze').value='10';
   document.getElementById('tDate').value=date||dk(S.cur);
   document.getElementById('tDeadlineDate').value='';
   genTimeOpts();
@@ -8235,6 +8250,7 @@ function saveTask(){
   const time=document.getElementById('tTime').value;
   const dur=parseInt(document.getElementById('tDur').value);
   const remind=parseInt(document.getElementById('tRemind').value);
+  const snooze=parseInt(document.getElementById('tSnooze').value)||10;
   const desc=document.getElementById('tDesc').value;
   const email=getEmailsValue();
   const projId=type==='project'?'':document.getElementById('tProj').value;
@@ -8260,7 +8276,7 @@ function saveTask(){
     const i=S.events.findIndex(e=>e.id===S.editId);
     if(i!==-1){
       const oldEv = S.events[i];
-      const updatedEv = {...oldEv,title,type,date,time,dur,remind,desc,email,projId,color,deadlineDate,deadlineTime,calendar_id:calendarId};
+      const updatedEv = {...oldEv,title,type,date,time,dur,remind,snooze,desc,email,projId,color,deadlineDate,deadlineTime,calendar_id:calendarId};
       S.events[i] = updatedEv;
       // Guardar en API
       updateEventInAPI(S.editId, updatedEv).then(()=>{
@@ -8304,7 +8320,7 @@ function saveTask(){
         S.projects.push({...projectData, id: realProjId, calendarName: calObj?.name||null});
 
         // Guardar el evento principal del proyecto en la API
-        const projEventData = {id,title,type:'project',date,time,dur,remind,desc,email,projId:realProjId,creatorId:ME.id,deadlineDate,deadlineTime,calendar_id:calendarId,isDeadline:false,calendarName:calObj?.name||null,calendarColor:calObj?.color||null};
+        const projEventData = {id,title,type:'project',date,time,dur,remind,snooze,desc,email,projId:realProjId,creatorId:ME.id,deadlineDate,deadlineTime,calendar_id:calendarId,isDeadline:false,calendarName:calObj?.name||null,calendarColor:calObj?.color||null};
         const savedProjEv = await saveEventToAPI(projEventData);
         const realEventId = savedProjEv?.id || id;
         S.events.push({...projEventData, id: realEventId});
@@ -8324,7 +8340,7 @@ function saveTask(){
         }
       } else {
         const calObj = calendarId ? S.calendars.find(c => c.id === calendarId) : null;
-        const eventData = {id,title,type,date,time,dur,remind,desc,email,projId,creatorId:ME.id,deadlineDate,deadlineTime,calendar_id:calendarId,calendarName:calObj?.name||null,calendarColor:calObj?.color||null,isRecurring,recurType:isRecurring?recurType:null,recurEnd:isRecurring?recurEnd:null};
+        const eventData = {id,title,type,date,time,dur,remind,snooze,desc,email,projId,creatorId:ME.id,deadlineDate,deadlineTime,calendar_id:calendarId,calendarName:calObj?.name||null,calendarColor:calObj?.color||null,isRecurring,recurType:isRecurring?recurType:null,recurEnd:isRecurring?recurEnd:null};
         
         // Guardar evento en API primero
         const savedEv = await saveEventToAPI(eventData);
@@ -8384,6 +8400,7 @@ function editEvent(ev){
   renderEmailFields(ev.email ? ev.email.split(',').map(e=>e.trim()) : ['']);
   document.getElementById('tDur').value=ev.dur;
   document.getElementById('tRemind').value=ev.remind;
+  document.getElementById('tSnooze').value=ev.snooze||ev.snooze_interval||10;
   document.getElementById('tDeadlineDate').value=ev.deadlineDate||'';
   genTimeOpts();
   document.getElementById('tTime').value=ev.time;
@@ -9146,6 +9163,7 @@ async function loadDataFromAPI(){
       time: e.time,
       dur: e.duration || 60,
       remind: e.reminder || 15,
+      snooze: e.snooze_interval || 10,
       projId: e.project_id || '',
       creatorId: e.creator_id || 'u1',
       creatorName: e.creator && e.creator.name
@@ -10461,6 +10479,7 @@ async function saveEventToAPI(eventData){
       duration: eventData.dur || 60,
       description: eventData.desc || '',
       reminder: eventData.remind || 15,
+      snooze_interval: eventData.snooze || 10,
       email: eventData.email || null,
       creator_id: ME.id,
       project_id: eventData.projId || null,
@@ -10472,7 +10491,7 @@ async function saveEventToAPI(eventData){
       recurrence_type: eventData.recurType || null,
       recurrence_end: eventData.recurEnd || null
     };
-    
+
     // Agregar calendar_id si hay un calendario seleccionado
     if(eventData.calendar_id){
       body.calendar_id = eventData.calendar_id;
@@ -10513,6 +10532,7 @@ async function updateEventInAPI(eventId, eventData){
       duration: eventData.dur || 60,
       description: eventData.desc || '',
       reminder: eventData.remind || 15,
+      snooze_interval: eventData.snooze || 10,
       email: eventData.email || null,
       project_id: eventData.projId || null,
       color: eventData.color || '#7c6af7',
