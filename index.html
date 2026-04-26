@@ -9505,6 +9505,7 @@ async function onAuthSuccess(userData, token){
   const savedCal = localStorage.getItem('planificame_calendar');
   if(savedCal) switchCalendar(savedCal);
   renderTeam(); renderProjects(); updateUserInfo(); render();
+  dmShowFab(); dmCheckPendingBadge();
   startPolling();
   startChatPoll();
   loadTags();
